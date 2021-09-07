@@ -11,7 +11,7 @@ public class ServiceDriver {
         System.out.println("Listing users in database:");
 
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/self_driving_car_service", "root", "***REMOVED***");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/self_driving_car_service", "root", "team2");
             Statement statement = connection.createStatement();
             ResultSet resultset = statement.executeQuery("SELECT * FROM users");
 
