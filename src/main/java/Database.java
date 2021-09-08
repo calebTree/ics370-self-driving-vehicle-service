@@ -1,42 +1,51 @@
 import java.sql.*;
 
 public class Database {
-    public static void newUser(String username, String password, String date) {
+    Database() {
         try {
             // explicitly load JDBC driver
             Class.forName("com.mysql.cj.jdbc.Driver");
-            // establish connection
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/self_driving_car_service", "root", "team2");
-            // create a statement
-            PreparedStatement preparedStmt = connection.prepareStatement("INSERT INTO users (username, password, dateCreated)" + "VALUES (?, ?, ?)");
-            preparedStmt.setString(1, username);
-            preparedStmt.setString(2, password);
-            preparedStmt.setString(3, date);
-            preparedStmt.executeUpdate();
-            System.out.println("User created.");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public static void authentication(String username, String password) {
+    private Connection connect() throws SQLException {
+        // establish connection
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/self_driving_car_service",
+                "root", "team2");
+    }
+
+    public void checkUser(String username, String password) {
         try {
-            // explicitly load JDBC driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            // establish connection
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/self_driving_car_service", "root", "team2");
             // create a statement
-            PreparedStatement preparedStmt = connection.prepareStatement("SELECT username, password FROM users WHERE username = ? && password = ?");
+            PreparedStatement preparedStmt = connect().prepareStatement("SELECT username, password FROM users " +
+                    "WHERE username = ? && password = ?");
             preparedStmt.setString(1, username);
             preparedStmt.setString(2, password);
             ResultSet rset = preparedStmt.executeQuery();
             if (rset.next()) {
 //                String dbUsername = rset.getString(1);
 //                String dbPassword = rset.getString(2);
-                System.out.println("Verified!");
+                System.out.println("\nVerified!");
             } else {
-                System.out.println("Not found.");
+                System.out.println("\nNot found!");
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void addUser(String username, String password, String date) {
+        try {
+            // insert statement
+            PreparedStatement prepStmt = connect().prepareStatement("INSERT INTO users (username, password, dateCreated)" +
+                    "VALUES (?, ?, ?)");
+            prepStmt.setString(1, username);
+            prepStmt.setString(2, password);
+            prepStmt.setString(3, date);
+            prepStmt.executeUpdate();
+            System.out.println("\nUser created.");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

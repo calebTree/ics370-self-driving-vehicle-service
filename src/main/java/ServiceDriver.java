@@ -10,10 +10,9 @@ public class ServiceDriver {
         String username;            // account username input
         String password;            // account password
 
-        System.out.println("\nWelcome to a self-driving-vehicle reservation or hailing service!");
-
         for (;;) {
-            System.out.println("\nPlease login or create an account.");
+            System.out.println("\nWelcome to a self-driving-vehicle reservation or hailing service!");
+            System.out.println("Please login or create an account.\n");
             System.out.print("(L) Login, (C) Create account, (Q) Quit: ");
             choice = input.nextLine();
             choice = choice.toLowerCase();
@@ -24,15 +23,16 @@ public class ServiceDriver {
                     username = input.nextLine();
                     System.out.print("Please enter your password: ");
                     password = input.nextLine();
-                    Account.login(username, password);
+                    Account login = new Account(username, password);
+                    login.authentication();
                 }
                 case 'c' -> {
                     System.out.print("Please choose a username: ");
                     username = input.nextLine();
                     System.out.print("Please choose a password: ");
                     password = input.nextLine();
-                    String date = new Date().toString();
-                    Account.createUser(username, password, date);
+                    Account user = new Account(username, password);
+                    user.newUser();
                 }
                 case 'q' -> {
                     System.out.println("Goodbye!");
