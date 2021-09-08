@@ -1,25 +1,52 @@
 // main driver of program
 
-import java.io.IOException;
-import java.sql.*;
+import java.util.Scanner;
+import java.util.Date;
 
 public class ServiceDriver {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("Welcome to a Self Driving Car Reservation Service!");
-        GeoLocation location = new GeoLocation();
-        System.out.println(location.getLatLon());
-        System.out.println("Listing users in database:");
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String choice;              // main interface choice
+        String username;            // account username input
+        String password;            // account password
 
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/self_driving_car_service", "root", "team2");
-            Statement statement = connection.createStatement();
-            ResultSet resultset = statement.executeQuery("SELECT * FROM users");
+        System.out.println("\nWelcome to a self-driving-vehicle reservation or hailing service!");
 
-            while (resultset.next()) {
-                System.out.println(resultset.getString("username"));
+        for (;;) {
+            System.out.println("\nPlease login or create an account.");
+            System.out.print("(L) Login, (C) Create account, (Q) Quit: ");
+            choice = input.nextLine();
+            choice = choice.toLowerCase();
+            char ch = choice.charAt(0);
+            switch (ch) {
+                case 'l' -> {
+                    System.out.print("Please enter your username: ");
+                    username = input.nextLine();
+                    System.out.print("Please enter your password: ");
+                    password = input.nextLine();
+                    Account.login(username, password);
+                }
+                case 'c' -> {
+                    System.out.print("Please choose a username: ");
+                    username = input.nextLine();
+                    System.out.print("Please choose a password: ");
+                    password = input.nextLine();
+                    String date = new Date().toString();
+                    Account.createUser(username, password, date);
+                }
+                case 'q' -> {
+                    System.out.println("Goodbye!");
+                    System.exit(0);
+                }
+                default -> System.out.println("Invalid option.");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+//        GeoLocation location = new GeoLocation();
+//        System.out.println(location.getLatLon());
+//        System.out.println("Listing users in database:");
+//        initializeDB();
     }
+
+
 }
