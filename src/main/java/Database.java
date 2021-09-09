@@ -10,41 +10,54 @@ public class Database {
         }
     }
 
-    private Connection connect() throws SQLException {
+    private static Connection getConnection() throws SQLException {
         // establish connection
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/self_driving_car_service",
-                "root", "team2");
+                "root", "***REMOVED***");
     }
 
-    public void checkUser(String username, String password) {
+    public static UserInfo checkUser(String username) {
+        UserInfo user = new UserInfo();
+        user.userName = username;
         try {
             // create a statement
-            PreparedStatement preparedStmt = connect().prepareStatement("SELECT username, password FROM users " +
-                    "WHERE username = ? && password = ?");
-            preparedStmt.setString(1, username);
-            preparedStmt.setString(2, password);
-            ResultSet rset = preparedStmt.executeQuery();
-            if (rset.next()) {
-//                String dbUsername = rset.getString(1);
-//                String dbPassword = rset.getString(2);
-                System.out.println("\nVerified!");
+            PreparedStatement userExist = getConnection().prepareStatement("SELECT userID FROM users " +
+                    "WHERE username = ?");
+            userExist.setString(1, username);
+            ResultSet uIDexist = userExist.executeQuery();
+            if (uIDexist.next()) {
+                int userID = uIDexist.getInt(1);
+                PreparedStatement prepStmt = getConnection().prepareStatement("SELECT password, salt FROM authentication " +
+                        "WHERE userID = ?");
+                prepStmt.setInt(1, userID);
+                ResultSet rset = prepStmt.executeQuery();
+                rset.next();
+                user.userEncryptedPassword = rset.getString("password");
+                user.userSalt = rset.getString("salt");
             } else {
                 System.out.println("\nNot found!");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return user;
     }
 
-    public void addUser(String username, String password, String date) {
+    public static void addUser(String username, String password, String salt, String date) {
         try {
             // insert statement
-            PreparedStatement prepStmt = connect().prepareStatement("INSERT INTO users (username, password, dateCreated)" +
-                    "VALUES (?, ?, ?)");
-            prepStmt.setString(1, username);
-            prepStmt.setString(2, password);
-            prepStmt.setString(3, date);
-            prepStmt.executeUpdate();
+            PreparedStatement userInfoIn = getConnection().prepareStatement("INSERT INTO users (username, dateCreated)" +
+                    "VALUES (?, ?)");
+            PreparedStatement userAuthIn = getConnection().prepareStatement("INSERT INTO authentication (password, salt)" +
+                    "VALUES (?, ?)");
+            userInfoIn.setString(1, username);
+            userInfoIn.setString(2, date);
+            userInfoIn.executeUpdate();
+
+            userAuthIn.setString(1, password);
+            userAuthIn.setString(2, salt);
+            userAuthIn.executeUpdate();
+
             System.out.println("\nUser created.");
         } catch (Exception ex) {
             ex.printStackTrace();
