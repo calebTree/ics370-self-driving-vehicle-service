@@ -1,38 +1,96 @@
 // main driver of program
 
+import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.Date;
+import java.io.Console;
 
 public class ServiceDriver {
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        String choice;              // main interface choice
-        String username;            // account username input
-        String password;            // account password
+        // password mask input
+        Console c = System.console();
+
+        // interface
+        String choice;
+        char ch;
+        // account password
+        char[] pass;
+        String password;
+        // account username input
+        String username;
 
         System.out.println("\nWelcome to a self-driving-vehicle reservation or hailing service!");
 
         for (;;) {
-            System.out.println("\nPlease login or create an account.");
+            Scanner input = new Scanner(System.in);
+            System.out.println("Please login or create an account.\n");
             System.out.print("(L) Login, (C) Create account, (Q) Quit: ");
+            // main interface choice
             choice = input.nextLine();
             choice = choice.toLowerCase();
-            char ch = choice.charAt(0);
+            ch = choice.charAt(0);
+
             switch (ch) {
                 case 'l' -> {
                     System.out.print("Please enter your username: ");
                     username = input.nextLine();
-                    System.out.print("Please enter your password: ");
-                    password = input.nextLine();
-                    Account.login(username, password);
+                    if (c == null) {
+                        System.out.print("Please enter your password: ");
+                        password = input.nextLine();
+                        try {
+                            boolean status = Authentication.authenticateUser(username, password);
+                            if (status) {
+                                System.out.println("\nLogged in!");
+                                try {
+                                    GeoLocation location = new GeoLocation();
+                                    System.out.println("Your city is: " + location.getCity());
+                                    System.out.println(location.getLatLon());
+                                } catch (Exception ex) {
+                                    System.out.println("\nError finding location:" + ex.getMessage());
+                                }
+                            } else {
+                                System.out.println("\nSorry, wrong username/password.");
+                            }
+                        } catch (SQLException ex) {
+                            System.out.println("\nSQL Error: " + ex.getMessage());
+                        } catch (Exception ex) {
+                            System.out.println("\nError with crypto: " + ex.getMessage());
+                        }
+                    } else {
+                        pass = c.readPassword("Please enter your password: ");
+                        password = String.valueOf(pass);
+                        try {
+                            boolean status = Authentication.authenticateUser(username, password);
+                            if (status) {
+                                System.out.println("\nLogged in!");
+                                try {
+                                    GeoLocation location = new GeoLocation();
+                                    System.out.println("Your city is: " + location.getCity());
+                                    System.out.println(location.getLatLon());
+                                } catch (Exception ex) {
+                                    System.out.println("\nError finding location:" + ex.getMessage());
+                                }
+                            } else {
+                                System.out.println("\nSorry, wrong username/password.");
+                            }
+                        } catch (SQLException ex) {
+                            System.out.println("\nSQL Error: " + ex.getMessage());
+                        } catch (Exception ex) {
+                            System.out.println("\nError with crypto: " + ex.getMessage());
+                        }
+                    }
                 }
                 case 'c' -> {
                     System.out.print("Please choose a username: ");
                     username = input.nextLine();
                     System.out.print("Please choose a password: ");
                     password = input.nextLine();
-                    String date = new Date().toString();
-                    Account.createUser(username, password, date);
+                    try {
+                        Authentication.signUp(username, password);
+                    } catch (SQLException ex) {
+                        System.out.println("\nSQL Error: " + ex.getMessage());
+                    } catch (Exception ex) {
+                        System.out.println("\nError with crypto: " + ex.getMessage());
+                    }
                 }
                 case 'q' -> {
                     System.out.println("Goodbye!");
@@ -41,12 +99,5 @@ public class ServiceDriver {
                 default -> System.out.println("Invalid option.");
             }
         }
-
-//        GeoLocation location = new GeoLocation();
-//        System.out.println(location.getLatLon());
-//        System.out.println("Listing users in database:");
-//        initializeDB();
     }
-
-
 }
