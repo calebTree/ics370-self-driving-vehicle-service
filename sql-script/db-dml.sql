@@ -1,1 +1,0 @@
-INSERT INTO users (username, password) VALUES ('jimbo', 'pass'), ('george', 'pass');
