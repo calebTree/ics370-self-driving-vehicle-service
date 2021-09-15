@@ -13,7 +13,7 @@ public class Database {
     private static Connection getConnection() throws SQLException {
         // establish connection
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/self_driving_car_service",
-                "root", "team2");
+                "team2", "jiB^3nX)b");
     }
 
     public static UserInfo checkUser(String username) throws SQLException {
@@ -21,10 +21,10 @@ public class Database {
         PreparedStatement userExist = getConnection().prepareStatement("SELECT userID FROM users " +
                 "WHERE username = ?");
         userExist.setString(1, username);
-        ResultSet uIDexist = userExist.executeQuery();
-        if (uIDexist.next()) {
+        ResultSet uIDExist = userExist.executeQuery();
+        if (uIDExist.next()) {
             UserInfo user = new UserInfo();
-            int userID = uIDexist.getInt(1);
+            int userID = uIDExist.getInt(1);
             PreparedStatement prepStmt = getConnection().prepareStatement("SELECT password, salt FROM authentication " +
                     "WHERE userID = ?");
             prepStmt.setInt(1, userID);

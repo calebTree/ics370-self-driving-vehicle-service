@@ -4,7 +4,37 @@ import java.sql.SQLException;
 import java.util.Scanner;
 import java.io.Console;
 
-public class ServiceDriver {
+//jfx
+import javafx.application.Application;
+import javafx.geometry.Pos;
+//import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+//import javafx.scene.text.Font;
+//import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+public class ServiceDriver extends Application {
+    public void start(Stage primaryStage) {
+        //create a clock and a lable
+        ClockPane clock = new ClockPane();
+        String timeString = clock.getHour() + ":" + clock.getMinute() + ":" + clock.getSecond();
+        Label lblCurrentTime = new Label(timeString);
+
+        //place clock in lable in border pane
+        BorderPane pane = new BorderPane();
+        pane.setCenter(clock);
+        pane.setBottom(lblCurrentTime);
+        BorderPane.setAlignment(lblCurrentTime, Pos.TOP_CENTER);
+
+        //create a scene and place it in the stage
+        Scene scene = new Scene(pane, 250, 250);
+        primaryStage.setTitle("DisplayClock"); //set the stage title
+        primaryStage.setScene(scene);//place the scene in the stage
+        primaryStage.show(); //display the stage
+    }
+
     public static void main(String[] args) {
         // password mask input
         Console c = System.console();
@@ -44,6 +74,7 @@ public class ServiceDriver {
                                     GeoLocation location = new GeoLocation();
                                     System.out.println("Your city is: " + location.getCity());
                                     System.out.println(location.getLatLon());
+                                    Application.launch();
                                 } catch (Exception ex) {
                                     System.out.println("\nError finding location:" + ex.getMessage());
                                 }
