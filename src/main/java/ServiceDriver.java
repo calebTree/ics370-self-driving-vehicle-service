@@ -98,6 +98,7 @@ public class ServiceDriver extends Application {
 	                                    GeoLocation location = new GeoLocation();
 	                                    System.out.println("Your city is: " + location.getCity());
 	                                    System.out.println(location.getLatLon());
+	                                    Application.launch();
 	                                } catch (Exception ex) {
 	                                    System.out.println("\nError finding location:" + ex.getMessage());
 	                                }

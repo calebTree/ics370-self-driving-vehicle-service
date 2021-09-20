@@ -14,14 +14,8 @@
         <maven.compiler.source>14</maven.compiler.source>
         <maven.compiler.target>14</maven.compiler.target>
     </properties>
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>mvn-repo</id>-->
-<!--            <name>maven-repo</name>-->
-<!--            <url>http://maven.icm.edu.pl/artifactory/repo/</url>-->
-<!--        </repository>-->
-<!--    </repositories>-->
     <dependencies>
+
         <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
             <groupId>org.json</groupId>
@@ -33,15 +27,30 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.25</version>
         </dependency>
+        <!-- JavaFX !!! L(・o・)」 -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>11.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>11</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>self-driving-car-service</finalName>
             <plugins>
+                <!-- use mvn exec:java -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.6.0</version>
+                    <configuration>
+                        <mainClass>Launcher</mainClass>
+                    </configuration>
+                </plugin>
                 <!-- Make this jar executable -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -54,7 +63,7 @@
                         <archive>
                             <manifest>
                                 <addClasspath>true</addClasspath>
-                                <mainClass>ServiceDriver</mainClass>
+                                <mainClass>Launcher</mainClass>
                                 <classpathPrefix>dependency-jars/</classpathPrefix>
                             </manifest>
                         </archive>
