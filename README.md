@@ -9,4 +9,7 @@ Our software design project will be a service for providing users with a link to
 * Shopping  
 ---
 ### This version of the project uses `localhost` as the MySQL server.
-### Package the projcet with `mvn package`.
+### Package the project with `mvn clean package`.
+### Launch
+* `java --module-path ./target/dependency-jars --add-modules javafx.controls,javafx.fxml -jar .\target\self-driving-car-service.jar`  
+* `mvn exec:java`
