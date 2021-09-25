@@ -69,3 +69,9 @@ node_modules/
 .idea
 .vscode
 .settings
+
+# webpack emitted files
+public/scripts
+
+# secrets
+src/firebase-config.js
