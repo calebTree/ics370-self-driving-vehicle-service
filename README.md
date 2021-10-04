@@ -5,4 +5,4 @@
 
 ## Build and Test
 * `npm run start`
-* `firebase serve --only hosting`
+* `firebase emulators:start`

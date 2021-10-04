@@ -72,6 +72,3 @@ node_modules/
 
 # webpack emitted files
 public/scripts
-
-# secrets
-src/firebase-config.js
