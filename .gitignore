@@ -65,10 +65,9 @@ node_modules/
 # dotenv environment variables file
 .env
 
-# IDE files
-.idea
-.vscode
-.settings
-
 # webpack emitted files
 public/scripts
+
+# allow git clean -df
+# !.idea
+# !.settings
