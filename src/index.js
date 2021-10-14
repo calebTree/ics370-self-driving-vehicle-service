@@ -65,8 +65,10 @@ function authStateObserver(user) {
   // Hide sign-in button.
   signInButtonElement.setAttribute('hidden', 'true');
   
-  // Show main options.
+  // Show main options
   mainButtons.removeAttribute('hidden');
+  // hide welcome buttons
+  welcomeButtons.setAttribute('hidden', 'true');
 
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
@@ -76,8 +78,10 @@ function authStateObserver(user) {
     // Show sign-in button.
     signInButtonElement.removeAttribute('hidden');
 
-    // Hide main options.
+    // Hide main options
     mainButtons.setAttribute('hidden', 'true');
+    // show welcome buttons
+    welcomeButtons.removeAttribute('hidden');
   }
 }
 
@@ -94,9 +98,12 @@ var userPicElement = document.getElementById('user-pic');
 var userNameElement = document.getElementById('user-name');
 var signInButtonElement = document.getElementById('sign-in');
 var signOutButtonElement = document.getElementById('sign-out');
-//  var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 
+// my DOM
+var welcomeButtons = document.getElementById('welcome');
 var mainButtons = document.getElementById('main-buttons');
+
+//  var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 
 signOutButtonElement.addEventListener('click', signOutUser);
 signInButtonElement.addEventListener('click', signIn);

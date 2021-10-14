@@ -43,7 +43,7 @@
     <!-- TODO: Enable First Input Delay polyfill library. -->
     <script type="text/javascript">!function(n,e){var t,o,i,c=[],f={passive:!0,capture:!0},r=new Date,a="pointerup",u="pointercancel";function p(n,c){t||(t=c,o=n,i=new Date,w(e),s())}function s(){o>=0&&o<i-r&&(c.forEach(function(n){n(o,t)}),c=[])}function l(t){if(t.cancelable){var o=(t.timeStamp>1e12?new Date:performance.now())-t.timeStamp;"pointerdown"==t.type?function(t,o){function i(){p(t,o),r()}function c(){r()}function r(){e(a,i,f),e(u,c,f)}n(a,i,f),n(u,c,f)}(o,t):p(o,t)}}function w(n){["click","mousedown","keydown","touchstart","pointerdown"].forEach(function(e){n(e,l,f)})}w(n),self.perfMetrics=self.perfMetrics||{},self.perfMetrics.onFirstInputDelay=function(n){c.push(n),s()}}(addEventListener,removeEventListener);</script>
   </head>
-  
+
   <body>
     <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
@@ -51,11 +51,11 @@
       <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
         <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
           <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
-            <h1><i class="material-icons">directions_car</i> FAV-RIDE</h1>
+            <h3><i class="material-icons">directions_car</i> FAV-RIDE</h3>
           </div>
           <div id="user-container">
             <div hidden id="user-pic"></div>
-            <!-- <div hidden id="user-name"></div> -->
+            <div hidden id="user-name"></div>
             <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
               Sign-out
             </button>
@@ -66,32 +66,40 @@
         </div>
       </header>
 
-        <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">          
-          <div class="home_box">
-            <div class="hmlogo">
-              <span class="material-icons">directions_car</span>
+		  <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+			  <div class="mdl-card__supporting-text">
+          <h3>Request your ride now</h3>
+          <form action="#">
+					  <div id="name">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+                <select class="mdl-textfield__input" id="service" name="service">
+                  <option> </option>
+                  <option>Basic</option>
+                  <option>Deluxe</option>							  
+                </select>
+                <label class="mdl-textfield__label" for="octane">Choose your service</label>
+              </div>						
             </div>
-            <div class="hmcontent">
-              <p>For all your trip requiring a ride, we will get you there safely.</p>
-            </div>
-            <div class="homeReg" hidden id="welcome">
-              <a href="register.html" class="mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</a>
-              <a href="login.html" class="mdl-button mdl-button--raised mdl-button--accent pull-right">Login</a>
-            </div>
-
-            <!-- Welcome/Main Button Form -->
-            <div class="mdl-grid" hidden id="main-buttons">
-              <div class="mdl-typography--text-center">
-                <div class="hmcontent">
-                  <h2>Welcome Back <span hidden id="user-name"></span></h2>
+            <div id ="contact">
+              <div id="phone" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input class="mdl-textfield__input" type="text"  id="pickDate">
+                  <label class="mdl-textfield__label" for="sample2">Pick up location</label>								
                 </div>
-                <a href="future-ride.html" class="mdl-button mdl-button--raised mdl-button--colored pull-left">Schedule A Ride <i class="material-icons">departure_board</i></a>
-                <a href="request-ride.html" class="mdl-button mdl-button--raised mdl-button--accent pull-right">Hail A Ride <i class="material-icons">hail</i></a>
               </div>
-            </div>
-          </div>
+              <div id="drop" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input class="mdl-textfield__input" type="text" >
+                  <label class="mdl-textfield__label" for="sample2">Drop of destination</label>							
+                </div>
+              </div>
+            </div>					  
+            <button href="register.html" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+				  </form>
         </div>
-
+			  
+		</div> 
+	  
       <footer class = "mdl-mega-footer">
         <div class="mdl-cell mdl-cell--12-col mdl-typography--text-center">
           Copyright © 2021 All Rights Reserved 
@@ -100,7 +108,7 @@
 
     </div>
 
-    <!-- This script is created by webpack -->
-    <script type="module" src="scripts/main.js"></script> 
+  <!-- This script is created by webpack -->
+  <script type="module" src="scripts/main.js"></script> 
   </body>
 </html>

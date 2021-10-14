@@ -1,0 +1,36 @@
+/* Arielle Style */
+.home_box {
+    margin: 0 auto;
+    max-width: 420px;
+}
+.hmlogo span {
+    background: grey;
+    color: #fff;
+    font-size: 87px;
+    padding: 10px;
+    margin-bottom: 16px;
+}
+.hmlogo {
+    text-align: center;
+}
+.hmcontent {
+    text-align: center;
+}
+
+.homeReg {
+    text-align: center;
+}
+.content_section {
+    min-height: 400px;
+    padding: 20px 2px;
+}
+
+/* Caleb style */
+
+h1 {
+    font-size: 28pt;
+}
+
+h2 {
+    font-size: 18pt;
+}
