@@ -26,11 +26,17 @@
 }
 
 /* Caleb style */
-
+body {
+    background-image: url("../images/street-bkrnd.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
 h1 {
     font-size: 28pt;
 }
-
 h2 {
     font-size: 18pt;
+}
+section {
+    background-color: azure;
 }
