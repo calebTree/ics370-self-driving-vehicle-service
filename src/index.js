@@ -22,8 +22,8 @@ function createEmailUser(email, password, displayName) {
   createUserWithEmailAndPassword(getAuth(), email, password, displayName)
     .then((userCredential) => {
       // Signed in 
-      const user = userCredential.user;
-      // user.displayName = displayName;
+      // const user = userCredential.user;
+      // console.log(user);
       updateProfile(getAuth().currentUser, {
         displayName: displayName,
       }).then(() => {
@@ -32,12 +32,10 @@ function createEmailUser(email, password, displayName) {
       }).catch((error) => {
         // An error occurred
       });
-      // console.log(user);
     })
     .catch((error) => {
       // const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorMessage);
+      console.log(error.message);
     });
 }
 
@@ -45,13 +43,11 @@ function loginEmailUser(email, password) {
   signInWithEmailAndPassword(getAuth(), email, password)
   .then((userCredential) => {
     // Signed in 
-    const user = userCredential.user;
-    console.log(user);
+    // const user = userCredential.user;
   })
   .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(errorMessage);
+    // const errorCode = error.code;
+    console.log(error.message);
   });
 }
 
@@ -104,10 +100,12 @@ function authStateObserver(user) {
 
   // Set the user's profile pic and name.
   userPicElement.style.backgroundImage = 'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
-  userNameElement.textContent = userName;
+  userNameElement[0].textContent = userName;
+  userNameElement[1].textContent = userName;
 
   // Show user's profile and sign-out button.
-  userNameElement.removeAttribute('hidden');
+  userNameElement[0].removeAttribute('hidden');
+  userNameElement[1].removeAttribute('hidden');
   userPicElement.removeAttribute('hidden');
   signOutButtonElement.removeAttribute('hidden');
   // Hide sign-in button.
@@ -120,16 +118,31 @@ function authStateObserver(user) {
 
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
-    userNameElement.setAttribute('hidden', 'true');
+    userNameElement[0].setAttribute('hidden', 'true');
     userPicElement.setAttribute('hidden', 'true');
     signOutButtonElement.setAttribute('hidden', 'true');
     // Show sign-in button.
     signInButtonElement.removeAttribute('hidden');
 
-    // Hide main options
+    // main welcome section
+    welcomeSection.setAttribute('hidden', 'true');              // hide main welcome section when logged out
+    // hide main options
     mainButtons.setAttribute('hidden', 'true');
     // show welcome buttons
     welcomeButtons.removeAttribute('hidden');
+
+    // welcome when logging out
+    if(greeting.getAttribute('hidden') != null) {               // if greeting is hidden
+      greeting.removeAttribute('hidden');                       // show greeting
+    } else {                                                    // else
+      welcomeSection.setAttribute('hidden', 'true');            // hide welcome section
+    }
+    
+    // back to home from other pages
+    loginForm.setAttribute('hidden', 'true');
+    registerForm.setAttribute('hidden', 'true');
+    schForm.setAttribute('hidden', 'true');
+    hailForm.setAttribute('hidden', 'true');
   }
 }
 
@@ -143,7 +156,7 @@ function addSizeToGoogleProfilePic(url) {
 
 // Shortcuts to DOM Elements.
 var userPicElement = document.getElementById('user-pic');
-var userNameElement = document.getElementById('user-name');
+var userNameElement = document.getElementsByClassName('user-name');
 var signInButtonElement = document.getElementById('sign-in');
 var signOutButtonElement = document.getElementById('sign-out');
 
