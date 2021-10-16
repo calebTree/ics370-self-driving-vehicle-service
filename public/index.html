@@ -65,92 +65,92 @@
         </div>
       </header>
 
-        <!-- welcome and main buttons -->
-        <section id="welcome-main" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-          <div class="home_box">
-            <div class="hmlogo">
-              <span class="material-icons">directions_car</span>
-            </div>
-            <div class="hmcontent">
-              <p>For all your trip requiring a ride, we will get you there safely.</p>
-            </div>
-            <div id="welcome" class="homeReg" hidden>
-              <button id="showRegFormBtn" class="mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
-              <button id="loginFormBtn" class="mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
-            </div>
+      <!-- welcome and main buttons -->
+      <section id="welcome-main" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+        <div class="home_box">
+          <div class="hmlogo">
+            <span class="material-icons">directions_car</span>
+          </div>
+          <div class="hmcontent">
+            <p>For all your trip requiring a ride, we will get you there safely.</p>
+          </div>
+          <div id="welcome" class="homeReg" hidden>
+            <button id="showRegFormBtn" class="mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
+            <button id="loginFormBtn" class="mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
+          </div>
 
-            <!-- Welcome/Main Button Form -->
-            <div id="main-buttons" class="mdl-grid" hidden>
-              <div class="mdl-typography--text-center">
-                <div class="hmcontent">
-                  <h2>Welcome Back <span hidden id="user-name"></span></h2>
-                </div>
-                <button id="scheduleBtn" class="mdl-button mdl-button--raised mdl-button--colored pull-left">Schedule A Ride <i class="material-icons">departure_board</i></button>
-                <button id="hailBtn" class="mdl-button mdl-button--raised mdl-button--accent pull-right">Hail A Ride <i class="material-icons">hail</i></button>
+          <!-- Welcome/Main Button Form -->
+          <div id="main-buttons" class="mdl-grid" hidden>
+            <div class="mdl-typography--text-center">
+              <div class="hmcontent">
+                <h2>Welcome Back <span hidden id="user-name"></span></h2>
               </div>
+              <a href="future-ride.html" id="scheduleBtn" class="mdl-button mdl-button--raised mdl-button--colored pull-left">Schedule A Ride <i class="material-icons">departure_board</i></a>
+              <a href="request-ride.html" id="hailBtn" class="mdl-button mdl-button--raised mdl-button--accent pull-right">Hail A Ride <i class="material-icons">hail</i></a>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <!-- register form -->
-        <section id="regFormSection" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
-          <div class="mdl-card__supporting-text">
-            <h3>Create Account</h3>
-            <form id="regForm" action="#">
-              <div id="name">
+      <!-- register form -->
+      <section id="regFormSection" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
+        <div class="mdl-card__supporting-text">
+          <h3>Create Account</h3>
+          <form id="regForm" action="#">
+            <div id="name">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input id="first-name" class="mdl-textfield__input" type="text" required>
+                <label class="mdl-textfield__label" for="first-name">First Name</label>
+              </div>
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input id="last-name" class="mdl-textfield__input" type="text" required>
+                <label class="mdl-textfield__label" for="last-name">Last Name</label>
+              </div>
+            </div>
+            <div id ="contact">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input id="first-name" class="mdl-textfield__input" type="text" id="first">
-                  <label class="mdl-textfield__label" for="first-name">First Name</label>
+                  <input id="phone" class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="mobile">
+                  <label class="mdl-textfield__label" for="phone">Mobile Phone</label>
                 </div>
+              </div>					
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input id="last-name" class="mdl-textfield__input" type="text" id="last">
-                  <label class="mdl-textfield__label" for="last-name">Last Name</label>
+                  <input id="regEmail" class="mdl-textfield__input" type="email" required>
+                  <label class="mdl-textfield__label" for="regEmail">E-mail</label>
                 </div>
               </div>
-              <div id ="contact">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input id="phone" class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="mobile">
-                    <label class="mdl-textfield__label" for="phone">Mobile Phone</label>
-                  </div>
-                </div>					
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input id="regEmail" class="mdl-textfield__input" type="email" required>
-                    <label class="mdl-textfield__label" for="regEmail">E-mail</label>
-                  </div>
-                </div>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input id="regPass" class="mdl-textfield__input" type="password" required>
-                    <label class="mdl-textfield__label" for="regPass">Password</label>
-                  </div>
+                  <input id="regPass" class="mdl-textfield__input" type="password" required>
+                  <label class="mdl-textfield__label" for="regPass">Password</label>
                 </div>
               </div>
-              <button id="registerBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Register</button>
-            </form>
-          </div>				
-        </section>
+            </div>
+            <button id="registerBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Register</button>
+          </form>
+        </div>				
+      </section>
 
-        <!-- login form -->
-        <section id="login" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
-          <div class="mdl-card__supporting-text">
-            <h3>Login</h3>
-            <form action="#">
-              <div id="name">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input id="loginUsername" class="mdl-textfield__input" type="text">
-                  <label class="mdl-textfield__label" for="username">User name/Email</label>
-                </div>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input id="loginPass" class="mdl-textfield__input" type="text">
-                  <label class="mdl-textfield__label" for="loginPass">Password</label>
-                </div>
+      <!-- login form -->
+      <section id="login" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
+        <div class="mdl-card__supporting-text">
+          <h3>Login</h3>
+          <form action="#">
+            <div id="name">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input id="loginUsername" class="mdl-textfield__input" type="text">
+                <label class="mdl-textfield__label" for="username">User name/Email</label>
               </div>
-              <button id="loginBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
-            </form>
-          </div>
-        </section>
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input id="loginPass" class="mdl-textfield__input" type="password">
+                <label class="mdl-textfield__label" for="loginPass">Password</label>
+              </div>
+            </div>
+            <button id="loginBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+          </form>
+        </div>
+      </section>
 
       <footer class = "mdl-mega-footer">
         <div class="mdl-cell mdl-cell--12-col mdl-typography--text-center">

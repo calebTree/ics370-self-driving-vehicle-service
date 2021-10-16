@@ -11,24 +11,32 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
   // connectAuthEmulator,
 } from 'firebase/auth';
 
 import { getFirebaseConfig } from './firebase-config.js';
 
 // email password authentication
-function createEmailUser(email, password) {
-  createUserWithEmailAndPassword(getAuth(), email, password)
+function createEmailUser(email, password, displayName) {
+  createUserWithEmailAndPassword(getAuth(), email, password, displayName)
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
+      // user.displayName = displayName;
+      updateProfile(getAuth().currentUser, {
+        displayName: displayName,
+      }).then(() => {
+        // Profile updated!
+        onAuthStateChanged(getAuth(), authStateObserver);
+      }).catch((error) => {
+        // An error occurred
+      });
       // console.log(user);
-      // ...
     })
     .catch((error) => {
       // const errorCode = error.code;
       const errorMessage = error.message;
-      // ..
       console.log(errorMessage);
     });
 }
@@ -38,13 +46,12 @@ function loginEmailUser(email, password) {
   .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    // console.log(user);
-    // ...
+    console.log(user);
   })
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
-    // console.log(errorMessage);
+    console.log(errorMessage);
   });
 }
 
@@ -53,6 +60,9 @@ async function signIn() {
   // Sign in Firebase using popup auth and Google as the identity provider.
   var provider = new GoogleAuthProvider();
   await signInWithPopup(getAuth(), provider);
+  console.log(user);
+  
+  // go back home
   document.getElementById('login').setAttribute('hidden', 'true');
   document.getElementById('regFormSection').setAttribute('hidden', 'true');
   document.getElementById('welcome-main').removeAttribute('hidden');
@@ -165,8 +175,7 @@ loginFormBtn.addEventListener('click', (e) => {
   loginForm.removeAttribute('hidden');
   welcomeSection.setAttribute('hidden', 'true');
 
-  let loginButton = document.getElementById('loginBtn');
-  loginButton.addEventListener('click', (e) => {
+  document.getElementById('loginBtn').addEventListener('click', (e) => {
     e.preventDefault();
     let email = document.getElementById('loginUsername').value;
     let loginPass = document.getElementById('loginPass').value;
@@ -181,12 +190,13 @@ showRegisterForm.addEventListener('click', (e) => {
   registerForm.removeAttribute('hidden');
   welcomeSection.setAttribute('hidden', 'true');
 
-  var regButton = document.getElementById('registerBtn');
-  regButton.addEventListener('click', (e) => {
+  document.getElementById('registerBtn').addEventListener('click', (e) => {
     e.preventDefault();
     let regEmail = document.getElementById('regEmail').value;
     let regPass = document.getElementById('regPass').value;
-    createEmailUser(regEmail, regPass);
+    let fName = document.getElementById('first-name').value;
+    let lName = document.getElementById('last-name').value;
+    createEmailUser(regEmail, regPass, fName + " " + lName);
     welcomeSection.removeAttribute('hidden');
     registerForm.setAttribute('hidden', 'true');
   });
