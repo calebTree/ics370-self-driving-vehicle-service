@@ -174,7 +174,6 @@ loginFormBtn.addEventListener('click', (e) => {
     welcomeSection.removeAttribute('hidden');
     loginForm.setAttribute('hidden', 'true');
   })
-
 });
 
 showRegisterForm.addEventListener('click', (e) => {
@@ -192,6 +191,14 @@ showRegisterForm.addEventListener('click', (e) => {
     registerForm.setAttribute('hidden', 'true');
   });
 });
+
+// home button
+document.getElementById('home').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('login').setAttribute('hidden', 'true');
+  document.getElementById('regFormSection').setAttribute('hidden', 'true');
+  document.getElementById('welcome-main').removeAttribute('hidden');
+})
 
 // hailBtn.addEventListener('click', showHailForm);
 // scheduleBtn.addEventListener('click', showScheduleForm);
