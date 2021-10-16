@@ -11,7 +11,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  connectAuthEmulator,
+  // connectAuthEmulator,
 } from 'firebase/auth';
 
 import { getFirebaseConfig } from './firebase-config.js';
@@ -53,6 +53,9 @@ async function signIn() {
   // Sign in Firebase using popup auth and Google as the identity provider.
   var provider = new GoogleAuthProvider();
   await signInWithPopup(getAuth(), provider);
+  document.getElementById('login').setAttribute('hidden', 'true');
+  document.getElementById('regFormSection').setAttribute('hidden', 'true');
+  document.getElementById('welcome-main').removeAttribute('hidden');
 }
 
 // Signs-out of FAV-RIDE.
@@ -195,6 +198,6 @@ showRegisterForm.addEventListener('click', (e) => {
 
 // Your web app's Firebase configuration
 const firebaseApp = initializeApp(getFirebaseConfig());
-connectAuthEmulator(getAuth(), "http://localhost:9099");
+// connectAuthEmulator(getAuth(), "http://localhost:9099");
 
 initFirebaseAuth();
