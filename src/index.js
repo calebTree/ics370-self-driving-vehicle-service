@@ -9,9 +9,44 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   signOut,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  connectAuthEmulator,
 } from 'firebase/auth';
 
 import { getFirebaseConfig } from './firebase-config.js';
+
+// email password authentication
+function createEmailUser(email, password) {
+  createUserWithEmailAndPassword(getAuth(), email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      // console.log(user);
+      // ...
+    })
+    .catch((error) => {
+      // const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+      console.log(errorMessage);
+    });
+}
+
+function loginEmailUser(email, password) {
+  signInWithEmailAndPassword(getAuth(), email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // console.log(user);
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // console.log(errorMessage);
+  });
+}
 
 // Signs-in FAV-RIDE
 async function signIn() {
@@ -99,16 +134,67 @@ var userNameElement = document.getElementById('user-name');
 var signInButtonElement = document.getElementById('sign-in');
 var signOutButtonElement = document.getElementById('sign-out');
 
+//  var signInSnackbarElement = document.getElementById('must-signin-snackbar');
+
 // my DOM
+// welcome
+var welcomeSection = document.getElementById('welcome-main');
 var welcomeButtons = document.getElementById('welcome');
 var mainButtons = document.getElementById('main-buttons');
 
-//  var signInSnackbarElement = document.getElementById('must-signin-snackbar');
+// register form
+var showRegisterForm = document.getElementById('showRegFormBtn');
+var registerForm = document.getElementById('regFormSection');
+
+// login form
+var loginForm = document.getElementById('login');
+var loginFormBtn = document.getElementById('loginFormBtn');
+
+// var hailBtn = document.getElementById('hailBtn');
+// var scheduleBtn = document.getElementById('scheduleBtn');
 
 signOutButtonElement.addEventListener('click', signOutUser);
 signInButtonElement.addEventListener('click', signIn);
 
+// my listeners
+loginFormBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  loginForm.removeAttribute('hidden');
+  welcomeSection.setAttribute('hidden', 'true');
+
+  let loginButton = document.getElementById('loginBtn');
+  loginButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    let email = document.getElementById('loginUsername').value;
+    let loginPass = document.getElementById('loginPass').value;
+    loginEmailUser(email, loginPass);
+    welcomeSection.removeAttribute('hidden');
+    loginForm.setAttribute('hidden', 'true');
+  })
+
+});
+
+showRegisterForm.addEventListener('click', (e) => {
+  e.preventDefault();
+  registerForm.removeAttribute('hidden');
+  welcomeSection.setAttribute('hidden', 'true');
+
+  var regButton = document.getElementById('registerBtn');
+  regButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    let regEmail = document.getElementById('regEmail').value;
+    let regPass = document.getElementById('regPass').value;
+    createEmailUser(regEmail, regPass);
+    welcomeSection.removeAttribute('hidden');
+    registerForm.setAttribute('hidden', 'true');
+  });
+});
+
+// hailBtn.addEventListener('click', showHailForm);
+// scheduleBtn.addEventListener('click', showScheduleForm);
+
 // Your web app's Firebase configuration
 const firebaseApp = initializeApp(getFirebaseConfig());
+connectAuthEmulator(getAuth(), "http://localhost:9099");
 
 initFirebaseAuth();
