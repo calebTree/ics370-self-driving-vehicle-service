@@ -62,9 +62,10 @@ async function signIn() {
   await signInWithPopup(getAuth(), provider);
   
   // go back home
-  document.getElementById('login').setAttribute('hidden', 'true');
-  document.getElementById('regFormSection').setAttribute('hidden', 'true');
-  document.getElementById('welcome-main').removeAttribute('hidden');
+  loginForm.setAttribute('hidden', 'true');
+  registerForm.setAttribute('hidden', 'true');
+  greeting.setAttribute('hidden', 'true');
+  welcomeSection.removeAttribute('hidden');
 }
 
 // Signs-out of FAV-RIDE.
@@ -151,29 +152,49 @@ var signOutButtonElement = document.getElementById('sign-out');
 // my DOM
 // welcome
 var welcomeSection = document.getElementById('welcome-main');
-var welcomeButtons = document.getElementById('welcome');
+// logged-in/out
 var mainButtons = document.getElementById('main-buttons');
+// guest
+var welcomeButtons = document.getElementById('welcome');
 
 // register form
 var showRegisterForm = document.getElementById('showRegFormBtn');
 var registerForm = document.getElementById('regFormSection');
 
 // login form
+var showLoginForm = document.getElementById('loginFormBtn');
 var loginForm = document.getElementById('login');
-var loginFormBtn = document.getElementById('loginFormBtn');
 
-// var hailBtn = document.getElementById('hailBtn');
-// var scheduleBtn = document.getElementById('scheduleBtn');
+// schedule / hail form
+var schForm = document.getElementById('scheduleForm');
+var hailForm = document.getElementById('hailForm');
 
+var continueBtn = document.getElementById('continue');
+var greeting = document.getElementById('greeting');
+
+// google login/out buttons
 signOutButtonElement.addEventListener('click', signOutUser);
 signInButtonElement.addEventListener('click', signIn);
 
 // my listeners
-loginFormBtn.addEventListener('click', (e) => {
+
+// continue past welcome
+continueBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  loginForm.setAttribute('hidden', 'true');
+  registerForm.setAttribute('hidden', 'true');
+  schForm.setAttribute('hidden', 'true');
+  hailForm.setAttribute('hidden', 'true');
+  greeting.setAttribute('hidden', 'true');
+  welcomeSection.removeAttribute('hidden');
+})
+
+// show login form
+showLoginForm.addEventListener('click', (e) => {
   e.preventDefault();
   loginForm.removeAttribute('hidden');
   welcomeSection.setAttribute('hidden', 'true');
-
+  // login event listener
   document.getElementById('loginBtn').addEventListener('click', (e) => {
     e.preventDefault();
     let email = document.getElementById('loginUsername').value;
@@ -184,11 +205,12 @@ loginFormBtn.addEventListener('click', (e) => {
   })
 });
 
+// show registration form
 showRegisterForm.addEventListener('click', (e) => {
   e.preventDefault();
   registerForm.removeAttribute('hidden');
   welcomeSection.setAttribute('hidden', 'true');
-
+  // register button click event
   document.getElementById('registerBtn').addEventListener('click', (e) => {
     e.preventDefault();
     let regEmail = document.getElementById('regEmail').value;
@@ -204,22 +226,24 @@ showRegisterForm.addEventListener('click', (e) => {
 // home button
 document.getElementById('home').addEventListener('click', (e) => {
   e.preventDefault();
-  document.getElementById('login').setAttribute('hidden', 'true');
-  document.getElementById('regFormSection').setAttribute('hidden', 'true');
-  document.getElementById('scheduleForm').setAttribute('hidden', 'true');
-  document.getElementById('hailForm').setAttribute('hidden', 'true');
-  document.getElementById('welcome-main').removeAttribute('hidden');
+  loginForm.setAttribute('hidden', 'true');
+  registerForm.setAttribute('hidden', 'true');
+  schForm.setAttribute('hidden', 'true');
+  hailForm.setAttribute('hidden', 'true');
+  greeting.setAttribute('hidden', 'true');
+  welcomeSection.removeAttribute('hidden');
 })
 
+// hail/schedule buttons
 hailBtn.addEventListener('click', (e) => {
   e.preventDefault();
-  document.getElementById('hailForm').removeAttribute('hidden');
-  document.getElementById('welcome-main').setAttribute('hidden', 'true');
+  hailForm.removeAttribute('hidden');
+  welcomeSection.setAttribute('hidden', 'true');
 });
 scheduleBtn.addEventListener('click', (e) => {
   e.preventDefault();
-  document.getElementById('scheduleForm').removeAttribute('hidden');
-  document.getElementById('welcome-main').setAttribute('hidden', 'true');
+  schForm.removeAttribute('hidden');
+  welcomeSection.setAttribute('hidden', 'true');
 });
 
 // Your web app's Firebase configuration

@@ -51,7 +51,7 @@
       <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
         <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
           <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
-            <h1 id="home"><i class="material-icons">directions_car</i> FAV-RIDE</h1>
+            <h1 id="home"><i class="material-icons">directions_car</i> FAV-RIDE ™</h1>
           </div>
           <div id="user-container">
             <div hidden id="user-pic"></div>
@@ -65,8 +65,31 @@
         </div>
       </header>
 
+      <!-- greeting form -->
+      <section id="greeting" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+        <div class="mdl-card__supporting-text">
+          <h3>Welcome to FAV-RIDE ™</h3>
+          <p class="greeting">FAV-RIDE is the future of transportation using F-ully A-utonomous V-ehicles.</p>
+          <p class="subGreeting">Brought to you by Metro State, Fall 2021 ICS370, Team 2:</p>
+          <p>
+            Caleb Anderson:
+            <a href="mailto:caleb.anderson@my.metrostate.edu">caleb.anderson@my.metrostate.edu</a>
+            </br>
+            Arielle Hounton:
+            <a href="mailto:arielle.hounton@my.metrostate.edu">arielle.hounton@my.metrostate.edu</a>
+            </br>
+            Youssoufou Kante:
+            <a href="mailto:youssoufou.kante@my.metrostate.edu">youssoufou.kante@my.metrostate.edu</a>
+            </br>
+            Jonathan Bracamontes:
+            <a href="mailto:jonathan.bracamontes@my.metrostate.edu">jonathan.bracamontes@my.metrostate.edu</a>
+          </p>
+          <button id="continue" class="section-button mdl-button mdl-js-button mdl-button--raised">Continue</button>
+        </div>
+      </section>
+
       <!-- welcome and main buttons -->
-      <section id="welcome-main" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <section id="welcome-main" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
         <div class="home_box">
           <div class="hmlogo">
             <span class="material-icons">directions_car</span>
@@ -75,8 +98,8 @@
             <p>For all your trip requiring a ride, we will get you there safely.</p>
           </div>
           <div id="welcome" class="homeReg" hidden>
-            <button id="showRegFormBtn" class="mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
-            <button id="loginFormBtn" class="mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
+            <button id="showRegFormBtn" class="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
+            <button id="loginFormBtn" class="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
           </div>
 
           <!-- Welcome/Main Button Form -->
@@ -85,8 +108,8 @@
               <div class="hmcontent">
                 <h2>Welcome Back <span hidden id="user-name"></span></h2>
               </div>
-              <a id="scheduleBtn" class="mdl-button mdl-button--raised mdl-button--colored pull-left">Schedule A Ride <i class="material-icons">departure_board</i></a>
-              <a id="hailBtn" class="mdl-button mdl-button--raised mdl-button--accent pull-right">Hail A Ride <i class="material-icons">hail</i></a>
+              <a id="scheduleBtn" class="section-button mdl-button mdl-button--raised mdl-button--colored">Schedule A Ride <i class="material-icons">departure_board</i></a>
+              <a id="hailBtn" class="section-button mdl-button mdl-button--raised mdl-button--accent">Hail A Ride <i class="material-icons">hail</i></a>
             </div>
           </div>
         </div>
@@ -108,12 +131,12 @@
               </div>
             </div>
             <div id ="contact">
-              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <!-- <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <input id="phone" class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="mobile">
                   <label class="mdl-textfield__label" for="phone">Mobile Phone</label>
                 </div>
-              </div>					
+              </div>					 -->
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <input id="regEmail" class="mdl-textfield__input" type="email" required>
@@ -127,7 +150,7 @@
                 </div>
               </div>
             </div>
-            <button id="registerBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Register</button>
+            <button id="registerBtn" class="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Register</button>
           </form>
         </div>				
       </section>
@@ -139,15 +162,15 @@
           <form action="#">
             <div id="name">
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input id="loginUsername" class="mdl-textfield__input" type="text">
+                <input id="loginUsername" class="mdl-textfield__input" type="text" required>
                 <label class="mdl-textfield__label" for="username">User name/Email</label>
               </div>
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input id="loginPass" class="mdl-textfield__input" type="password">
+                <input id="loginPass" class="mdl-textfield__input" type="password" required>
                 <label class="mdl-textfield__label" for="loginPass">Password</label>
               </div>
             </div>
-            <button id="loginBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+            <button id="loginBtn" class="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
           </form>
         </div>
       </section>
@@ -181,7 +204,7 @@
                 </div>
               </div>
             </div>					  
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+            <button class="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
 				  </form>
         </div>
 		  </section>
@@ -219,7 +242,7 @@
                 <label class="mdl-textfield__label" for="carType">Select your luxury car</label>
               </div>
             </div>
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+            <button class="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
           </form>
         </div>
       </section>

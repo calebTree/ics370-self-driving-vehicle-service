@@ -42,3 +42,16 @@ h2 {
 section {
     background-color: azure;
 }
+.section-button {
+    margin: 10px;
+}
+
+.greeting {
+    font-family: Georgia, serif;
+    font-size: large;
+}
+
+.subGreeting {
+    font-family: Georgia, serif;
+    font-size: medium;
+}
