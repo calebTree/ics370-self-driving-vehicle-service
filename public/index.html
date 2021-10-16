@@ -85,8 +85,8 @@
               <div class="hmcontent">
                 <h2>Welcome Back <span hidden id="user-name"></span></h2>
               </div>
-              <a href="future-ride.html" id="scheduleBtn" class="mdl-button mdl-button--raised mdl-button--colored pull-left">Schedule A Ride <i class="material-icons">departure_board</i></a>
-              <a href="request-ride.html" id="hailBtn" class="mdl-button mdl-button--raised mdl-button--accent pull-right">Hail A Ride <i class="material-icons">hail</i></a>
+              <a id="scheduleBtn" class="mdl-button mdl-button--raised mdl-button--colored pull-left">Schedule A Ride <i class="material-icons">departure_board</i></a>
+              <a id="hailBtn" class="mdl-button mdl-button--raised mdl-button--accent pull-right">Hail A Ride <i class="material-icons">hail</i></a>
             </div>
           </div>
         </div>
@@ -148,6 +148,78 @@
               </div>
             </div>
             <button id="loginBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- hail a ride now -->
+      <section id="hailForm" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
+			  <div class="mdl-card__supporting-text">
+          <h3>Request your ride now</h3>
+          <form action="#">
+					  <div id="name">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+                <select id="service" class="mdl-textfield__input" name="service">
+                  <!-- <option> </option> -->
+                  <option>Basic</option>
+                  <option>Deluxe</option>							  
+                </select>
+                <label class="mdl-textfield__label" for="service">Choose your service</label>
+              </div>						
+            </div>
+            <div id ="contact">
+              <!-- <div id="phone" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input id="pickDate" class="mdl-textfield__input" type="text">
+                  <label class="mdl-textfield__label" for="sample2">Pick up location</label>
+                </div>
+              </div> -->
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input id="dropOff" class="mdl-textfield__input" type="text" name="dropOff">
+                  <label class="mdl-textfield__label" for="dropOff">Drop of destination</label>
+                </div>
+              </div>
+            </div>					  
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+				  </form>
+        </div>
+		  </section>
+
+      <!-- schedule form -->
+      <section id="scheduleForm" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
+        <div class="mdl-card__supporting-text">
+          <h3>Schedule a future ride</h3>
+          <form action="#">					
+            <div id ="contact">
+              <div id="phone" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input id="pickDate" class="mdl-textfield__input" type="date">
+                  <!-- <label class="mdl-textfield__label" for="sample2">Pick your ride date</label> -->
+                </div>
+              </div>
+              <div id="email" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input class="mdl-textfield__input" type="time">
+                  <!-- <label class="mdl-textfield__label" for="sample2">Enter your pick up time</label> -->
+                </div>
+              </div>
+            </div>
+            <div id="name">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <select id="schServ" class="mdl-textfield__input" name="service">
+                  <option></option>
+                </select>
+                <label class="mdl-textfield__label" for="schServ">Choose your service</label>
+              </div>
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <select id="carType" class="mdl-textfield__input" name="carType">
+                  <option></option>							
+                </select>
+                <label class="mdl-textfield__label" for="carType">Select your luxury car</label>
+              </div>
+            </div>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
           </form>
         </div>
       </section>

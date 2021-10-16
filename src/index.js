@@ -60,7 +60,6 @@ async function signIn() {
   // Sign in Firebase using popup auth and Google as the identity provider.
   var provider = new GoogleAuthProvider();
   await signInWithPopup(getAuth(), provider);
-  console.log(user);
   
   // go back home
   document.getElementById('login').setAttribute('hidden', 'true');
@@ -207,11 +206,21 @@ document.getElementById('home').addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('login').setAttribute('hidden', 'true');
   document.getElementById('regFormSection').setAttribute('hidden', 'true');
+  document.getElementById('scheduleForm').setAttribute('hidden', 'true');
+  document.getElementById('hailForm').setAttribute('hidden', 'true');
   document.getElementById('welcome-main').removeAttribute('hidden');
 })
 
-// hailBtn.addEventListener('click', showHailForm);
-// scheduleBtn.addEventListener('click', showScheduleForm);
+hailBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('hailForm').removeAttribute('hidden');
+  document.getElementById('welcome-main').setAttribute('hidden', 'true');
+});
+scheduleBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('scheduleForm').removeAttribute('hidden');
+  document.getElementById('welcome-main').setAttribute('hidden', 'true');
+});
 
 // Your web app's Firebase configuration
 const firebaseApp = initializeApp(getFirebaseConfig());
