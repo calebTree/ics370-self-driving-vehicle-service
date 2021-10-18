@@ -45,13 +45,21 @@ section {
 .section-button {
     margin: 10px;
 }
-
 .greeting {
     font-family: Georgia, serif;
     font-size: large;
 }
-
 .subGreeting {
     font-family: Georgia, serif;
     font-size: medium;
+}
+#myProgress {
+    width: 100%;
+    background-color: grey;
+    margin-bottom: 25px;
+}  
+#myBar {
+    width: 1%;
+    height: 30px;
+    background-color: green;
 }

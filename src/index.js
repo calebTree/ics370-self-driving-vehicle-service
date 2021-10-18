@@ -172,6 +172,27 @@ function addSizeToGoogleProfilePic(url) {
 //   return res.test(String(email).toLowerCase());
 // }
 
+// progress bar
+var i = 0;
+function progress() {
+  if (i == 0) {
+    i = 1;
+    var elem = document.getElementById("myBar");
+    var width = 1;
+    var id = setInterval(frame, 50);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+        // i = 0;
+        alert('Your ride has arrived!');
+      } else {
+        width++;
+        elem.style.width = width + "%";
+      }
+    }
+  }
+}
+
 // Shortcuts to DOM Elements.
 var userPicElement = document.getElementById('user-pic');
 var userNameElement = document.getElementsByClassName('user-name');
@@ -199,6 +220,7 @@ var loginForm = document.getElementById('login');
 // schedule / hail form
 var schForm = document.getElementById('scheduleForm');
 var hailForm = document.getElementById('hailForm');
+var hailNowBtn = document.getElementById('hailNowBtn');
 
 var continueBtn = document.getElementById('continue');
 var greeting = document.getElementById('greeting');
@@ -279,6 +301,17 @@ hailBtn.addEventListener('click', (e) => {
   e.preventDefault();
   hailForm.removeAttribute('hidden');
   welcomeSection.setAttribute('hidden', 'true');
+});
+hailNowBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  let dropOff = document.getElementById('dropOff').value;
+  if(dropOff) {
+    document.getElementById('destination').innerHTML = "Sending an FAV to: " + dropOff;
+    document.getElementById('myBar').removeAttribute('hidden');
+    progress();
+  } else {
+    alert("Please enter a drop-off location.");
+  }
 });
 scheduleBtn.addEventListener('click', (e) => {
   e.preventDefault();
