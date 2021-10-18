@@ -12,30 +12,38 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-  // connectAuthEmulator,
+  connectAuthEmulator,
 } from 'firebase/auth';
 
 import { getFirebaseConfig } from './firebase-config.js';
 
+let emulate = true;
+// const auth = getAuth();
+
 // email password authentication
 function createEmailUser(email, password, displayName) {
-  createUserWithEmailAndPassword(getAuth(), email, password, displayName)
+  createUserWithEmailAndPassword(getAuth(), email, password)
     .then((userCredential) => {
       // Signed in 
       // const user = userCredential.user;
-      // console.log(user);
       updateProfile(getAuth().currentUser, {
         displayName: displayName,
       }).then(() => {
         // Profile updated!
-        onAuthStateChanged(getAuth(), authStateObserver);
+        initFirebaseAuth();
+        welcomeSection.removeAttribute('hidden');
+        registerForm.setAttribute('hidden', 'true');
+        console.log("User: " + userCredential.user.displayName + " added.");
       }).catch((error) => {
         // An error occurred
+        console.log(error.message);
+        alert(error.message);
       });
     })
     .catch((error) => {
       // const errorCode = error.code;
       console.log(error.message);
+      alert(error.message);
     });
 }
 
@@ -44,10 +52,13 @@ function loginEmailUser(email, password) {
   .then((userCredential) => {
     // Signed in 
     // const user = userCredential.user;
+    welcomeSection.removeAttribute('hidden');
+    loginForm.setAttribute('hidden', 'true');
   })
   .catch((error) => {
     // const errorCode = error.code;
     console.log(error.message);
+    alert(error.message);
   });
 }
 
@@ -154,6 +165,13 @@ function addSizeToGoogleProfilePic(url) {
   return url;
 }
 
+// validate email
+// https://www.w3docs.com/snippets/javascript/how-to-validate-an-e-mail-using-javascript.html
+// function validateEmail(email) {
+//   const res = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//   return res.test(String(email).toLowerCase());
+// }
+
 // Shortcuts to DOM Elements.
 var userPicElement = document.getElementById('user-pic');
 var userNameElement = document.getElementsByClassName('user-name');
@@ -190,50 +208,13 @@ signOutButtonElement.addEventListener('click', signOutUser);
 signInButtonElement.addEventListener('click', signIn);
 
 // my listeners
-
-// continue past welcome
+// e.stopPropagation(); 
+// https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation
+// continue past welcome button
 continueBtn.addEventListener('click', (e) => {
   e.preventDefault();
-  loginForm.setAttribute('hidden', 'true');
-  registerForm.setAttribute('hidden', 'true');
-  schForm.setAttribute('hidden', 'true');
-  hailForm.setAttribute('hidden', 'true');
   greeting.setAttribute('hidden', 'true');
   welcomeSection.removeAttribute('hidden');
-})
-
-// show login form
-showLoginForm.addEventListener('click', (e) => {
-  e.preventDefault();
-  loginForm.removeAttribute('hidden');
-  welcomeSection.setAttribute('hidden', 'true');
-  // login event listener
-  document.getElementById('loginBtn').addEventListener('click', (e) => {
-    e.preventDefault();
-    let email = document.getElementById('loginUsername').value;
-    let loginPass = document.getElementById('loginPass').value;
-    loginEmailUser(email, loginPass);
-    welcomeSection.removeAttribute('hidden');
-    loginForm.setAttribute('hidden', 'true');
-  })
-});
-
-// show registration form
-showRegisterForm.addEventListener('click', (e) => {
-  e.preventDefault();
-  registerForm.removeAttribute('hidden');
-  welcomeSection.setAttribute('hidden', 'true');
-  // register button click event
-  document.getElementById('registerBtn').addEventListener('click', (e) => {
-    e.preventDefault();
-    let regEmail = document.getElementById('regEmail').value;
-    let regPass = document.getElementById('regPass').value;
-    let fName = document.getElementById('first-name').value;
-    let lName = document.getElementById('last-name').value;
-    createEmailUser(regEmail, regPass, fName + " " + lName);
-    welcomeSection.removeAttribute('hidden');
-    registerForm.setAttribute('hidden', 'true');
-  });
 });
 
 // home button
@@ -245,7 +226,53 @@ document.getElementById('home').addEventListener('click', (e) => {
   hailForm.setAttribute('hidden', 'true');
   greeting.setAttribute('hidden', 'true');
   welcomeSection.removeAttribute('hidden');
-})
+});
+
+// show login form
+showLoginForm.addEventListener('click', (e) => {
+  e.preventDefault();
+  loginForm.removeAttribute('hidden');
+  welcomeSection.setAttribute('hidden', 'true');
+});
+// login event listener
+document.getElementById('loginBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  let email = document.getElementById('loginUsername').value;
+  let loginPass = document.getElementById('loginPass').value;
+  if(email && loginPass) {
+    loginEmailUser(email, loginPass);
+  } else
+  alert("Please complete the form.");
+});
+
+// show registration form listener
+showRegisterForm.addEventListener('click', (e) => {
+  e.preventDefault();
+  registerForm.removeAttribute('hidden');
+  welcomeSection.setAttribute('hidden', 'true');
+});
+// register event click listener
+document.getElementById('registerBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  let regEmail = document.getElementById('regEmail').value;
+  let regPass = document.getElementById('regPass').value;
+  let fName = document.getElementById('first-name').value;
+  let lName = document.getElementById('last-name').value;
+  
+  // if(validateEmail(regEmail)) {
+  if (regEmail && regPass && fName && lName) {
+    if(regPass.length > 5) {
+      createEmailUser(regEmail, regPass, fName + " " + lName);
+    } else {
+      alert("Please choose a password length of at least 6.");
+    }
+  } else {
+    alert("Please complete the form.");
+  }
+  // } else {
+  //   alert("Please use a valid email address.");
+  // }
+});
 
 // hail/schedule buttons
 hailBtn.addEventListener('click', (e) => {
@@ -261,6 +288,9 @@ scheduleBtn.addEventListener('click', (e) => {
 
 // Your web app's Firebase configuration
 const firebaseApp = initializeApp(getFirebaseConfig());
-// connectAuthEmulator(getAuth(), "http://localhost:9099");
+
+// enable/disable emulate on line 20
+if(emulate)
+  connectAuthEmulator(getAuth(), "http://localhost:9099");
 
 initFirebaseAuth();
