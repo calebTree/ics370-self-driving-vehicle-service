@@ -10,11 +10,24 @@ const rootConfig = {
 
 const appConfig = {
   ...rootConfig,
-  entry: './src/index.js',
+  entry: {
+    main: './src/index.js',
+    react: './src/react.js'
+  },
   output: {
-    filename: 'main.js',
+    filename: './[name].js',
     path: path.resolve(__dirname, 'public/scripts'),
   },
+
+  module: {
+    rules: [
+        {
+            test: /\.js$/,
+            loader: 'babel-loader',
+            exclude: /node_modules/
+        },
+      ]
+    }
 };
 
 module.exports = [appConfig];

@@ -296,7 +296,7 @@ document.getElementById('registerBtn').addEventListener('click', (e) => {
   // }
 });
 
-// hail/schedule buttons
+// hail now form
 hailBtn.addEventListener('click', (e) => {
   e.preventDefault();
   hailForm.removeAttribute('hidden');
@@ -313,6 +313,7 @@ hailNowBtn.addEventListener('click', (e) => {
     alert("Please enter a drop-off location.");
   }
 });
+// schedule form
 scheduleBtn.addEventListener('click', (e) => {
   e.preventDefault();
   schForm.removeAttribute('hidden');
