@@ -240,15 +240,15 @@ signInButtonElement.addEventListener('click', signIn);
 // });
 
 // home button
-document.getElementById('home').addEventListener('click', (e) => {
-  e.preventDefault();
-  loginForm.setAttribute('hidden', 'true');
-  registerForm.setAttribute('hidden', 'true');
-  schForm.setAttribute('hidden', 'true');
-  hailForm.setAttribute('hidden', 'true');
-  greeting.setAttribute('hidden', 'true');
-  welcomeSection.removeAttribute('hidden');
-});
+// document.getElementById('home').addEventListener('click', (e) => {
+//   e.preventDefault();
+//   loginForm.setAttribute('hidden', 'true');
+//   registerForm.setAttribute('hidden', 'true');
+//   schForm.setAttribute('hidden', 'true');
+//   hailForm.setAttribute('hidden', 'true');
+//   greeting.setAttribute('hidden', 'true');
+//   welcomeSection.removeAttribute('hidden');
+// });
 
 // show login form
 // showLoginForm.addEventListener('click', (e) => {

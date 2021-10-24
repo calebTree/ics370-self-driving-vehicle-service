@@ -7,6 +7,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      home: false,
       register: false,
       login: false,
       hail: false,
@@ -14,27 +15,34 @@ class App extends React.Component {
     }
   }
 
+  handleClick(condition) {
+    this.setState( {home: condition} )
+  }
+
   render() {
+    const condition  = this.state.home;
     return (
-      <div className="mdl-layout--fixed-header">
-        <header className="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
-          <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-            <div className="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
-              <h1 id="home"><i className="material-icons">directions_car</i> FAV-RIDE ™</h1>
+      <div>
+        <div className="mdl-layout--fixed-header">
+          <header className="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+            <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+              <div className="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+                <h1 onClick={() => this.handleClick(true)}><i className="material-icons">directions_car</i> FAV-RIDE ™</h1>
+              </div>
+              <div id="user-container">
+                <div hidden id="user-pic"></div>
+                <div hidden className="user-name"></div>
+                <button hidden id="sign-out" className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+                  Sign-out
+                </button>
+                <button hidden id="sign-in" className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+                  <i className="material-icons">account_circle</i>Sign-in with Google
+                </button>
+              </div>
             </div>
-            <div id="user-container">
-              <div hidden id="user-pic"></div>
-              <div hidden className="user-name"></div>
-              <button hidden id="sign-out" className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
-                Sign-out
-              </button>
-              <button hidden id="sign-in" className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
-                <i className="material-icons">account_circle</i>Sign-in with Google
-              </button>
-            </div>
-          </div>
-        </header>
-        <Greeting />
+          </header>
+        </div>
+        {condition === true ? <Welcome /> : <Greeting />}
       </div>
     )
   }
@@ -98,42 +106,40 @@ class Welcome extends React.Component {
     };
   }
 
-  // handleClick(condition) {
-  //   this.setState( {condition} )
-  // }
-
   choose(condition) {
     switch (condition) {
       case 'registration' :
         return <Register />;
       case 'login' :
         return <Login />;
-      default :
-        return <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">   
-          <div className="home_box">       
-            <div className="hmlogo">
-              <span className="material-icons">directions_car</span>
-            </div>
-            <div className="hmcontent">
-              <p>For all your trip requiring a ride, we will get you there safely.</p>
-            </div>
-            <div id="welcome" className="homeReg">
-              <button onClick={() => this.setState({shown: 'registration'})} id="showRegFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
-              <button onClick={() => this.setState({shown: 'login'})} id="loginFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
-            </div>
+      default : 
+        return (
+          <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">   
+            <div className="home_box">       
+              <div className="hmlogo">
+                <span className="material-icons">directions_car</span>
+              </div>
+              <div className="hmcontent">
+                <p>For all your trip requiring a ride, we will get you there safely.</p>
+              </div>
+              <div id="welcome" className="homeReg">
+                <button onClick={() => this.setState({shown: 'registration'})} id="showRegFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
+                <button onClick={() => this.setState({shown: 'login'})} id="loginFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
+              </div>
 
-            {/* <!-- Welcome/Main Button Form */}
-            <div id="main-buttons" className="mdl-grid" hidden>
-              <div className="mdl-typography--text-center">
-                <div className="hmcontent">
-                  <h2>Welcome Back <span hidden className="user-name"></span></h2>
+              {/* <!-- Welcome/Main Button Form */}
+              <div id="main-buttons" className="mdl-grid" hidden>
+                <div className="mdl-typography--text-center">
+                  <div className="hmcontent">
+                    <h2>Welcome Back <span hidden className="user-name"></span></h2>
+                  </div>
+                  <a id="scheduleBtn" className="section-button mdl-button mdl-button--raised mdl-button--colored">Schedule A Ride <i className="material-icons">departure_board</i></a>
+                  <a id="hailBtn" className="section-button mdl-button mdl-button--raised mdl-button--accent">Hail A Ride <i className="material-icons">hail</i></a>
                 </div>
-                <a id="scheduleBtn" className="section-button mdl-button mdl-button--raised mdl-button--colored">Schedule A Ride <i className="material-icons">departure_board</i></a>
-                <a id="hailBtn" className="section-button mdl-button mdl-button--raised mdl-button--accent">Hail A Ride <i className="material-icons">hail</i></a>
               </div>
             </div>
-          </div>
-        </section>;
+          </section>
+        )
     }
   }
 
