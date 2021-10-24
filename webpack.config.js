@@ -17,6 +17,7 @@ const appConfig = {
   output: {
     filename: './[name].js',
     path: path.resolve(__dirname, 'public/scripts'),
+    clean: true,
   },
 
   module: {
@@ -24,7 +25,8 @@ const appConfig = {
         {
             test: /\.js$/,
             loader: 'babel-loader',
-            exclude: /node_modules/
+            exclude: /node_modules/,
+            // exclude: /src\/index.js/
         },
       ]
     }

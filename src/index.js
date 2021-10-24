@@ -222,7 +222,7 @@ var schForm = document.getElementById('scheduleForm');
 var hailForm = document.getElementById('hailForm');
 var hailNowBtn = document.getElementById('hailNowBtn');
 
-var continueBtn = document.getElementById('continue');
+// var continueBtn = document.getElementById('continue');
 var greeting = document.getElementById('greeting');
 
 // google login/out buttons
@@ -233,11 +233,11 @@ signInButtonElement.addEventListener('click', signIn);
 // e.stopPropagation(); 
 // https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation
 // continue past welcome button
-continueBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  greeting.setAttribute('hidden', 'true');
-  welcomeSection.removeAttribute('hidden');
-});
+// continueBtn.addEventListener('click', (e) => {
+//   e.preventDefault();
+//   greeting.setAttribute('hidden', 'true');
+//   welcomeSection.removeAttribute('hidden');
+// });
 
 // home button
 document.getElementById('home').addEventListener('click', (e) => {

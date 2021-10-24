@@ -48,7 +48,7 @@
     <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
       <!-- Header section containing logo -->
-      <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+      <!-- <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
         <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
           <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
             <h1 id="home"><i class="material-icons">directions_car</i> FAV-RIDE ™</h1>
@@ -64,11 +64,13 @@
             </button>
           </div>
         </div>
-      </header>
+      </header> -->
+
+      <div id="root"></div>
 
       <!-- greeting form -->
-      <section id="greeting" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-        <!-- <div class="mdl-card__supporting-text">
+      <!-- <section id="greeting" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+        <div class="mdl-card__supporting-text">
           <h3>Welcome to FAV-RIDE ™</h3>
           <p class="greeting">FAV-RIDE is the future of transportation using F-ully A-utonomous V-ehicles.</p>
           <p class="subGreeting">Brought to you by Metro State, Fall 2021 ICS370, Team 2:</p>
@@ -86,30 +88,25 @@
             <a href="mailto:jonathan.bracamontes@my.metrostate.edu">jonathan.bracamontes@my.metrostate.edu</a>
           </p>
           <button id="continue" class="section-button mdl-button mdl-js-button mdl-button--raised">Continue</button>
-        </div> -->
-      </section>
+        </div>
+      </section> -->
 
       <!-- welcome and main buttons -->
-      <section id="welcome-main" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
+      <!-- <section id="welcome-main" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
         <div class="home_box">
           <div class="hmlogo">
             <span class="material-icons">directions_car</span>
           </div>
-          <!-- ... existing HTML ... -->
-
-          <!-- <div id="like_button_container"></div> -->
-
-          <!-- ... existing HTML ... -->
           <div class="hmcontent">
             <p>For all your trip requiring a ride, we will get you there safely.</p>
           </div>
           <div id="welcome" class="homeReg" hidden>
             <button id="showRegFormBtn" class="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
             <button id="loginFormBtn" class="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
-          </div>
+          </div> -->
 
           <!-- Welcome/Main Button Form -->
-          <div id="main-buttons" class="mdl-grid" hidden>
+          <!-- <div id="main-buttons" class="mdl-grid" hidden>
             <div class="mdl-typography--text-center">
               <div class="hmcontent">
                 <h2>Welcome Back <span hidden class="user-name"></span></h2>
@@ -119,7 +116,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
 
       <!-- register form -->
       <section id="regFormSection" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
@@ -256,19 +253,17 @@
           </form>
         </div>
       </section>
-
+      
       <footer class = "mdl-mega-footer">
         <div class="mdl-cell mdl-cell--12-col mdl-typography--text-center">
           Copyright © 2021 All Rights Reserved 
         </div>            
       </footer>
-
+      
     </div>
 
     <!-- This script is created by webpack -->
     <script type="module" src="scripts/main.js"></script>
-
-    <!-- Load our React component. -->
     <script src="scripts/react.js"></script>
   </body>
 </html>
