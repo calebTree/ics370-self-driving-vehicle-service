@@ -150,7 +150,7 @@ function authStateObserver(user) {
     }
     
     // back to home from other pages
-    loginForm.setAttribute('hidden', 'true');
+    // loginForm.setAttribute('hidden', 'true');
     // registerForm.setAttribute('hidden', 'true');
     schForm.setAttribute('hidden', 'true');
     hailForm.setAttribute('hidden', 'true');
@@ -257,15 +257,15 @@ document.getElementById('home').addEventListener('click', (e) => {
 //   welcomeSection.setAttribute('hidden', 'true');
 // });
 // login event listener
-document.getElementById('loginBtn').addEventListener('click', (e) => {
-  e.preventDefault();
-  let email = document.getElementById('loginUsername').value;
-  let loginPass = document.getElementById('loginPass').value;
-  if(email && loginPass) {
-    loginEmailUser(email, loginPass);
-  } else
-  alert("Please complete the form.");
-});
+// document.getElementById('loginBtn').addEventListener('click', (e) => {
+//   e.preventDefault();
+//   let email = document.getElementById('loginUsername').value;
+//   let loginPass = document.getElementById('loginPass').value;
+//   if(email && loginPass) {
+//     loginEmailUser(email, loginPass);
+//   } else
+//   alert("Please complete the form.");
+// });
 
 // show registration form listener
 // showRegisterForm.addEventListener('click', (e) => {

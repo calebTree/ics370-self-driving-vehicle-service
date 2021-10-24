@@ -44,63 +44,46 @@ class Greeting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      condition: true
+      condition: false
     };
-    this.handleClick = this.handleClick.bind(this);
-}
+  }
 
-handleClick(condition) {
-  this.setState( {condition} )
-}
-
-  // my listeners
-  // e.stopPropagation(); 
-  // https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation
-  // continue past welcome button
-  continue() {
-    var greeting = document.getElementById('greeting');
-    var welcomeSection = document.getElementById('welcome-main');
-
-    greeting.setAttribute('hidden', 'true');
-    welcomeSection.removeAttribute('hidden');
-
-    this.state.shown = false;
+  handleClick(condition) {
+    this.setState( {condition} )
   }
 
   render() {
     const { condition } = this.state;
     return (
-      <div>
-        <section id="greeting" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-          <div className="mdl-card__supporting-text">
-            <h3>Welcome to FAV-RIDE ™</h3>
-            <p className="greeting">FAV-RIDE is the future of transportation using F-ully A-utonomous V-ehicles.</p>
-            <p className="subGreeting">Brought to you by Metro State, Fall 2021 ICS370, Team 2:</p>
-            <p>
-              Caleb Anderson:
-              <a href="mailto:caleb.anderson@my.metrostate.edu">caleb.anderson@my.metrostate.edu</a>
-            </p>
-            <p>
-              Arielle Hounton:
-              <a href="mailto:arielle.hounton@my.metrostate.edu">arielle.hounton@my.metrostate.edu</a>
-            </p>
-            <p>
-              Youssoufou Kante:
-              <a href="mailto:youssoufou.kante@my.metrostate.edu">youssoufou.kante@my.metrostate.edu</a>
-            </p>
-            <p>
-              Jonathan Bracamontes:
-              <a href="mailto:jonathan.bracamontes@my.metrostate.edu">jonathan.bracamontes@my.metrostate.edu</a>
-            </p>
-            {/* <button id="continue" className="section-button mdl-button mdl-js-button mdl-button--raised"  */}
-             <button onClick={() => this.handleClick(true)}>Condition1</button>
-             <button onClick={() => this.handleClick(false)}>Condition2</button>
-             {condition === true ? <Welcome /> : <Register />}
-
-            {/* </button> */}
-          </div>
-        </section>
-        {/* <Welcome /> */}
+      <div className="mdl-layout">
+        {condition === true ? <Welcome /> :
+          <section id="greeting" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+            <div className="mdl-card__supporting-text">
+              <h3>Welcome to FAV-RIDE ™</h3>
+              <p className="greeting">FAV-RIDE is the future of transportation using F-ully A-utonomous V-ehicles.</p>
+              <p className="subGreeting">Brought to you by Metro State, Fall 2021 ICS370, Team 2:</p>
+              <p>
+                Caleb Anderson:
+                <a href="mailto:caleb.anderson@my.metrostate.edu">caleb.anderson@my.metrostate.edu</a>
+              </p>
+              <p>
+                Arielle Hounton:
+                <a href="mailto:arielle.hounton@my.metrostate.edu">arielle.hounton@my.metrostate.edu</a>
+              </p>
+              <p>
+                Youssoufou Kante:
+                <a href="mailto:youssoufou.kante@my.metrostate.edu">youssoufou.kante@my.metrostate.edu</a>
+              </p>
+              <p>
+                Jonathan Bracamontes:
+                <a href="mailto:jonathan.bracamontes@my.metrostate.edu">jonathan.bracamontes@my.metrostate.edu</a>
+              </p>
+                <button className="section-button mdl-button mdl-js-button mdl-button--raised" 
+                  onClick={() => this.handleClick(true)}>Continue
+                </button>
+            </div>
+          </section>
+        }
       </div>
     )
   }
@@ -109,26 +92,24 @@ handleClick(condition) {
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      loggedIn: false,
+      shown: '',
+    };
   }
 
-  register() {
-    // to do
-    // var showRegisterForm = document.getElementById('showRegFormBtn');
-    var welcomeSection = document.getElementById('welcome-main');
+  // handleClick(condition) {
+  //   this.setState( {condition} )
+  // }
 
-    var registerForm = document.getElementById('regFormSection');
-    registerForm.removeAttribute('hidden');
-    welcomeSection.setAttribute('hidden', 'true');
-  }
-
-  login() {
-    // to do
-  }
-
-  render() {
-    return (
-      <div>
-        <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">   
+  choose(condition) {
+    switch (condition) {
+      case 'registration' :
+        return <Register />;
+      case 'login' :
+        return <Login />;
+      default :
+        return <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">   
           <div className="home_box">       
             <div className="hmlogo">
               <span className="material-icons">directions_car</span>
@@ -136,9 +117,9 @@ class Welcome extends React.Component {
             <div className="hmcontent">
               <p>For all your trip requiring a ride, we will get you there safely.</p>
             </div>
-            <div id="welcome" className="homeReg" hidden>
-              <button onClick={() => this.register()} id="showRegFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
-              <button onClick={() => this.login()} id="loginFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
+            <div id="welcome" className="homeReg">
+              <button onClick={() => this.setState({shown: 'registration'})} id="showRegFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
+              <button onClick={() => this.setState({shown: 'login'})} id="loginFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
             </div>
 
             {/* <!-- Welcome/Main Button Form */}
@@ -152,7 +133,15 @@ class Welcome extends React.Component {
               </div>
             </div>
           </div>
-        </section>
+        </section>;
+    }
+  }
+
+  render() {
+    const condition = this.state.shown;
+    return (
+      <div className="mdl-layout">
+        { this.choose(condition) }
       </div>
     )
   }
@@ -165,7 +154,7 @@ class Register extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="mdl-layout">
         <section id="regFormSection" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
           <div className="mdl-card__supporting-text">
             <h3>Create Account</h3>
@@ -207,7 +196,35 @@ class Register extends React.Component {
       </div>
     )
   }
+}
 
+class Login extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <section id="login" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+        <div className="mdl-card__supporting-text">
+          <h3>Login</h3>
+          <form action="#">
+            <div id="name">
+              <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input id="loginUsername" className="mdl-textfield__input" type="text" required />
+                <label className="mdl-textfield__label" htmlFor="username">Email / Username</label>
+              </div>
+              <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input id="loginPass" className="mdl-textfield__input" type="password" required />
+                <label className="mdl-textfield__label" htmlFor="loginPass">Password</label>
+              </div>
+            </div>
+            <button id="loginBtn" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+          </form>
+        </div>
+      </section>
+    )
+  }
 }
 
 const domContainer = document.querySelector('#root');
