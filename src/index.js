@@ -136,22 +136,22 @@ function authStateObserver(user) {
     signInButtonElement.removeAttribute('hidden');
 
     // main welcome section
-    welcomeSection.setAttribute('hidden', 'true');              // hide main welcome section when logged out
+    // welcomeSection.setAttribute('hidden', 'true');              // hide main welcome section when logged out
     // hide main options
-    mainButtons.setAttribute('hidden', 'true');
+    // mainButtons.setAttribute('hidden', 'true');
     // show welcome buttons
-    welcomeButtons.removeAttribute('hidden');
+    // welcomeButtons.removeAttribute('hidden');
 
     // welcome when logging out
     if(greeting.getAttribute('hidden') != null) {               // if greeting is hidden
       greeting.removeAttribute('hidden');                       // show greeting
     } else {                                                    // else
-      welcomeSection.setAttribute('hidden', 'true');            // hide welcome section
+      // welcomeSection.setAttribute('hidden', 'true');            // hide welcome section
     }
     
     // back to home from other pages
     loginForm.setAttribute('hidden', 'true');
-    registerForm.setAttribute('hidden', 'true');
+    // registerForm.setAttribute('hidden', 'true');
     schForm.setAttribute('hidden', 'true');
     hailForm.setAttribute('hidden', 'true');
   }
@@ -251,11 +251,11 @@ document.getElementById('home').addEventListener('click', (e) => {
 });
 
 // show login form
-showLoginForm.addEventListener('click', (e) => {
-  e.preventDefault();
-  loginForm.removeAttribute('hidden');
-  welcomeSection.setAttribute('hidden', 'true');
-});
+// showLoginForm.addEventListener('click', (e) => {
+//   e.preventDefault();
+//   loginForm.removeAttribute('hidden');
+//   welcomeSection.setAttribute('hidden', 'true');
+// });
 // login event listener
 document.getElementById('loginBtn').addEventListener('click', (e) => {
   e.preventDefault();
@@ -268,40 +268,40 @@ document.getElementById('loginBtn').addEventListener('click', (e) => {
 });
 
 // show registration form listener
-showRegisterForm.addEventListener('click', (e) => {
-  e.preventDefault();
-  registerForm.removeAttribute('hidden');
-  welcomeSection.setAttribute('hidden', 'true');
-});
+// showRegisterForm.addEventListener('click', (e) => {
+//   e.preventDefault();
+//   registerForm.removeAttribute('hidden');
+//   welcomeSection.setAttribute('hidden', 'true');
+// });
 // register event click listener
-document.getElementById('registerBtn').addEventListener('click', (e) => {
-  e.preventDefault();
-  let regEmail = document.getElementById('regEmail').value;
-  let regPass = document.getElementById('regPass').value;
-  let fName = document.getElementById('first-name').value;
-  let lName = document.getElementById('last-name').value;
+// document.getElementById('registerBtn').addEventListener('click', (e) => {
+//   e.preventDefault();
+//   let regEmail = document.getElementById('regEmail').value;
+//   let regPass = document.getElementById('regPass').value;
+//   let fName = document.getElementById('first-name').value;
+//   let lName = document.getElementById('last-name').value;
   
-  // if(validateEmail(regEmail)) {
-  if (regEmail && regPass && fName && lName) {
-    if(regPass.length > 5) {
-      createEmailUser(regEmail, regPass, fName + " " + lName);
-    } else {
-      alert("Please choose a password length of at least 6.");
-    }
-  } else {
-    alert("Please complete the form.");
-  }
-  // } else {
-  //   alert("Please use a valid email address.");
-  // }
-});
+//   // if(validateEmail(regEmail)) {
+//   if (regEmail && regPass && fName && lName) {
+//     if(regPass.length > 5) {
+//       createEmailUser(regEmail, regPass, fName + " " + lName);
+//     } else {
+//       alert("Please choose a password length of at least 6.");
+//     }
+//   } else {
+//     alert("Please complete the form.");
+//   }
+//   // } else {
+//   //   alert("Please use a valid email address.");
+//   // }
+// });
 
 // hail now form
-hailBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  hailForm.removeAttribute('hidden');
-  welcomeSection.setAttribute('hidden', 'true');
-});
+// hailBtn.addEventListener('click', (e) => {
+//   e.preventDefault();
+//   hailForm.removeAttribute('hidden');
+//   welcomeSection.setAttribute('hidden', 'true');
+// });
 hailNowBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let dropOff = document.getElementById('dropOff').value;
@@ -314,11 +314,11 @@ hailNowBtn.addEventListener('click', (e) => {
   }
 });
 // schedule form
-scheduleBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  schForm.removeAttribute('hidden');
-  welcomeSection.setAttribute('hidden', 'true');
-});
+// scheduleBtn.addEventListener('click', (e) => {
+//   e.preventDefault();
+//   schForm.removeAttribute('hidden');
+//   welcomeSection.setAttribute('hidden', 'true');
+// });
 
 // Your web app's Firebase configuration
 const firebaseApp = initializeApp(getFirebaseConfig());

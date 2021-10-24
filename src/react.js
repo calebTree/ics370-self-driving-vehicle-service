@@ -6,11 +6,17 @@ import ReactDOM from 'react-dom';
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      register: false,
+      login: false,
+      hail: false,
+      book: false
+    }
   }
 
   render() {
     return (
-      <div>
+      <div className="mdl-layout--fixed-header">
         <header className="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
           <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
             <div className="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
@@ -28,9 +34,7 @@ class App extends React.Component {
             </div>
           </div>
         </header>
-        <div>
-          <Greeting />
-        </div>
+        <Greeting />
       </div>
     )
   }
@@ -40,9 +44,14 @@ class Greeting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      shown: true,
-    }
-  }
+      condition: true
+    };
+    this.handleClick = this.handleClick.bind(this);
+}
+
+handleClick(condition) {
+  this.setState( {condition} )
+}
 
   // my listeners
   // e.stopPropagation(); 
@@ -59,6 +68,7 @@ class Greeting extends React.Component {
   }
 
   render() {
+    const { condition } = this.state;
     return (
       <div>
         <section id="greeting" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
@@ -82,13 +92,15 @@ class Greeting extends React.Component {
               Jonathan Bracamontes:
               <a href="mailto:jonathan.bracamontes@my.metrostate.edu">jonathan.bracamontes@my.metrostate.edu</a>
             </p>
-            <button id="continue" className="section-button mdl-button mdl-js-button mdl-button--raised" 
-              onClick={() => this.continue()}>Continue
-            </button>
+            {/* <button id="continue" className="section-button mdl-button mdl-js-button mdl-button--raised"  */}
+             <button onClick={() => this.handleClick(true)}>Condition1</button>
+             <button onClick={() => this.handleClick(false)}>Condition2</button>
+             {condition === true ? <Welcome /> : <Register />}
+
+            {/* </button> */}
           </div>
         </section>
-
-        <Welcome />
+        {/* <Welcome /> */}
       </div>
     )
   }
@@ -99,10 +111,24 @@ class Welcome extends React.Component {
     super(props);
   }
 
+  register() {
+    // to do
+    // var showRegisterForm = document.getElementById('showRegFormBtn');
+    var welcomeSection = document.getElementById('welcome-main');
+
+    var registerForm = document.getElementById('regFormSection');
+    registerForm.removeAttribute('hidden');
+    welcomeSection.setAttribute('hidden', 'true');
+  }
+
+  login() {
+    // to do
+  }
+
   render() {
     return (
       <div>
-        <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>   
+        <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">   
           <div className="home_box">       
             <div className="hmlogo">
               <span className="material-icons">directions_car</span>
@@ -111,8 +137,8 @@ class Welcome extends React.Component {
               <p>For all your trip requiring a ride, we will get you there safely.</p>
             </div>
             <div id="welcome" className="homeReg" hidden>
-              <button id="showRegFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
-              <button id="loginFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
+              <button onClick={() => this.register()} id="showRegFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</button>
+              <button onClick={() => this.login()} id="loginFormBtn" className="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</button>
             </div>
 
             {/* <!-- Welcome/Main Button Form */}
@@ -130,6 +156,58 @@ class Welcome extends React.Component {
       </div>
     )
   }
+}
+
+class Register extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div>
+        <section id="regFormSection" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+          <div className="mdl-card__supporting-text">
+            <h3>Create Account</h3>
+            <form id="regForm" action="#">
+              <div id="name">
+                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input id="first-name" className="mdl-textfield__input" type="text" required />
+                  <label className="mdl-textfield__label" htmlFor="first-name">First Name</label>
+                </div>
+                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input id="last-name" className="mdl-textfield__input" type="text" required />
+                  <label className="mdl-textfield__label" htmlFor="last-name">Last Name</label>
+                </div>
+              </div>
+              <div id ="contact">
+                {/* <!-- <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input id="phone" class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="mobile">
+                    <label class="mdl-textfield__label" htmlFor="phone">Mobile Phone</label>
+                  </div>
+                </div>					 --> */}
+                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input id="regEmail" className="mdl-textfield__input" type="email" required />
+                    <label className="mdl-textfield__label" htmlFor="regEmail">E-mail / Username</label>
+                  </div>
+                </div>
+                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input id="regPass" className="mdl-textfield__input" type="password" required />
+                    <label className="mdl-textfield__label" htmlFor="regPass">Password</label>
+                  </div>
+                </div>
+              </div>
+              <button id="registerBtn" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Register</button>
+            </form>
+          </div>
+        </section>
+      </div>
+    )
+  }
+
 }
 
 const domContainer = document.querySelector('#root');
