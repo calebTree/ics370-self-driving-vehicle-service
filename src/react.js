@@ -2,64 +2,88 @@
 
 import React from 'react';
 import ReactDOM, { render } from 'react-dom';
-import { BrowserRouter, Route, Link, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Link, Switch, Redirect, withRouter, Router } from "react-router-dom";
 
 // firebase
+import { withFirebase } from './components/firebase';
 import Firebase, { FirebaseContext } from './components/firebase';
+// import { AuthUserContext } from './components/session';
 
-let emulate = true;
+// let emulate = true;
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: false
+      authUser: null,
     };
   }
 
+  componentDidMount() {
+    this.listener = this.props.firebase.doAuthStateChanged(authUser => {
+      authUser
+        ? this.setState({ authUser })
+        : this.setState({ authUser: null });
+    });
+  }
+
+  componentWillUnmount() {
+    this.listener();
+  }
+
+  SignOutButton = ({ firebase }) => (
+    <button type="button" onClick={firebase.doSignOut} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+      Sign Out
+    </button>
+  ); 
+
   handleClick() {
-    console.log("you ciicked google sign in/out");
+    console.log("you ciicked google sign in");
   }
 
   render() {
+    const SignOutButton = withFirebase(this.SignOutButton);
     return (
       <div>
         <div className="mdl-layout--fixed-header">
-          <header className="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
-            <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-              <div className="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">                
-                <h1>
-                  <Link to="/"><i className="material-icons">directions_car</i> FAV-RIDE ™</Link>
-                </h1>                
-              </div>
-              <div id="user-container">
-                <div hidden id="user-pic"></div>
-                <div hidden className="user-name"></div>
-                {this.state.loggedIn ?
-                  <button onClick={() => this.handleClick()} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
-                    Sign-out
-                  </button> :
-                  <button onClick={() => this.handleClick()} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
-                    <i className="material-icons">account_circle</i>Sign-in with Google
-                  </button> 
+        <header className="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+          <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+            <div className="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">                
+              <h1>
+                <Link to="/"><i className="material-icons">directions_car</i> FAV-RIDE ™</Link>
+              </h1>                
+            </div>
+            <div id="user-container">
+              <div hidden id="user-pic"></div>
+              <div className="user-name">
+                {this.state.authUser 
+                  ? <div>{this.state.authUser.email}</div>
+                  : null
                 }
               </div>
+              {this.state.authUser 
+                ? <SignOutButton />
+                : <button onClick={() => this.handleClick()} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+                  <i className="material-icons">account_circle</i>Sign-in with Google
+                </button> 
+              }
             </div>
-          </header>
-        </div>
+          </div>
+        </header>
+      </div>
         <Switch>
-          <Route exact path="/" component={Greeting}/>
-          <Route path="/welcome" component={Welcome}/>
-          <Route path="/register" component={SignUpPage}/>
-          <Route path="/login" component={Login}/>
-          {/* <Route path="/hail" component={Hail}/>
-          <Route path="/book" component={Book}/> */}
+          <Route exact path="/" component={Greeting} />
+          <Route path="/welcome"  render={props => (<Welcome state={this.state}/>)}/>
+          <Route path="/register" component={SignUpPage} />
+          <Route path="/login" component={SignInPage}/>
           <Redirect to="/welcome" />
         </Switch>
       </div>
     )
   }
 }
+
+const App =  withRouter(withFirebase(Home));
 
 class Greeting extends React.Component {
   render() {
@@ -98,18 +122,16 @@ class Greeting extends React.Component {
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loggedIn: false
-    };
   }
 
   render() {
+    const authUser = this.props.state.authUser;
     return (
       <div className="mdl-layout">
         <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
 
           <div className="home_box">
-            {this.state.loggedIn ? 
+            {authUser ? 
                 <div id="main-buttons" className="mdl-grid">
                   <div className="mdl-typography--text-center">
                     <div className="hmcontent">
@@ -146,15 +168,13 @@ const SignUpPage = () => (
     <section className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
       <div className="mdl-card__supporting-text">
         <h3>Create Account</h3>
-        <FirebaseContext.Consumer>
-          {firebase => <SignUpForm firebase={firebase} />}
-        </FirebaseContext.Consumer>
+          <SignUpForm />
       </div>
     </section>
   </div>
 );
 
-const INITIAL_STATE = {
+const SIGN_UP_INITIAL_STATE = {
   fName: '',
   lName: '',
   email: '',
@@ -163,27 +183,27 @@ const INITIAL_STATE = {
   error: null,
 };
 
-class SignUpForm extends React.Component {
+class SignUpFormBase extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ...INITIAL_STATE
+      ...SIGN_UP_INITIAL_STATE
     };
   }
 
   onSubmit = event => {
-    const { email, passwordOne } = this.state; 
+    const { fName, email, passwordOne } = this.state; 
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
-        this.setState({ ...INITIAL_STATE });
-        console.log(authUser.email + " created");
+        console.log(this.state.email + " created");
+        this.setState({ ...SIGN_UP_INITIAL_STATE });
+        this.props.history.push('/welcome');
       })
       .catch(error => {
         this.setState({ error });
         console.log(error.message);
-      });
- 
+      }); 
     event.preventDefault();
   };
 
@@ -258,50 +278,83 @@ class SignUpForm extends React.Component {
   }
 }
 
-class Login extends React.Component {
+const SignUpForm = withRouter(withFirebase(SignUpFormBase));
+
+const SignInPage = () => (
+  <div className="mdl-layout">
+    <section id="login" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <div className="mdl-card__supporting-text">
+        <h3>Login</h3>
+        <SignInForm />
+      </div>
+    </section>
+  </div>
+);
+
+const SIGN_IN_INITIAL_STATE = {
+  email: '',
+  password: '',
+  error: null,
+};
+
+class LoginFormBase extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { ...SIGN_IN_INITIAL_STATE };
   }
 
+  onSubmit = event => {
+    const { email, password } = this.state; 
+    this.props.firebase
+      .doSignInWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log("signed in " + this.state.email);
+        this.setState({ ...SIGN_IN_INITIAL_STATE });
+        this.props.history.push('/welcome');
+      })
+      .catch(error => {
+        this.setState({ error });
+      }); 
+    event.preventDefault();
+  };
+ 
+  onChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
   render() {
+    const { email, password, error } = this.state;
+    const isInvalid = password === '' || email === '';
     return (
-      <div className="mdl-layout">
-        <section id="login" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-          <div className="mdl-card__supporting-text">
-            <h3>Login</h3>
-            <form action="#">
-              <div id="name">
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input id="loginUsername" className="mdl-textfield__input" type="text" required />
-                  <label className="mdl-textfield__label" htmlFor="username">Email / Username</label>
-                </div>
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input id="loginPass" className="mdl-textfield__input" type="password" required />
-                  <label className="mdl-textfield__label" htmlFor="loginPass">Password</label>
-                </div>
-              </div>
-              <button id="loginBtn" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
-            </form>
+      <form onSubmit={this.onSubmit}>
+        <div id="name">
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input name="email" value={email} onChange={this.onChange} className="mdl-textfield__input" type="text" required />
+            <label className="mdl-textfield__label" htmlFor="username">Email / Username</label>
           </div>
-        </section>
-      </div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input name="password" value={password} onChange={this.onChange} className="mdl-textfield__input" type="password" required />
+            <label className="mdl-textfield__label" htmlFor="loginPass">Password</label>
+          </div>
+        </div>
+        <button disabled={isInvalid} type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+        {error && <p>{error.message}</p>}
+      </form>
     )
   }
 }
 
-// const firebaseApp = initializeApp(getFirebaseConfig());
+const SignInForm = withRouter(withFirebase(LoginFormBase));
 
 // enable/disable emulate on line 20
 // if(emulate)
   // connectAuthEmulator(getAuth(), "http://localhost:9099");
 
-// initFirebaseAuth();
-
 const domContainer = document.querySelector('#root');
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>
     <BrowserRouter>
-      <Home />
+      <App />
     </BrowserRouter>
   </FirebaseContext.Provider>,
 domContainer);

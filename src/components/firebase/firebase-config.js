@@ -12,7 +12,9 @@
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from 'firebase/auth';
 
 const config = {
@@ -39,14 +41,19 @@ class Firebase {
     createUserWithEmailAndPassword(this.auth, email, password);
 
   doSignInWithEmailAndPassword = (email, password) =>
-    this.auth.signInWithEmailAndPassword(email, password);
+    signInWithEmailAndPassword(this.auth, email, password);
 
-  doSignOut = () => this.auth.signOut();
+  doSignOut = () => {
+    console.log("signed out");
+    this.auth.signOut();
+  } 
+  doAuthStateChanged = (authUser) =>
+    onAuthStateChanged(this.auth, authUser);
 
-  doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
+  // doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
  
-  doPasswordUpdate = password =>
-    this.auth.currentUser.updatePassword(password);
+  // doPasswordUpdate = password =>
+  //   this.auth.currentUser.updatePassword(password);
 }
  
 export default Firebase;
