@@ -1,31 +1,11 @@
 'use strict';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, { render } from 'react-dom';
 import { BrowserRouter, Route, Link, Switch, Redirect } from "react-router-dom";
 
 // firebase
-import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithPopup,
-  signOut,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-  connectAuthEmulator,
-} from 'firebase/auth';
-import { getFirebaseConfig } from './firebase-config.js';
-import { 
-  initFirebaseAuth, 
-  authStateObserver, 
-  userPicElement, 
-  userNameElement, 
-  signInButtonElement, 
-  signOutButtonElement 
-} from './index.js';
+import Firebase, { FirebaseContext } from './components/firebase';
 
 let emulate = true;
 
@@ -38,7 +18,7 @@ class Home extends React.Component {
   }
 
   handleClick() {
-    console.log("you ciicked a button.");
+    console.log("you ciicked google sign in/out");
   }
 
   render() {
@@ -70,7 +50,7 @@ class Home extends React.Component {
         <Switch>
           <Route exact path="/" component={Greeting}/>
           <Route path="/welcome" component={Welcome}/>
-          <Route path="/register" component={Register}/>
+          <Route path="/register" component={SignUpPage}/>
           <Route path="/login" component={Login}/>
           {/* <Route path="/hail" component={Hail}/>
           <Route path="/book" component={Book}/> */}
@@ -161,22 +141,53 @@ class Welcome extends React.Component {
   }
 }
 
-class Register extends React.Component {
+const SignUpPage = () => (
+  <div className="mdl-layout">
+    <section className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <div className="mdl-card__supporting-text">
+        <h3>Create Account</h3>
+        <FirebaseContext.Consumer>
+          {firebase => <SignUpForm firebase={firebase} />}
+        </FirebaseContext.Consumer>
+      </div>
+    </section>
+  </div>
+);
+
+const INITIAL_STATE = {
+  fName: '',
+  lName: '',
+  email: '',
+  passwordOne: '',
+  passwordTwo: '',
+  error: null,
+};
+
+class SignUpForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fName: '',
-      lName: '',
-      email: '',
-      password: '',
-      loggedIn: false
+      ...INITIAL_STATE
     };
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleInputChange(event) {
+  onSubmit = event => {
+    const { email, passwordOne } = this.state; 
+    this.props.firebase
+      .doCreateUserWithEmailAndPassword(email, passwordOne)
+      .then(authUser => {
+        this.setState({ ...INITIAL_STATE });
+        console.log(authUser.email + " created");
+      })
+      .catch(error => {
+        this.setState({ error });
+        console.log(error.message);
+      });
+ 
+    event.preventDefault();
+  };
+
+  onChange = event => {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -186,76 +197,63 @@ class Register extends React.Component {
     });
   }
 
-  handleSubmit(event) {
-    createUserWithEmailAndPassword(getAuth(), this.state.email, this.state.password)
-    .then((userCredential) => {
-      // Signed in 
-      // const user = userCredential.user;
-      updateProfile(getAuth().currentUser, {
-        displayName: this.state.fName + " " + this.state.lName,
-      }).then(() => {
-        // Profile updated!
-        initFirebaseAuth();
-        console.log("User: " + userCredential.user.displayName + " added.");
-        this.setState({loggedIn: true});
-      }).catch((error) => {
-        // An error occurred
-        console.log(error.message);
-        alert(error.message);
-      });
-    })
-    .catch((error) => {
-      // const errorCode = error.code;
-      console.log(error.message);
-      alert(error.message);
-    });
-    event.preventDefault();
-  }
-
   render() {
-    if(this.state.loggedIn)
-      return <Redirect to="/welcome" />;
+    const {
+      fName,
+      lName,
+      email,
+      passwordOne,
+      passwordTwo,
+      error,
+    } = this.state;
+
+    const isInvalid =
+    passwordOne !== passwordTwo ||
+    passwordOne === '' ||
+    email === '' ||
+    fName === '' || lName === '';
+
     return (
-      <div className="mdl-layout">
-        <section id="regFormSection" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-          <div className="mdl-card__supporting-text">
-            <h3>Create Account</h3>
-            <form id="regForm" onSubmit={this.handleSubmit}>
-              <div id="name">
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input name="fName" className="mdl-textfield__input" type="text" value={this.state.fName} onChange={this.handleInputChange} required />
-                  <label className="mdl-textfield__label" htmlFor="first-name">First Name</label>
-                </div>
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input name="lName" className="mdl-textfield__input" type="text" value={this.state.lName} onChange={this.handleInputChange} required />
-                  <label className="mdl-textfield__label" htmlFor="last-name">Last Name</label>
-                </div>
-              </div>
-              <div id ="contact">
-                {/* <!-- <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input id="phone" class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="mobile">
-                    <label class="mdl-textfield__label" htmlFor="phone">Mobile Phone</label>
-                  </div>
-                </div>					 --> */}
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input name="email" className="mdl-textfield__input" type="email" value={this.state.email} onChange={this.handleInputChange} required />
-                    <label className="mdl-textfield__label" htmlFor="regEmail">E-mail / Username</label>
-                  </div>
-                </div>
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input name="password" className="mdl-textfield__input" type="password" value={this.state.password} onChange={this.handleInputChange} required />
-                    <label className="mdl-textfield__label" htmlFor="regPass">Password</label>
-                  </div>
-                </div>
-              </div>
-              <button className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Register</button>
-            </form>
+      <form onSubmit={this.onSubmit}>
+        <div id="name">
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input name="fName" className="mdl-textfield__input" type="text" value={fName} onChange={this.onChange} required />
+            <label className="mdl-textfield__label" htmlFor="first-name">First Name</label>
           </div>
-        </section>
-      </div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input name="lName" className="mdl-textfield__input" type="text" value={lName} onChange={this.onChange} required />
+            <label className="mdl-textfield__label" htmlFor="last-name">Last Name</label>
+          </div>
+        </div>
+        <div id ="contact">
+          {/* <!-- <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input id="phone" class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="mobile">
+              <label class="mdl-textfield__label" htmlFor="phone">Mobile Phone</label>
+            </div>
+          </div>					 --> */}
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input name="email" className="mdl-textfield__input" type="email" value={email} onChange={this.onChange} required />
+              <label className="mdl-textfield__label" htmlFor="regEmail">E-mail / Username</label>
+            </div>
+          </div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input name="passwordOne" className="mdl-textfield__input" type="password" value={passwordOne} onChange={this.onChange} required />
+              <label className="mdl-textfield__label" htmlFor="regPass">Password</label>
+            </div>
+          </div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input name="passwordTwo" className="mdl-textfield__input" type="password" value={passwordTwo} onChange={this.onChange} required />
+              <label className="mdl-textfield__label" htmlFor="regPass">Password</label>
+            </div>
+          </div>
+        </div>
+        <button disabled={isInvalid} type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Register</button>
+        {error && <p>{error.message}</p>}
+      </form>
     )
   }
 }
@@ -294,14 +292,16 @@ class Login extends React.Component {
 // const firebaseApp = initializeApp(getFirebaseConfig());
 
 // enable/disable emulate on line 20
-if(emulate)
-  connectAuthEmulator(getAuth(), "http://localhost:9099");
+// if(emulate)
+  // connectAuthEmulator(getAuth(), "http://localhost:9099");
 
 // initFirebaseAuth();
 
 const domContainer = document.querySelector('#root');
 ReactDOM.render(
-  <BrowserRouter>
-    <Home />
-  </BrowserRouter>,
+  <FirebaseContext.Provider value={new Firebase()}>
+    <BrowserRouter>
+      <Home />
+    </BrowserRouter>
+  </FirebaseContext.Provider>,
 domContainer);

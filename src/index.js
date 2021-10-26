@@ -15,37 +15,37 @@ import {
   connectAuthEmulator,
 } from 'firebase/auth';
 
-import { getFirebaseConfig } from './firebase-config.js';
+// import { getFirebaseConfig } from './firebase-config.js';
 
 let emulate = true;
 // const auth = getAuth();
 
 // email password authentication
-// function createEmailUser(email, password, displayName) {
-//   createUserWithEmailAndPassword(getAuth(), email, password)
-//     .then((userCredential) => {
-//       // Signed in 
-//       // const user = userCredential.user;
-//       updateProfile(getAuth().currentUser, {
-//         displayName: displayName,
-//       }).then(() => {
-//         // Profile updated!
-//         initFirebaseAuth();
-//         welcomeSection.removeAttribute('hidden');
-//         registerForm.setAttribute('hidden', 'true');
-//         console.log("User: " + userCredential.user.displayName + " added.");
-//       }).catch((error) => {
-//         // An error occurred
-//         console.log(error.message);
-//         alert(error.message);
-//       });
-//     })
-//     .catch((error) => {
-//       // const errorCode = error.code;
-//       console.log(error.message);
-//       alert(error.message);
-//     });
-// }
+function createEmailUser(email, password, displayName) {
+  createUserWithEmailAndPassword(getAuth(), email, password)
+    .then((userCredential) => {
+      // Signed in 
+      // const user = userCredential.user;
+      updateProfile(getAuth().currentUser, {
+        displayName: displayName,
+      }).then(() => {
+        // Profile updated!
+        initFirebaseAuth();
+        welcomeSection.removeAttribute('hidden');
+        registerForm.setAttribute('hidden', 'true');
+        console.log("User: " + userCredential.user.displayName + " added.");
+      }).catch((error) => {
+        // An error occurred
+        console.log(error.message);
+        alert(error.message);
+      });
+    })
+    .catch((error) => {
+      // const errorCode = error.code;
+      console.log(error.message);
+      alert(error.message);
+    });
+}
 
 function loginEmailUser(email, password) {
   signInWithEmailAndPassword(getAuth(), email, password)
@@ -82,7 +82,7 @@ function signOutUser() {
 }
 
 // Initialize firebase auth
-export function initFirebaseAuth() {
+function initFirebaseAuth() {
   // Listen to auth state changes.
   onAuthStateChanged(getAuth(), authStateObserver);
 }
@@ -103,37 +103,37 @@ function getUserName() {
 // }
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
-export function authStateObserver(user) {
+function authStateObserver(user) {
   if (user) { // User is signed in!
   // Get the signed-in user's profile pic and name.
   var profilePicUrl = getProfilePicUrl();
   var userName = getUserName();
 
   // Set the user's profile pic and name.
-  // userPicElement.style.backgroundImage = 'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
+  userPicElement.style.backgroundImage = 'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
   userNameElement[0].textContent = userName;
-  // userNameElement[1].textContent = userName;
+  userNameElement[1].textContent = userName;
 
   // Show user's profile and sign-out button.
   userNameElement[0].removeAttribute('hidden');
-  // userNameElement[1].removeAttribute('hidden');
-  // userPicElement.removeAttribute('hidden');
-  // signOutButtonElement.removeAttribute('hidden');
+  userNameElement[1].removeAttribute('hidden');
+  userPicElement.removeAttribute('hidden');
+  signOutButtonElement.removeAttribute('hidden');
   // Hide sign-in button.
-  // signInButtonElement.setAttribute('hidden', 'true');
+  signInButtonElement.setAttribute('hidden', 'true');
   
   // Show main options
-  // mainButtons.removeAttribute('hidden');
+  mainButtons.removeAttribute('hidden');
   // hide welcome buttons
-  // welcomeButtons.setAttribute('hidden', 'true');
+  welcomeButtons.setAttribute('hidden', 'true');
 
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
     userNameElement[0].setAttribute('hidden', 'true');
-    // userPicElement.setAttribute('hidden', 'true');
-    // signOutButtonElement.setAttribute('hidden', 'true');
+    userPicElement.setAttribute('hidden', 'true');
+    signOutButtonElement.setAttribute('hidden', 'true');
     // Show sign-in button.
-    // signInButtonElement.removeAttribute('hidden');
+    signInButtonElement.removeAttribute('hidden');
 
     // main welcome section
     // welcomeSection.setAttribute('hidden', 'true');              // hide main welcome section when logged out
@@ -143,17 +143,17 @@ export function authStateObserver(user) {
     // welcomeButtons.removeAttribute('hidden');
 
     // welcome when logging out
-    // if(greeting.getAttribute('hidden') != null) {               // if greeting is hidden
-    //   greeting.removeAttribute('hidden');                       // show greeting
-    // } else {                                                    // else
-    //   welcomeSection.setAttribute('hidden', 'true');            // hide welcome section
-    // }
+    if(greeting.getAttribute('hidden') != null) {               // if greeting is hidden
+      greeting.removeAttribute('hidden');                       // show greeting
+    } else {                                                    // else
+      // welcomeSection.setAttribute('hidden', 'true');            // hide welcome section
+    }
     
     // back to home from other pages
     // loginForm.setAttribute('hidden', 'true');
     // registerForm.setAttribute('hidden', 'true');
-    // schForm.setAttribute('hidden', 'true');
-    // hailForm.setAttribute('hidden', 'true');
+    schForm.setAttribute('hidden', 'true');
+    hailForm.setAttribute('hidden', 'true');
   }
 }
 
@@ -194,10 +194,10 @@ function progress() {
 }
 
 // Shortcuts to DOM Elements.
-export var userPicElement = document.getElementById('user-pic');
-export var userNameElement = document.getElementsByClassName('user-name');
-export var signInButtonElement = document.getElementById('sign-in');
-export var signOutButtonElement = document.getElementById('sign-out');
+var userPicElement = document.getElementById('user-pic');
+var userNameElement = document.getElementsByClassName('user-name');
+var signInButtonElement = document.getElementById('sign-in');
+var signOutButtonElement = document.getElementById('sign-out');
 
 //  var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 
@@ -232,7 +232,30 @@ var greeting = document.getElementById('greeting');
 // my listeners
 // e.stopPropagation(); 
 // https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation
+// continue past welcome button
+// continueBtn.addEventListener('click', (e) => {
+//   e.preventDefault();
+//   greeting.setAttribute('hidden', 'true');
+//   welcomeSection.removeAttribute('hidden');
+// });
 
+// home button
+// document.getElementById('home').addEventListener('click', (e) => {
+//   e.preventDefault();
+//   loginForm.setAttribute('hidden', 'true');
+//   registerForm.setAttribute('hidden', 'true');
+//   schForm.setAttribute('hidden', 'true');
+//   hailForm.setAttribute('hidden', 'true');
+//   greeting.setAttribute('hidden', 'true');
+//   welcomeSection.removeAttribute('hidden');
+// });
+
+// show login form
+// showLoginForm.addEventListener('click', (e) => {
+//   e.preventDefault();
+//   loginForm.removeAttribute('hidden');
+//   welcomeSection.setAttribute('hidden', 'true');
+// });
 // login event listener
 // document.getElementById('loginBtn').addEventListener('click', (e) => {
 //   e.preventDefault();
@@ -244,6 +267,12 @@ var greeting = document.getElementById('greeting');
 //   alert("Please complete the form.");
 // });
 
+// show registration form listener
+// showRegisterForm.addEventListener('click', (e) => {
+//   e.preventDefault();
+//   registerForm.removeAttribute('hidden');
+//   welcomeSection.setAttribute('hidden', 'true');
+// });
 // register event click listener
 // document.getElementById('registerBtn').addEventListener('click', (e) => {
 //   e.preventDefault();
@@ -292,6 +321,10 @@ hailNowBtn.addEventListener('click', (e) => {
 // });
 
 // Your web app's Firebase configuration
-const firebaseApp = initializeApp(getFirebaseConfig());
+// const firebaseApp = initializeApp(getFirebaseConfig());
 
-initFirebaseAuth();
+// enable/disable emulate on line 20
+// if(emulate)
+//   connectAuthEmulator(getAuth(), "http://localhost:9099");
+
+// initFirebaseAuth();
