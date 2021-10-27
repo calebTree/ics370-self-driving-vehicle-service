@@ -1,330 +1,392 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+'use strict';
 
-import {
-  getAuth,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithPopup,
-  signOut,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-  connectAuthEmulator,
-} from 'firebase/auth';
+import React from 'react';
+import ReactDOM, { render } from 'react-dom';
+import { BrowserRouter, Route, Link, Switch, Redirect, withRouter, Router } from "react-router-dom";
 
-// import { getFirebaseConfig } from './firebase-config.js';
+// firebase
+import { withFirebase } from './components/firebase';
+import Firebase, { FirebaseContext } from './components/firebase';
+// import { AuthUserContext } from './components/session';
 
-let emulate = true;
-// const auth = getAuth();
-
-// email password authentication
-function createEmailUser(email, password, displayName) {
-  createUserWithEmailAndPassword(getAuth(), email, password)
-    .then((userCredential) => {
-      // Signed in 
-      // const user = userCredential.user;
-      updateProfile(getAuth().currentUser, {
-        displayName: displayName,
-      }).then(() => {
-        // Profile updated!
-        initFirebaseAuth();
-        welcomeSection.removeAttribute('hidden');
-        registerForm.setAttribute('hidden', 'true');
-        console.log("User: " + userCredential.user.displayName + " added.");
-      }).catch((error) => {
-        // An error occurred
-        console.log(error.message);
-        alert(error.message);
-      });
-    })
-    .catch((error) => {
-      // const errorCode = error.code;
-      console.log(error.message);
-      alert(error.message);
-    });
-}
-
-function loginEmailUser(email, password) {
-  signInWithEmailAndPassword(getAuth(), email, password)
-  .then((userCredential) => {
-    // Signed in 
-    // const user = userCredential.user;
-    welcomeSection.removeAttribute('hidden');
-    loginForm.setAttribute('hidden', 'true');
-  })
-  .catch((error) => {
-    // const errorCode = error.code;
-    console.log(error.message);
-    alert(error.message);
-  });
-}
-
-// Signs-in FAV-RIDE
-async function signIn() {
-  // Sign in Firebase using popup auth and Google as the identity provider.
-  var provider = new GoogleAuthProvider();
-  await signInWithPopup(getAuth(), provider);
-  
-  // go back home
-  loginForm.setAttribute('hidden', 'true');
-  registerForm.setAttribute('hidden', 'true');
-  greeting.setAttribute('hidden', 'true');
-  welcomeSection.removeAttribute('hidden');
-}
-
-// Signs-out of FAV-RIDE.
-function signOutUser() {
-  // Sign out of Firebase.
-  signOut(getAuth());
-}
-
-// Initialize firebase auth
-function initFirebaseAuth() {
-  // Listen to auth state changes.
-  onAuthStateChanged(getAuth(), authStateObserver);
-}
-
-// Returns the signed-in user's profile Pic URL.
-function getProfilePicUrl() {
-  return getAuth().currentUser.photoURL || '/images/profile_placeholder.png';
-}
-
-// Returns the signed-in user's display name.
-function getUserName() {
-  return getAuth().currentUser.displayName;
-}
-
-// Returns true if a user is signed-in.
-// function isUserSignedIn() {
-//   return !!getAuth().currentUser;
-// }
-
-// Triggers when the auth state change for instance when the user signs-in or signs-out.
-function authStateObserver(user) {
-  if (user) { // User is signed in!
-  // Get the signed-in user's profile pic and name.
-  var profilePicUrl = getProfilePicUrl();
-  var userName = getUserName();
-
-  // Set the user's profile pic and name.
-  userPicElement.style.backgroundImage = 'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
-  userNameElement[0].textContent = userName;
-  userNameElement[1].textContent = userName;
-
-  // Show user's profile and sign-out button.
-  userNameElement[0].removeAttribute('hidden');
-  userNameElement[1].removeAttribute('hidden');
-  userPicElement.removeAttribute('hidden');
-  signOutButtonElement.removeAttribute('hidden');
-  // Hide sign-in button.
-  signInButtonElement.setAttribute('hidden', 'true');
-  
-  // Show main options
-  mainButtons.removeAttribute('hidden');
-  // hide welcome buttons
-  welcomeButtons.setAttribute('hidden', 'true');
-
-  } else { // User is signed out!
-    // Hide user's profile and sign-out button.
-    userNameElement[0].setAttribute('hidden', 'true');
-    userPicElement.setAttribute('hidden', 'true');
-    signOutButtonElement.setAttribute('hidden', 'true');
-    // Show sign-in button.
-    signInButtonElement.removeAttribute('hidden');
-
-    // main welcome section
-    // welcomeSection.setAttribute('hidden', 'true');              // hide main welcome section when logged out
-    // hide main options
-    // mainButtons.setAttribute('hidden', 'true');
-    // show welcome buttons
-    // welcomeButtons.removeAttribute('hidden');
-
-    // welcome when logging out
-    if(greeting.getAttribute('hidden') != null) {               // if greeting is hidden
-      greeting.removeAttribute('hidden');                       // show greeting
-    } else {                                                    // else
-      // welcomeSection.setAttribute('hidden', 'true');            // hide welcome section
-    }
-    
-    // back to home from other pages
-    // loginForm.setAttribute('hidden', 'true');
-    // registerForm.setAttribute('hidden', 'true');
-    schForm.setAttribute('hidden', 'true');
-    hailForm.setAttribute('hidden', 'true');
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      authUser: null,
+    };
   }
-}
 
-// Adds a size to Google Profile pics URLs.
-function addSizeToGoogleProfilePic(url) {
-  if (url.indexOf('googleusercontent.com') !== -1 && url.indexOf('?') === -1) {
-    return url + '?sz=150';
+  getProfilePicUrl() {
+    return this.state.authUser.photoURL || '/images/profile_placeholder.png'; 
   }
-  return url;
-}
 
-// validate email
-// https://www.w3docs.com/snippets/javascript/how-to-validate-an-e-mail-using-javascript.html
-// function validateEmail(email) {
-//   const res = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//   return res.test(String(email).toLowerCase());
-// }
-
-// progress bar
-var i = 0;
-function progress() {
-  if (i == 0) {
-    i = 1;
-    var elem = document.getElementById("myBar");
-    var width = 1;
-    var id = setInterval(frame, 50);
-    function frame() {
-      if (width >= 100) {
-        clearInterval(id);
-        // i = 0;
-        alert('Your ride has arrived!');
-      } else {
-        width++;
-        elem.style.width = width + "%";
+  profileElement = () => {
+    function addSizeToGoogleProfilePic(url) {
+      if (url.indexOf('googleusercontent.com') !== -1 && url.indexOf('?') === -1) {
+        return url + '?sz=150';
       }
-    }
+      return url;
+    }    
+    return (
+      <div id="user-pic" 
+        style= {{ backgroundImage: `url(${addSizeToGoogleProfilePic(this.getProfilePicUrl())})` }}
+      ></div>
+    )
+  }
+
+  getUserName() {
+    return this.state.authUser.displayName;
+  }
+
+  componentDidMount() {
+    this.listener = this.props.firebase.doAuthStateChanged(authUser => {
+      authUser
+        ? this.setState({ authUser })
+        : this.setState({ authUser: null });
+    });    
+  }
+
+  componentWillUnmount() {
+    this.listener();
+  }
+
+  SignOutButton = ({ firebase }) => (
+    <button type="button" onClick={firebase.doSignOut} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+      Sign Out
+    </button>
+  );
+
+  GoogleSignIn = async () => {
+    await this.props.firebase.doGoogleSignIn();
+    this.props.history.push('/welcome');
+  }
+
+  GoogleSignInButton = () => (
+    <button onClick={this.GoogleSignIn} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+      <i className="material-icons">account_circle</i>Sign-in with Google
+    </button>
+  );
+
+  render() {
+    const SignOutButton = withFirebase(this.SignOutButton);
+    const GoogleSignInButton = withFirebase(this.GoogleSignInButton);
+    const ProfilePic = this.state.authUser ? this.profileElement : null;
+    return (
+      <div>
+        <div className="mdl-layout--fixed-header">
+        <header className="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+          <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+            <div className="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">                
+              <h1>
+                <Link to="/"><i className="material-icons">directions_car</i> FAV-RIDE ™</Link>
+              </h1>                
+            </div>
+            <div id="user-container">
+              { this.state.authUser ? <ProfilePic /> : null }
+              <div className="user-name">
+                {this.state.authUser 
+                  ? <div>{this.state.authUser.displayName}</div>
+                  : null
+                }
+              </div>
+              {this.state.authUser 
+                ? <SignOutButton />
+                : <GoogleSignInButton />
+              }
+            </div>
+          </div>
+        </header>
+      </div>
+        <Switch>
+          <Route exact path="/" component={Greeting} />
+          <Route path="/welcome"  render={props => (<Welcome state={this.state}/>)}/>
+          <Route path="/register" component={SignUpPage} />
+          <Route path="/login" component={SignInPage}/>
+          <Redirect to="/welcome" />
+        </Switch>
+      </div>
+    )
   }
 }
 
-// Shortcuts to DOM Elements.
-var userPicElement = document.getElementById('user-pic');
-var userNameElement = document.getElementsByClassName('user-name');
-var signInButtonElement = document.getElementById('sign-in');
-var signOutButtonElement = document.getElementById('sign-out');
+const App =  withRouter(withFirebase(Home));
 
-//  var signInSnackbarElement = document.getElementById('must-signin-snackbar');
-
-// my DOM
-// welcome
-var welcomeSection = document.getElementById('welcome-main');
-// logged-in/out
-var mainButtons = document.getElementById('main-buttons');
-// guest
-var welcomeButtons = document.getElementById('welcome');
-
-// register form
-var showRegisterForm = document.getElementById('showRegFormBtn');
-var registerForm = document.getElementById('regFormSection');
-
-// login form
-var showLoginForm = document.getElementById('loginFormBtn');
-var loginForm = document.getElementById('login');
-
-// schedule / hail form
-var schForm = document.getElementById('scheduleForm');
-var hailForm = document.getElementById('hailForm');
-var hailNowBtn = document.getElementById('hailNowBtn');
-
-// var continueBtn = document.getElementById('continue');
-var greeting = document.getElementById('greeting');
-
-// google login/out buttons
-// signOutButtonElement.addEventListener('click', signOutUser);
-// signInButtonElement.addEventListener('click', signIn);
-
-// my listeners
-// e.stopPropagation(); 
-// https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation
-// continue past welcome button
-// continueBtn.addEventListener('click', (e) => {
-//   e.preventDefault();
-//   greeting.setAttribute('hidden', 'true');
-//   welcomeSection.removeAttribute('hidden');
-// });
-
-// home button
-// document.getElementById('home').addEventListener('click', (e) => {
-//   e.preventDefault();
-//   loginForm.setAttribute('hidden', 'true');
-//   registerForm.setAttribute('hidden', 'true');
-//   schForm.setAttribute('hidden', 'true');
-//   hailForm.setAttribute('hidden', 'true');
-//   greeting.setAttribute('hidden', 'true');
-//   welcomeSection.removeAttribute('hidden');
-// });
-
-// show login form
-// showLoginForm.addEventListener('click', (e) => {
-//   e.preventDefault();
-//   loginForm.removeAttribute('hidden');
-//   welcomeSection.setAttribute('hidden', 'true');
-// });
-// login event listener
-// document.getElementById('loginBtn').addEventListener('click', (e) => {
-//   e.preventDefault();
-//   let email = document.getElementById('loginUsername').value;
-//   let loginPass = document.getElementById('loginPass').value;
-//   if(email && loginPass) {
-//     loginEmailUser(email, loginPass);
-//   } else
-//   alert("Please complete the form.");
-// });
-
-// show registration form listener
-// showRegisterForm.addEventListener('click', (e) => {
-//   e.preventDefault();
-//   registerForm.removeAttribute('hidden');
-//   welcomeSection.setAttribute('hidden', 'true');
-// });
-// register event click listener
-// document.getElementById('registerBtn').addEventListener('click', (e) => {
-//   e.preventDefault();
-//   let regEmail = document.getElementById('regEmail').value;
-//   let regPass = document.getElementById('regPass').value;
-//   let fName = document.getElementById('first-name').value;
-//   let lName = document.getElementById('last-name').value;
-  
-//   // if(validateEmail(regEmail)) {
-//   if (regEmail && regPass && fName && lName) {
-//     if(regPass.length > 5) {
-//       createEmailUser(regEmail, regPass, fName + " " + lName);
-//     } else {
-//       alert("Please choose a password length of at least 6.");
-//     }
-//   } else {
-//     alert("Please complete the form.");
-//   }
-//   // } else {
-//   //   alert("Please use a valid email address.");
-//   // }
-// });
-
-// hail now form
-// hailBtn.addEventListener('click', (e) => {
-//   e.preventDefault();
-//   hailForm.removeAttribute('hidden');
-//   welcomeSection.setAttribute('hidden', 'true');
-// });
-hailNowBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  let dropOff = document.getElementById('dropOff').value;
-  if(dropOff) {
-    document.getElementById('destination').innerHTML = "Sending an FAV to: " + dropOff;
-    document.getElementById('myBar').removeAttribute('hidden');
-    progress();
-  } else {
-    alert("Please enter a drop-off location.");
+class Greeting extends React.Component {
+  render() {
+    return (
+      <div className="mdl-layout">
+        <section id="greeting" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+          <div className="mdl-card__supporting-text">
+            <h3>Welcome to FAV-RIDE ™</h3>
+            <p className="greeting">FAV-RIDE is the future of transportation using F-ully A-utonomous V-ehicles.</p>
+            <p className="subGreeting">Brought to you by Metro State, Fall 2021 ICS370, Team 2:</p>
+            <br />
+              Caleb Anderson:
+              <a href="mailto:caleb.anderson@my.metrostate.edu">caleb.anderson@my.metrostate.edu</a>
+            <br />
+              Arielle Hounton:
+              <a href="mailto:arielle.hounton@my.metrostate.edu">arielle.hounton@my.metrostate.edu</a>
+            <br />
+              Youssoufou Kante:
+              <a href="mailto:youssoufou.kante@my.metrostate.edu">youssoufou.kante@my.metrostate.edu</a>
+            <br />
+              Jonathan Bracamontes:
+              <a href="mailto:jonathan.bracamontes@my.metrostate.edu">jonathan.bracamontes@my.metrostate.edu</a>
+            <br />
+            <br />
+            <br />
+            <div>
+              <Link to="/welcome" className="section-button mdl-button mdl-js-button mdl-button--raised" >Continue</Link>
+            </div>
+          </div>
+        </section>
+      </div>
+    )
   }
-});
-// schedule form
-// scheduleBtn.addEventListener('click', (e) => {
-//   e.preventDefault();
-//   schForm.removeAttribute('hidden');
-//   welcomeSection.setAttribute('hidden', 'true');
-// });
+}
 
-// Your web app's Firebase configuration
-// const firebaseApp = initializeApp(getFirebaseConfig());
+class Welcome extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-// enable/disable emulate on line 20
-// if(emulate)
-//   connectAuthEmulator(getAuth(), "http://localhost:9099");
+  render() {
+    const authUser = this.props.state.authUser;
+    return (
+      <div className="mdl-layout">
+        <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
 
-// initFirebaseAuth();
+          <div className="home_box">
+            { authUser ? 
+                <div id="main-buttons" className="mdl-grid">
+                  <div className="mdl-typography--text-center">
+                    <div className="hmcontent">
+                      <h2>Welcome Back <span hidden className="user-name"></span></h2>
+                    </div>
+                    <Link to='/hail' className="section-button mdl-button mdl-button--raised mdl-button--accent">Book Now <i className="material-icons">hail</i></Link>
+                    <Link to='/book' className="section-button mdl-button mdl-button--raised mdl-button--colored">Book Later <i className="material-icons">departure_board</i></Link>
+                  </div>
+                </div>
+              :
+              <div>
+                <div className="hmlogo">
+                  <span className="material-icons">directions_car</span>
+                </div>
+                <div className="hmcontent">
+                  <p>For all your trips requiring a ride, we will get you there safely.</p>
+                </div>
+                <div id="welcome" className="homeReg">
+                  <Link to='/register' className="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</Link>
+                  <Link to='/login' className="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</Link>
+                </div>
+              </div>
+            }
+          </div>
+
+        </section>
+      </div>
+    )
+  }
+}
+
+const SignUpPage = () => (
+  <div className="mdl-layout">
+    <section className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <div className="mdl-card__supporting-text">
+        <h3>Create Account</h3>
+          <SignUpForm />
+      </div>
+    </section>
+  </div>
+);
+
+const SIGN_UP_INITIAL_STATE = {
+  fName: '',
+  lName: '',
+  email: '',
+  passwordOne: '',
+  passwordTwo: '',
+  error: null,
+};
+
+class SignUpFormBase extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ...SIGN_UP_INITIAL_STATE
+    };
+  }
+
+  // load mdl-js* classes
+  componentDidMount() {
+    componentHandler.upgradeDom();
+  }
+
+  onSubmit = event => {
+    const { fName, lName, email, passwordOne } = this.state; 
+    this.props.firebase
+      .doCreateUserWithEmailAndPassword(email, passwordOne)
+      .then(authUser => {
+        // console.log(authUser);
+        this.setState({ ...SIGN_UP_INITIAL_STATE });
+        this.props.history.push('/welcome');
+      })
+      .catch(error => {
+        this.setState({ error });
+        console.log(error.message);
+      }); 
+    event.preventDefault();
+  };
+
+  onChange = event => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  render() {
+    const {
+      fName,
+      lName,
+      email,
+      passwordOne,
+      passwordTwo,
+      error,
+    } = this.state;
+
+    const isInvalid =
+    passwordOne !== passwordTwo ||
+    passwordOne === '' ||
+    email === '' ||
+    fName === '' || lName === '';
+
+    return (
+      <form onSubmit={this.onSubmit}>
+        <div id="name">
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input name="fName" className="mdl-textfield__input" type="text" value={fName} onChange={this.onChange} required />
+            <label className="mdl-textfield__label" htmlFor="first-name">First Name</label>
+          </div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input name="lName" className="mdl-textfield__input" type="text" value={lName} onChange={this.onChange} required />
+            <label className="mdl-textfield__label" htmlFor="last-name">Last Name</label>
+          </div>
+        </div>
+        <div id ="contact">
+          {/* <!-- <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input id="phone" class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="mobile">
+              <label class="mdl-textfield__label" htmlFor="phone">Mobile Phone</label>
+            </div>
+          </div>					 --> */}
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input name="email" className="mdl-textfield__input" type="email" value={email} onChange={this.onChange} required />
+              <label className="mdl-textfield__label" htmlFor="regEmail">E-mail / Username</label>
+            </div>
+          </div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input name="passwordOne" className="mdl-textfield__input" type="password" value={passwordOne} onChange={this.onChange} required />
+              <label className="mdl-textfield__label" htmlFor="regPass">Password</label>
+            </div>
+          </div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input name="passwordTwo" className="mdl-textfield__input" type="password" value={passwordTwo} onChange={this.onChange} required />
+              <label className="mdl-textfield__label" htmlFor="regPass">Veryify Password</label>
+            </div>
+          </div>
+        </div>
+        <button disabled={isInvalid} type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Register</button>
+        {error && <p>{error.message}</p>}
+      </form>
+    )
+  }
+}
+
+const SignUpForm = withRouter(withFirebase(SignUpFormBase));
+
+const SignInPage = () => (
+  <div className="mdl-layout">
+    <section id="login" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <div className="mdl-card__supporting-text">
+        <h3>Login</h3>
+        <SignInForm />
+      </div>
+    </section>
+  </div>
+);
+
+const SIGN_IN_INITIAL_STATE = {
+  email: '',
+  password: '',
+  error: null,
+};
+
+class LoginFormBase extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { ...SIGN_IN_INITIAL_STATE };
+  }
+
+  componentDidMount(){
+    componentHandler.upgradeDom();
+  }
+
+  onSubmit = event => {
+    const { email, password } = this.state; 
+    this.props.firebase
+      .doSignInWithEmailAndPassword(email, password)
+      .then(() => {
+        // console.log("signed in " + this.state.email);
+        this.setState({ ...SIGN_IN_INITIAL_STATE });
+        this.props.history.push('/welcome');
+      })
+      .catch(error => {
+        this.setState({ error });
+      }); 
+    event.preventDefault();
+  };
+ 
+  onChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  render() {
+    const { email, password, error } = this.state;
+    const isInvalid = password === '' || email === '';
+    return (
+      <form onSubmit={this.onSubmit}>
+        <div id="name">
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input name="email" value={email} onChange={this.onChange} className="mdl-textfield__input" type="text" required />
+            <label className="mdl-textfield__label" htmlFor="username">Email / Username</label>
+          </div>
+          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input name="password" value={password} onChange={this.onChange} className="mdl-textfield__input" type="password" required />
+            <label className="mdl-textfield__label" htmlFor="loginPass">Password</label>
+          </div>
+        </div>
+        <button disabled={isInvalid} type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+        {error && <p>{error.message}</p>}
+      </form>
+    )
+  }
+}
+
+const SignInForm = withRouter(withFirebase(LoginFormBase));
+
+const domContainer = document.querySelector('#root');
+ReactDOM.render(
+  <FirebaseContext.Provider value={new Firebase()}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </FirebaseContext.Provider>,
+domContainer);

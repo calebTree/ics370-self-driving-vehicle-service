@@ -12,11 +12,11 @@ const appConfig = {
   ...rootConfig,
   entry: {
     main: './src/index.js',
-    react: './src/react.js'
   },
   output: {
     filename: './[name].js',
     path: path.resolve(__dirname, 'public/scripts'),
+    publicPath: '/',
     clean: true,
   },
 
@@ -26,7 +26,6 @@ const appConfig = {
             test: /\.js$/,
             loader: 'babel-loader',
             exclude: /node_modules/,
-            // exclude: /src\/index.js/
         },
       ]
     }
