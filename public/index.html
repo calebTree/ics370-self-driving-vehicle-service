@@ -11,7 +11,7 @@
     <meta name="msapplication-tap-highlight" content="no">
   
     <!-- Web Application Manifest -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/manifest.json">
   
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -49,44 +49,6 @@
 
       <div id="root" class="mdl-layout"></div>
 
-      <!-- schedule form -->
-      <section id="scheduleForm" class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid" hidden>
-        <div class="mdl-card__supporting-text">
-          <h3>Schedule a future ride</h3>
-          <form action="#">					
-            <div id ="contact">
-              <div id="phone" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input id="pickDate" class="mdl-textfield__input" type="date">
-                  <!-- <label class="mdl-textfield__label" for="sample2">Pick your ride date</label> -->
-                </div>
-              </div>
-              <div id="email" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input class="mdl-textfield__input" type="time">
-                  <!-- <label class="mdl-textfield__label" for="sample2">Enter your pick up time</label> -->
-                </div>
-              </div>
-            </div>
-            <div id="name">
-              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <select id="schServ" class="mdl-textfield__input" name="service">
-                  <option></option>
-                </select>
-                <label class="mdl-textfield__label" for="schServ">Choose your service</label>
-              </div>
-              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <select id="carType" class="mdl-textfield__input" name="carType">
-                  <option></option>							
-                </select>
-                <label class="mdl-textfield__label" for="carType">Select your luxury car</label>
-              </div>
-            </div>
-            <button class="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
-          </form>
-        </div>
-      </section>
-      
       <footer class = "mdl-mega-footer">
         <div class="mdl-cell mdl-cell--12-col mdl-typography--text-center">
           Copyright © 2021 All Rights Reserved 
@@ -96,7 +58,7 @@
     </div>
 
     <!-- This script is created by webpack -->
-    <script type="module" src="scripts/main.js"></script>
+    <script type="module" src="/scripts/main.js"></script>
 
   </body>
 </html>

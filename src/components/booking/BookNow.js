@@ -1,9 +1,25 @@
 import React from 'react';
 
-const hailNow = () => (
-    <section id="hailForm" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-        <div className="mdl-card__supporting-text">
-            <h3>Request your ride now</h3>
+const BookNowPage = () => (
+    <div className="mdl-layout">
+        <section id="hailForm" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+            <div className="mdl-card__supporting-text">
+                <h3>Book a Ride Now</h3>
+                <BookNowForm />
+            </div>
+        </section>
+    </div>
+)
+
+class BookNowForm extends React.Component {
+    
+    // load mdl-js* classes
+    componentDidMount() {
+        componentHandler.upgradeDom();
+    }
+
+    render() {
+        return (
             <form action="#">
                 <div id="name">
                     <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
@@ -30,11 +46,13 @@ const hailNow = () => (
                     </div>
                     <div id="destination"></div>
                     <div id="myProgress">
-                    <div id="myBar" hidden></div>
+                        <div id="myBar" hidden></div>
                     </div>
-                </div>					  
-                <button id="hailNowBtn" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
+                </div>
+            <button id="hailNowBtn" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
             </form>
-        </div>
-    </section>
-)
+        )
+    }
+}
+
+export default BookNowPage;

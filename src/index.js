@@ -9,6 +9,9 @@ import { withFirebase } from './components/firebase';
 import Firebase, { FirebaseContext } from './components/firebase';
 // import { AuthUserContext } from './components/session';
 
+// components
+import { BookNowPage, BookLaterPage } from './components/booking';
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -51,8 +54,13 @@ class Home extends React.Component {
     this.listener();
   }
 
-  SignOutButton = ({ firebase }) => (
-    <button type="button" onClick={firebase.doSignOut} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+  SignOut = () => {
+    this.props.firebase.doSignOut();
+    this.props.history.push('/welcome');
+  }
+
+  SignOutButton = () => (
+    <button type="button" onClick={this.SignOut} className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
       Sign Out
     </button>
   );
@@ -72,6 +80,9 @@ class Home extends React.Component {
     const SignOutButton = withFirebase(this.SignOutButton);
     const GoogleSignInButton = withFirebase(this.GoogleSignInButton);
     const ProfilePic = this.state.authUser ? this.profileElement : null;
+    const displayName = this.state.authUser 
+      ? <div>{this.state.authUser.displayName}</div>
+      : null
     return (
       <div>
         <div className="mdl-layout--fixed-header">
@@ -85,10 +96,7 @@ class Home extends React.Component {
             <div id="user-container">
               { this.state.authUser ? <ProfilePic /> : null }
               <div className="user-name">
-                {this.state.authUser 
-                  ? <div>{this.state.authUser.displayName}</div>
-                  : null
-                }
+                {displayName}
               </div>
               {this.state.authUser 
                 ? <SignOutButton />
@@ -100,10 +108,12 @@ class Home extends React.Component {
       </div>
         <Switch>
           <Route exact path="/" component={Greeting} />
-          <Route path="/welcome"  render={props => (<Welcome state={this.state}/>)}/>
+          <Route exact path="/welcome"  render={props => (<Welcome state={this.state}/>)} />
           <Route path="/register" component={SignUpPage} />
-          <Route path="/login" component={SignInPage}/>
-          <Redirect to="/welcome" />
+          <Route path="/login" component={SignInPage} />
+          <Route path="/booking/now" component={BookNowPage} />
+          <Route path="/booking/later" component={BookLaterPage} />
+          <Redirect to="/" />
         </Switch>
       </div>
     )
@@ -158,29 +168,28 @@ class Welcome extends React.Component {
         <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
 
           <div className="home_box">
-            { authUser ? 
-                <div id="main-buttons" className="mdl-grid">
+            { authUser 
+              ? <div id="main-buttons" className="mdl-grid">
                   <div className="mdl-typography--text-center">
                     <div className="hmcontent">
                       <h2>Welcome Back <span hidden className="user-name"></span></h2>
                     </div>
-                    <Link to='/hail' className="section-button mdl-button mdl-button--raised mdl-button--accent">Book Now <i className="material-icons">hail</i></Link>
-                    <Link to='/book' className="section-button mdl-button mdl-button--raised mdl-button--colored">Book Later <i className="material-icons">departure_board</i></Link>
+                    <Link to='/booking/now' className="section-button mdl-button mdl-button--raised mdl-button--accent">Book Now <i className="material-icons">hail</i></Link>
+                    <Link to='/booking/later' className="section-button mdl-button mdl-button--raised mdl-button--colored">Book Later <i className="material-icons">departure_board</i></Link>
                   </div>
                 </div>
-              :
-              <div>
-                <div className="hmlogo">
-                  <span className="material-icons">directions_car</span>
+              : <div>
+                  <div className="hmlogo">
+                    <span className="material-icons">directions_car</span>
+                  </div>
+                  <div className="hmcontent">
+                    <p>For all your trips requiring a ride, we will get you there safely.</p>
+                  </div>
+                  <div className="homeReg">
+                    <Link to='/register' className="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</Link>
+                    <Link to='/login' className="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</Link>
+                  </div>
                 </div>
-                <div className="hmcontent">
-                  <p>For all your trips requiring a ride, we will get you there safely.</p>
-                </div>
-                <div id="welcome" className="homeReg">
-                  <Link to='/register' className="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</Link>
-                  <Link to='/login' className="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</Link>
-                </div>
-              </div>
             }
           </div>
 
