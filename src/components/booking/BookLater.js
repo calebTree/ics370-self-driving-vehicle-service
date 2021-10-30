@@ -9,7 +9,7 @@ const BookLaterPage = () => (
       </div>
     </section>
   </div>
-)
+);
 
 class BookLaterForm extends React.Component {
 

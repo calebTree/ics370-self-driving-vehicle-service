@@ -15,7 +15,7 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   GoogleAuthProvider,
-  // updateProfile,
+  updateProfile,
   connectAuthEmulator,
 } from 'firebase/auth';
 
@@ -45,39 +45,6 @@ class Firebase {
   // *** Auth API ***
   doCreateUserWithEmailAndPassword = (email, password, displayName) =>
     createUserWithEmailAndPassword(this.auth, email, password);
-    // .then((userCredential) => {
-    //   // console.log("user created");
-    //   updateProfile(this.auth.currentUser, {
-    //     displayName: displayName,
-    //   }).then(() => {
-    //     // Profile updated!
-    //     // initFirebaseAuth();
-    //     console.log("User: " + userCredential.user.displayName + " added.");
-    //   }).catch((error) => {
-    //     // An error occurred
-    //     console.log(error.message);
-    //     alert(error.message);
-    //   });
-
-    // })
-    // .catch((error) => {
-    //   // An error occurred
-    //   console.log(error.message);
-    //   alert(error.message);
-    // });
-
-  // doUpdateUsername = (authUser, username) =>
-  //   updateProfile(authUser, {
-  //     displayName: username,
-  //   }).then(() => {
-  //     // Profile updated!
-  //     // initFirebaseAuth();
-  //     console.log("User: " + username + " added.");
-  //   }).catch((error) => {
-  //     // An error occurred
-  //     console.log(error.message);
-  //     alert(error.message);
-  //   });
 
   doSignInWithEmailAndPassword = (email, password) =>
     signInWithEmailAndPassword(this.auth, email, password);
@@ -96,6 +63,21 @@ class Firebase {
   doGoogleSignIn = async () => {
     var provider = new GoogleAuthProvider();
     await signInWithPopup(this.auth, provider);
+  }
+
+  doUpdateProfile = (displayName) => {
+    return new Promise((resolve, reject) => {
+    updateProfile(this.auth.currentUser, {
+        displayName: displayName,
+      }).then(() => {
+        // Profile updated!        
+        return resolve(this.auth.currentUser);
+      }).catch((error) => {
+        // An error occurred
+        console.log(error.message);
+        // reject();
+      });
+    });
   }
 
 }

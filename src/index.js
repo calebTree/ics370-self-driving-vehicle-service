@@ -7,10 +7,14 @@ import { BrowserRouter, Route, Link, Switch, Redirect, withRouter, Router } from
 // firebase
 import { withFirebase } from './components/firebase';
 import Firebase, { FirebaseContext } from './components/firebase';
-// import { AuthUserContext } from './components/session';
+import { AuthUserContext } from './components/session';
 
 // components
 import { BookNowPage, BookLaterPage } from './components/booking';
+import { AccountPage } from './components/account';
+
+// style
+import "./style/sass.scss";
 
 class Home extends React.Component {
   constructor(props) {
@@ -47,7 +51,7 @@ class Home extends React.Component {
       authUser
         ? this.setState({ authUser })
         : this.setState({ authUser: null });
-    });    
+    });
   }
 
   componentWillUnmount() {
@@ -81,7 +85,7 @@ class Home extends React.Component {
     const GoogleSignInButton = withFirebase(this.GoogleSignInButton);
     const ProfilePic = this.state.authUser ? this.profileElement : null;
     const displayName = this.state.authUser 
-      ? <div>{this.state.authUser.displayName}</div>
+      ? <div>{this.getUserName()}</div>
       : null
     return (
       <div>
@@ -94,7 +98,7 @@ class Home extends React.Component {
               </h1>                
             </div>
             <div id="user-container">
-              { this.state.authUser ? <ProfilePic /> : null }
+              { this.state.authUser ? <Link to="/account"><ProfilePic /></Link> : null }
               <div className="user-name">
                 {displayName}
               </div>
@@ -109,10 +113,12 @@ class Home extends React.Component {
         <Switch>
           <Route exact path="/" component={Greeting} />
           <Route exact path="/welcome"  render={props => (<Welcome state={this.state}/>)} />
+          {/* <Route exact path="/welcome" component={Welcome} /> */}
           <Route path="/register" component={SignUpPage} />
           <Route path="/login" component={SignInPage} />
           <Route path="/booking/now" component={BookNowPage} />
           <Route path="/booking/later" component={BookLaterPage} />
+          <Route path="/account" component={AccountPage} />
           <Redirect to="/" />
         </Switch>
       </div>
@@ -120,7 +126,7 @@ class Home extends React.Component {
   }
 }
 
-const App =  withRouter(withFirebase(Home));
+const App = withRouter(withFirebase(Home));
 
 class Greeting extends React.Component {
   render() {
@@ -166,13 +172,12 @@ class Welcome extends React.Component {
     return (
       <div className="mdl-layout">
         <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-
           <div className="home_box">
             { authUser 
               ? <div id="main-buttons" className="mdl-grid">
                   <div className="mdl-typography--text-center">
                     <div className="hmcontent">
-                      <h2>Welcome Back <span hidden className="user-name"></span></h2>
+                      <h2>Welcome Back <span className="user-name">{authUser.displayName}</span></h2>
                     </div>
                     <Link to='/booking/now' className="section-button mdl-button mdl-button--raised mdl-button--accent">Book Now <i className="material-icons">hail</i></Link>
                     <Link to='/booking/later' className="section-button mdl-button mdl-button--raised mdl-button--colored">Book Later <i className="material-icons">departure_board</i></Link>
@@ -192,7 +197,6 @@ class Welcome extends React.Component {
                 </div>
             }
           </div>
-
         </section>
       </div>
     )
@@ -271,18 +275,17 @@ class SignUpFormBase extends React.Component {
     const isInvalid =
     passwordOne !== passwordTwo ||
     passwordOne === '' ||
-    email === '' ||
-    fName === '' || lName === '';
+    email === '';
 
     return (
       <form onSubmit={this.onSubmit}>
         <div id="name">
           <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input name="fName" className="mdl-textfield__input" type="text" value={fName} onChange={this.onChange} required />
+            <input name="fName" className="mdl-textfield__input" type="text" value={fName} onChange={this.onChange} />
             <label className="mdl-textfield__label" htmlFor="first-name">First Name</label>
           </div>
           <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input name="lName" className="mdl-textfield__input" type="text" value={lName} onChange={this.onChange} required />
+            <input name="lName" className="mdl-textfield__input" type="text" value={lName} onChange={this.onChange} />
             <label className="mdl-textfield__label" htmlFor="last-name">Last Name</label>
           </div>
         </div>
