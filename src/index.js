@@ -10,8 +10,7 @@ import Firebase, { FirebaseContext } from './components/firebase';
 
 // components
 import { BookNowPage, BookLaterPage } from './components/booking';
-import { AccountPage, SignUpPage } from './components/account';
-import { SignInPage } from './components/account';
+import { AccountPage, SignUpPage, SignInPage } from './components/account';
 
 // style
 import "./style/mdc.scss";
@@ -44,7 +43,7 @@ class Home extends React.Component {
   }
 
   getUserName() {
-    return this.state.authUser.displayName;
+    return this.state.authUser && this.state.authUser.displayName;
   }
 
   componentDidMount() {
@@ -86,9 +85,8 @@ class Home extends React.Component {
     const SignOutButton = withFirebase(this.SignOutButton);
     const GoogleSignInButton = withFirebase(this.GoogleSignInButton);
     const ProfilePic = authUser ? this.profileElement : null;
-    const displayName = authUser
-      ? <div>{this.getUserName()}</div>
-      : null
+    // to-do: send this logic to a banner notification with a button to fix it.
+    const displayName = this.getUserName() ? this.getUserName() : "<-- Click here to update your display name.";
     return (
       <div>
         <div className="mdl-layout--fixed-header">
@@ -96,16 +94,17 @@ class Home extends React.Component {
             <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
               <div className="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
                 <h1>
+                  {/* home link brings user to welcome when logged in or greeting when logged out*/}
                   { authUser ? <Link to="/welcome"><i className="material-icons">directions_car</i> FAV-RIDE ™</Link> :
                   <Link to="/"><i className="material-icons">directions_car</i> FAV-RIDE ™</Link> }
                 </h1>
               </div>
               <div id="user-container">
-                {this.state.authUser ? <Link to="/account"><ProfilePic /></Link> : null}
+                { authUser ? <Link to="/account"><ProfilePic /></Link> : null}
                 <div className="user-name">
-                  {displayName}
+                  { authUser ? displayName : null }
                 </div>
-                {this.state.authUser
+                { authUser
                   ? <SignOutButton />
                   : <GoogleSignInButton />
                 }
