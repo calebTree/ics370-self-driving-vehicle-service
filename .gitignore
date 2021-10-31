@@ -67,7 +67,4 @@ node_modules/
 
 # webpack emitted files
 public/scripts
-
-# allow git clean -df
-# !.idea
-# !.settings
+styles

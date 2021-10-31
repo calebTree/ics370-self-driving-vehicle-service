@@ -13,8 +13,9 @@ import { BookNowPage, BookLaterPage } from './components/booking';
 import { AccountPage, SignUpPage } from './components/account';
 import { SignInPage } from './components/account';
 
-// scss style
+// style
 import "./style/mdc.scss";
+import "./style/custom-style.css";
 
 class Home extends React.Component {
   constructor(props) {

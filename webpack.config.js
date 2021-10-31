@@ -1,4 +1,5 @@
 const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const rootConfig = {
   mode: 'development',
@@ -19,24 +20,36 @@ const appConfig = {
     publicPath: '/',
     clean: true,
   },
-
+  plugins: [new MiniCssExtractPlugin({
+    filename: "../styles/[name].css",
+  })],
   module: {
     rules: [
+      {
+        test: /\.(png|jpe?g|gif|webp|svg)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: '../images/[base]'
+        },
+      },
         {
             test: /\.js$/,
             loader: 'babel-loader',
             exclude: /node_modules/,
         },
         {
-          test: /\.s[ac]ss$/i,
-          use: [
-            // Creates `style` nodes from JS strings
-            "style-loader",
-            // Translates CSS into CommonJS
-            "css-loader",
-            // Compiles Sass to CSS
-            "sass-loader",
-          ],
+          test: /.s?css$/,
+          // to-do: learn why background doesn't load with css extract
+          // use: [
+          //   {
+          //     loader: MiniCssExtractPlugin.loader,
+          //     options: {
+          //       publicPath: '../'
+          //     },
+          //   },
+          //   'css-loader', 'sass-loader',
+          // ],
+          use: ['style-loader', 'css-loader', 'sass-loader'],
         },
       ]
     }
