@@ -32,8 +32,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
     <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
-    <!-- Material Design Web -->
+    <!-- Material Design Component Web -->
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <!-- to-do: incorporate mdc -->
     <!-- <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script> -->
 
     <!-- App Styling -->
@@ -42,14 +43,27 @@
 
     <!-- TODO: Enable First Input Delay polyfill library. -->
     <script type="text/javascript">!function(n,e){var t,o,i,c=[],f={passive:!0,capture:!0},r=new Date,a="pointerup",u="pointercancel";function p(n,c){t||(t=c,o=n,i=new Date,w(e),s())}function s(){o>=0&&o<i-r&&(c.forEach(function(n){n(o,t)}),c=[])}function l(t){if(t.cancelable){var o=(t.timeStamp>1e12?new Date:performance.now())-t.timeStamp;"pointerdown"==t.type?function(t,o){function i(){p(t,o),r()}function c(){r()}function r(){e(a,i,f),e(u,c,f)}n(a,i,f),n(u,c,f)}(o,t):p(o,t)}}function w(n){["click","mousedown","keydown","touchstart","pointerdown"].forEach(function(e){n(e,l,f)})}w(n),self.perfMetrics=self.perfMetrics||{},self.perfMetrics.onFirstInputDelay=function(n){c.push(n),s()}}(addEventListener,removeEventListener);</script>
+
+    <style>
+      footer {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+      }
+    </style>
+
   </head>
 
   <body>
-    <div class="demo-layout mdl-js-layout mdl-layout">
+    <noscript>
+      <h1>Please enable JavaScript.</h1>
+    </noscript>
 
+    <div class="demo-layout mdl-js-layout mdl-layout">
+      <!-- react entry -->
       <div id="root" class="mdl-layout"></div>
 
-      <footer class = "mdl-mega-footer">
+      <footer class="mdl-mega-footer">
         <div class="mdl-cell mdl-cell--12-col mdl-typography--text-center">
           Copyright © 2021 All Rights Reserved
         </div>
