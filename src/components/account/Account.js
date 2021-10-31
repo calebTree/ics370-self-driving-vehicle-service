@@ -48,7 +48,7 @@ class AccountFormBase extends React.Component {
                 .then(authUser => {
                     this.props.history.push({ displayName: authUser.displayName });
                     // MDC Component
-                    this.state.mdcComponent.labelText = displayName + " is your new display name.";
+                    this.state.mdcComponent.labelText = "Your new display name is: " + displayName;
                     this.state.mdcComponent.open();
                     return;
                 })

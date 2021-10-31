@@ -67,4 +67,4 @@ node_modules/
 
 # webpack emitted files
 public/scripts
-styles
+public/images/street-bkrnd.jpg

@@ -83,8 +83,6 @@ class Home extends React.Component {
 
   render() {
     const authUser = this.state.authUser;
-
-    const condition = authUser => !!authUser;
     const SignOutButton = withFirebase(this.SignOutButton);
     const GoogleSignInButton = withFirebase(this.GoogleSignInButton);
     const ProfilePic = authUser ? this.profileElement : null;
@@ -98,7 +96,8 @@ class Home extends React.Component {
             <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
               <div className="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
                 <h1>
-                  <Link to="/"><i className="material-icons">directions_car</i> FAV-RIDE ™</Link>
+                  { authUser ? <Link to="/welcome"><i className="material-icons">directions_car</i> FAV-RIDE ™</Link> :
+                  <Link to="/"><i className="material-icons">directions_car</i> FAV-RIDE ™</Link> }
                 </h1>
               </div>
               <div id="user-container">
