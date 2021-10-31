@@ -1,2 +1,10 @@
 // update snackbar
 @use "@material/snackbar/mdc-snackbar";
+
+@use "@material/banner";
+
+$color: red;
+.mdc-banner {
+    @include banner.text-color($color);
+    @include banner.position-centered();
+}
