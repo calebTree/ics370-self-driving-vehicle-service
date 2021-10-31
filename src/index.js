@@ -180,7 +180,7 @@ class Welcome extends React.Component {
               ? <div id="main-buttons" className="mdl-grid">
                 <div className="mdl-typography--text-center">
                   <div className="hmcontent">
-                    <h2>Welcome Back <span className="user-name">{authUser.displayName}</span></h2>
+                    <h2>Welcome Back: <span className="user-name">{authUser.displayName}</span></h2>
                   </div>
                   <Link to='/booking/now' className="section-button mdl-button mdl-button--raised mdl-button--accent">Book Now <i className="material-icons">hail</i></Link>
                   <Link to='/booking/later' className="section-button mdl-button mdl-button--raised mdl-button--colored">Book Later <i className="material-icons">departure_board</i></Link>

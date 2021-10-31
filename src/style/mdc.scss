@@ -1,10 +1,18 @@
-// update snackbar
 @use "@material/snackbar/mdc-snackbar";
 
 @use "@material/banner";
 
-$color: red;
+@use "@material/linear-progress";
+
+@include linear-progress.core-styles;
+
+$errorColor: red;
 .mdc-banner {
-    @include banner.text-color($color);
+    @include banner.text-color($errorColor);
     @include banner.position-centered();
+}
+
+$color: orange;
+.mdc-linear-progress {
+    @include linear-progress.bar-color($color);
 }

@@ -24,14 +24,16 @@ class BookLaterForm extends React.Component {
             <div id ="contact">
               <div id="phone" className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input id="pickDate" className="mdl-textfield__input" type="date" />
-                  {/* <label className="mdl-textfield__label" htmlFor="sample2">Pick your ride date</label> */}
+                  <input name="pickDate" className="mdl-textfield__input" type="date" />
+                  {/* to-do: mdl lable overlaps HTML lable */}
+                  {/* <label className="mdl-textfield__label" htmlFor="pickDate">Pick your ride date</label> */}
                 </div>
               </div>
               <div id="email" className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input className="mdl-textfield__input" type="time" />
-                  {/* <label className="mdl-textfield__label" htmlFor="sample2">Enter your pick up time</label> */}
+                  <input name="pickTime" className="mdl-textfield__input" type="time" />
+                  {/* to-do: mdl lable overlaps HTML lable */}
+                  {/* <label className="mdl-textfield__label" htmlFor="pickTime">Enter your pick up time</label> */}
                 </div>
               </div>
             </div>
