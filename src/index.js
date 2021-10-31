@@ -11,6 +11,7 @@ import Firebase, { FirebaseContext } from './components/firebase';
 // components
 import { BookNowPage, BookLaterPage } from './components/booking';
 import { AccountPage, SignUpPage } from './components/account';
+import { SignInPage } from './components/account';
 
 // scss style
 import "./style/mdc.scss";
@@ -204,81 +205,12 @@ class Welcome extends React.Component {
   }
 }
 
-const SignInPage = () => (
-  <div className="mdl-layout">
-    <section id="login" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-      <div className="mdl-card__supporting-text">
-        <h3>Login</h3>
-        <SignInForm />
-      </div>
-    </section>
-  </div>
-);
-
-const SIGN_IN_INITIAL_STATE = {
-  email: '',
-  password: '',
-  error: null,
-};
-
-class LoginFormBase extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { ...SIGN_IN_INITIAL_STATE };
-  }
-
-  componentDidMount() {
-    componentHandler.upgradeDom();
-  }
-
-  onSubmit = event => {
-    const { email, password } = this.state;
-    this.props.firebase
-      .doSignInWithEmailAndPassword(email, password)
-      .then(() => {
-        // console.log("signed in " + this.state.email);
-        this.setState({ ...SIGN_IN_INITIAL_STATE });
-        this.props.history.push('/welcome');
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-    event.preventDefault();
-  };
-
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  render() {
-    const { email, password, error } = this.state;
-    const isInvalid = password === '' || email === '';
-    return (
-      <form onSubmit={this.onSubmit}>
-        <div id="name">
-          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input name="email" value={email} onChange={this.onChange} className="mdl-textfield__input" type="text" required />
-            <label className="mdl-textfield__label" htmlFor="username">Email / Username</label>
-          </div>
-          <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input name="password" value={password} onChange={this.onChange} className="mdl-textfield__input" type="password" required />
-            <label className="mdl-textfield__label" htmlFor="loginPass">Password</label>
-          </div>
-        </div>
-        <button disabled={isInvalid} type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
-        {error && <p>{error.message}</p>}
-      </form>
-    )
-  }
-}
-
-const SignInForm = withRouter(withFirebase(LoginFormBase));
-
 const domContainer = document.querySelector('#root');
-ReactDOM.render(
+ReactDOM.render (
   <FirebaseContext.Provider value={new Firebase()}>
     <BrowserRouter>
       <App />
     </BrowserRouter>
   </FirebaseContext.Provider>,
-  domContainer);
+  domContainer
+);
