@@ -132,33 +132,35 @@ const App = withRouter(withFirebase(Home));
 class Greeting extends React.Component {
   render() {
     return (
-      <div className="mdl-layout">
-        <section id="greeting" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <section className="content mdl-card mdl-shadow--2dp">
+        <div className="mdl-card__title">
+          <h2 className="mdl-card__title-text">Welcome to FAV-RIDE ™</h2>
+        </div>
+        <div>
           <div className="mdl-card__supporting-text">
-            <h3>Welcome to FAV-RIDE ™</h3>
-            <p className="greeting">FAV-RIDE is the future of transportation using F-ully A-utonomous V-ehicles.</p>
-            <p className="subGreeting">Brought to you by Metro State, Fall 2021 ICS370, Team 2:</p>
-            <br />
-            Caleb Anderson:
-            <a href="mailto:caleb.anderson@my.metrostate.edu">caleb.anderson@my.metrostate.edu</a>
-            <br />
-            Arielle Hounton:
-            <a href="mailto:arielle.hounton@my.metrostate.edu">arielle.hounton@my.metrostate.edu</a>
-            <br />
-            Youssoufou Kante:
-            <a href="mailto:youssoufou.kante@my.metrostate.edu">youssoufou.kante@my.metrostate.edu</a>
-            <br />
-            Jonathan Bracamontes:
-            <a href="mailto:jonathan.bracamontes@my.metrostate.edu">jonathan.bracamontes@my.metrostate.edu</a>
-            <br />
-            <br />
-            <br />
-            <div>
-              <Link to="/welcome" className="section-button mdl-button mdl-js-button mdl-button--raised" >Continue</Link>
-            </div>
+            FAV-RIDE is the future of transportation using F-ully A-utonomous V-ehicles.
+            Brought to you by Metro State, Fall 2021 ICS370, Team 2:
           </div>
-        </section>
-      </div>
+          
+          <br />
+          Caleb Anderson:
+          <a href="mailto:caleb.anderson@my.metrostate.edu">caleb.anderson@my.metrostate.edu</a>
+          <br />
+          Arielle Hounton:
+          <a href="mailto:arielle.hounton@my.metrostate.edu">arielle.hounton@my.metrostate.edu</a>
+          <br />
+          Youssoufou Kante:
+          <a href="mailto:youssoufou.kante@my.metrostate.edu">youssoufou.kante@my.metrostate.edu</a>
+          <br />
+          Jonathan Bracamontes:
+          <a href="mailto:jonathan.bracamontes@my.metrostate.edu">jonathan.bracamontes@my.metrostate.edu</a>
+          <br />
+          <br />
+          <div>
+            <Link to="/welcome" className="section-button mdl-button mdl-js-button mdl-button--raised" >Continue</Link>
+          </div>
+        </div>
+      </section>
     )
   }
 }
@@ -171,35 +173,34 @@ class Welcome extends React.Component {
   render() {
     const authUser = this.props.state.authUser;
     return (
-      <div className="mdl-layout">
-        <section id="welcome-main" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-          <div className="home_box">
+      <div>
+        <section className="content mdl-card mdl-shadow--2dp">
             {authUser
-              ? <div id="main-buttons" className="mdl-grid">
-                <div className="mdl-typography--text-center">
-                  <div className="hmcontent">
-                    <h2>Welcome Back: <span className="user-name">{authUser.displayName ? authUser.displayName : "empty"}</span></h2>
-                  </div>
+              ? 
+              <div>
+                <div className="mdl-card__title">
+                  <h2 className="mdl-card__title-text">Welcome Back: {authUser.displayName ? authUser.displayName : "empty"}</h2>
+                </div>
                   <Link to='/booking/now' className="section-button mdl-button mdl-button--raised mdl-button--accent">Book Now <i className="material-icons">hail</i></Link>
                   <Link to='/booking/later' className="section-button mdl-button mdl-button--raised mdl-button--colored">Book Later <i className="material-icons">departure_board</i></Link>
-                </div>
               </div>
-              : <div>
+              : 
+              <div>
                 <div className="hmlogo">
                   <span className="material-icons">directions_car</span>
                 </div>
-                <div className="hmcontent">
-                  <p>For all your trips requiring a ride, we will get you there safely.</p>
-                </div>
+                <div className="mdl-card__supporting-text">
+                  For all your trips requiring a ride, we will get you there safely.
+                </div>                
                 <div className="homeReg">
                   <Link to='/register' className="section-button mdl-button mdl-button--raised mdl-button--colored pull-left">Create your account</Link>
                   <Link to='/login' className="section-button mdl-button mdl-button--raised mdl-button--accent pull-right">Login</Link>
                 </div>
               </div>
             }
-          </div>
         </section>
       </div>
+
     )
   }
 }

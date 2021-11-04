@@ -10,15 +10,18 @@ import { MDCBanner } from '@material/banner';
 import { RegisterBanner } from '../mdc-components';
 
 const SignUpPage = (props) => (
-    <div className="mdl-layout">
-      <RegisterBanner />
-      <section className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-        <div className="mdl-card__supporting-text">
-          <h3>Create Account</h3>
-          <SignUpForm />
+  <div>
+    <RegisterBanner />
+    <section className="content mdl-card mdl-shadow--2dp">
+      <div>
+        <div className="mdl-card__title">
+          <h2 className="mdl-card__title-text">Create Account</h2>
         </div>
-      </section>
-    </div>
+        <SignUpForm />
+      </div>
+    </section>
+  </div>
+
 );
   
   const INITIAL_STATE = {

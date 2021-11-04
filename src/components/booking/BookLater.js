@@ -1,11 +1,13 @@
 import React from "react";
 
 const BookLaterPage = () => (
-  <div className="mdl-layout">
-    <section id="scheduleForm" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-      <div className="mdl-card__supporting-text">
-          <h3>Book a Future Ride</h3>
-          <BookLaterForm />
+  <div>
+    <section className="content mdl-card mdl-shadow--2dp">
+      <div className="mdl-card__title">
+          <h2 className="mdl-card__title-text">Book a Future Ride</h2>
+        </div>
+      <div className="mdl-grid">
+        <BookLaterForm />
       </div>
     </section>
   </div>

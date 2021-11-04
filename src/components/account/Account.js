@@ -7,13 +7,14 @@ import { MDCSnackbar } from '@material/snackbar';
 import { AccountSnackBar } from '../mdc-components';
 
 const AccountPage = (props) => (
-    <div className="mdl-layout">
-        <section id="scheduleForm" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-            <div className="mdl-card__supporting-text">
-                <h3>Account Update Form</h3>
-                <AccountForm />
+    <div>
+        <section className="content mdl-card mdl-shadow--2dp">
+            <div className="mdl-card__title">
+                <h2 className="mdl-card__title-text">Account Update Form</h2>
             </div>
+            <AccountForm />
         </section>
+        <AccountSnackBar />
     </div>
 );
 
@@ -84,7 +85,6 @@ class AccountFormBase extends React.Component {
                     <label className="mdl-textfield__label" htmlFor="displayName">Enter a new display name.</label>
                 </div>
                 <button type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Update Profile</button>
-                <AccountSnackBar />
             </form>
         );
     }

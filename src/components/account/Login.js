@@ -7,13 +7,16 @@ import { MDCSnackbar } from '@material/snackbar';
 import { AccountSnackBar } from '../mdc-components';
 
 const SignInPage = () => (
-    <div className="mdl-layout">
-        <section id="login" className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
-            <div className="mdl-card__supporting-text">
-                <h3>Login</h3>
+    <div>
+        <section className="content mdl-card mdl-shadow--2dp">
+            <div className="mdl-card__title">
+                <h2 className="mdl-card__title-text">Login</h2>
+            </div>
+            <div>
                 <SignInForm />
             </div>
         </section>
+        <AccountSnackBar />
     </div>
 );
 
@@ -74,7 +77,6 @@ class LoginFormBase extends React.Component {
                     </div>
                 </div>
                 <button disabled={isInvalid} type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Submit</button>
-                <AccountSnackBar />
             </form>
         )
     }
