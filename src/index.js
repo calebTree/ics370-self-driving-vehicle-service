@@ -86,7 +86,7 @@ class Home extends React.Component {
     const GoogleSignInButton = withFirebase(this.GoogleSignInButton);
     const ProfilePic = authUser ? this.profileElement : null;
     // to-do: send this logic to a banner notification with a button to fix it.
-    const displayName = this.getUserName() ? this.getUserName() : "<-- Click here to update your display name.";
+    const displayName = this.getUserName() ? this.getUserName() : "<-- Click here to choose a display name.";
     return (
       <div>
         <div className="mdl-layout--fixed-header">
@@ -178,7 +178,7 @@ class Welcome extends React.Component {
               ? <div id="main-buttons" className="mdl-grid">
                 <div className="mdl-typography--text-center">
                   <div className="hmcontent">
-                    <h2>Welcome Back: <span className="user-name">{authUser.displayName}</span></h2>
+                    <h2>Welcome Back: <span className="user-name">{authUser.displayName ? authUser.displayName : "empty"}</span></h2>
                   </div>
                   <Link to='/booking/now' className="section-button mdl-button mdl-button--raised mdl-button--accent">Book Now <i className="material-icons">hail</i></Link>
                   <Link to='/booking/later' className="section-button mdl-button mdl-button--raised mdl-button--colored">Book Later <i className="material-icons">departure_board</i></Link>

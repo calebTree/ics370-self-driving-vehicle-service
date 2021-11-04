@@ -18,14 +18,15 @@ const AccountPage = (props) => (
 );
 
 const INITIAL_STATE = {
+    displayName: '',
     error: null,
-    mdcComponent: null,
 };
 
 class AccountFormBase extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            mdcComponent: null,
             ...INITIAL_STATE
         }
     }
@@ -46,10 +47,11 @@ class AccountFormBase extends React.Component {
             this.props.firebase
                 .doUpdateProfile(displayName)
                 .then(authUser => {
-                    this.props.history.push({ displayName: authUser.displayName });
+                    this.props.history.push();
                     // MDC Component
                     this.state.mdcComponent.labelText = "Your new display name is: " + displayName;
                     this.state.mdcComponent.open();
+                    this.setState({ ...INITIAL_STATE });
                     return;
                 })
                 .catch(error => {
@@ -78,7 +80,7 @@ class AccountFormBase extends React.Component {
         return (
             <form onSubmit={this.onSubmit}>
                 <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input name="displayName" className="mdl-textfield__input" type="text" onChange={this.onChange} />
+                    <input name="displayName" className="mdl-textfield__input" value={this.state.displayName} type="text" onChange={this.onChange} />
                     <label className="mdl-textfield__label" htmlFor="displayName">Enter a new display name.</label>
                 </div>
                 <button type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Update Profile</button>

@@ -21,7 +21,7 @@ const SignUpPage = (props) => (
     </div>
 );
   
-  const SIGN_UP_INITIAL_STATE = {
+  const INITIAL_STATE = {
     fName: '',
     lName: '',
     email: '',
@@ -35,7 +35,7 @@ const SignUpPage = (props) => (
     constructor(props) {
       super(props);
       this.state = {
-        ...SIGN_UP_INITIAL_STATE
+        ...INITIAL_STATE
       };
     }
   
@@ -49,25 +49,39 @@ const SignUpPage = (props) => (
     }
   
     onSubmit = event => {
-      const { email, passwordOne } = this.state;
-      this.props.firebase
+      const { mdcComponent, email, passwordOne, fName, lName } = this.state;
+      const firebase =  this.props.firebase;
+      const history = this.props.history;
+
+      firebase
         .doCreateUserWithEmailAndPassword(email, passwordOne)
         .then(authUser => {
-          // console.log(authUser);
-          this.setState({ ...SIGN_UP_INITIAL_STATE });
-          this.props.history.push('/welcome');
+          if(fName + " " + lName != " ")
+            firebase
+              .doUpdateProfile((fName + " " + lName).trim())
+              .then(authUser => {
+                history.push();
+                return;
+              })
+              .catch(error => {
+                // this.setState({ error });
+                mdcComponent.setText(error.message);
+                return;
+              });
+            this.setState({ ...INITIAL_STATE });
+            history.push('/welcome');
+            return;
         })
         .catch(error => {
-          this.setState({ error });
-          this.state.mdcComponent.setText(error.message);
-          this.state.mdcComponent.open();
-          // console.log(error.message);
+          // this.setState({ error });
+          mdcComponent.setText(error.message);
+          mdcComponent.open();
+          return;
         });
       event.preventDefault();
     };
   
     onChange = event => {
-      this.state.mdcComponent.close();
       const target = event.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
@@ -75,6 +89,8 @@ const SignUpPage = (props) => (
       this.setState({
         [name]: value
       });
+      // close fixit banner
+      this.state.mdcComponent.close();
     }
   
     render() {
@@ -84,7 +100,6 @@ const SignUpPage = (props) => (
         email,
         passwordOne,
         passwordTwo,
-        error,
       } = this.state;
   
       const isInvalid =
@@ -95,7 +110,7 @@ const SignUpPage = (props) => (
       return (
         <div>
           <form onSubmit={this.onSubmit}>
-            {/* <div id="name">
+            <div id="name">
               <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <input name="fName" className="mdl-textfield__input" type="text" value={fName} onChange={this.onChange} />
                 <label className="mdl-textfield__label" htmlFor="first-name">First Name</label>
@@ -104,23 +119,25 @@ const SignUpPage = (props) => (
                 <input name="lName" className="mdl-textfield__input" type="text" value={lName} onChange={this.onChange} />
                 <label className="mdl-textfield__label" htmlFor="last-name">Last Name</label>
               </div>
-            </div> */}
+            </div>
             <div id="contact">
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input name="email" className="mdl-textfield__input" type="email" value={email} onChange={this.onChange} required />
-                    <label className="mdl-textfield__label" htmlFor="regEmail">E-mail / Username</label>
-                </div>
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input name="passwordOne" className="mdl-textfield__input" type="password" value={passwordOne} onChange={this.onChange} required />
-                    <label className="mdl-textfield__label" htmlFor="regPass">Password</label>
-                </div>
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input name="passwordTwo" className="mdl-textfield__input" type="password" value={passwordTwo} onChange={this.onChange} required />
-                    <label className="mdl-textfield__label" htmlFor="regPass">Veryify Password</label>
-                </div>
+              <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input name="email" className="mdl-textfield__input" type="email" value={email} onChange={this.onChange} required />
+                <label className="mdl-textfield__label" htmlFor="regEmail">E-mail / Username</label>
+              </div>
+            </div>
+            <div id="password">
+              <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label password">
+                <input name="passwordOne" className="mdl-textfield__input" type="password" value={passwordOne} onChange={this.onChange} required />
+                <label className="mdl-textfield__label" htmlFor="regPass">Password</label>
+              </div>
+              <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label password">
+                <input name="passwordTwo" className="mdl-textfield__input" type="password" value={passwordTwo} onChange={this.onChange} required />
+                <label className="mdl-textfield__label" htmlFor="regPass">Veryify Password</label>
+              </div>
             </div>
             <button disabled={isInvalid} type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left" data-upgraded=",MaterialButton">Register</button>
-            {/* {error && <p>{error.message}</p>} */}
+            {passwordOne !== passwordTwo ? <span>passwords must match</span> : null}
           </form>
         </div>
       )

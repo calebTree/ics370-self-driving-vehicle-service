@@ -57,13 +57,9 @@ section {
     font-family: Georgia, serif;
     font-size: medium;
 }
-#myProgress {
-    width: 100%;
-    background-color: grey;
-    margin-bottom: 25px;
-}  
-#myBar {
-    width: 1%;
-    height: 30px;
-    background-color: green;
+.password{
+    margin-right: 15px;
+}
+.warning{
+    color: red;
 }
