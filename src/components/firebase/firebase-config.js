@@ -80,15 +80,15 @@ class Firebase {
   }
 
   // *** firestore API ***
-  doBookNow = async (pickup, dropoff) => {
+  doBookNow = async (pickup, dropoff, distance, price) => {
     const currentUser = this.auth.currentUser;
     const bookNow = collection(this.db, "bookNow");
-
     await setDoc(doc(bookNow, currentUser.email), {
-      starting: pickup,
-      destination: dropoff
+      origin: pickup,
+      destination: dropoff,
+      distance: distance,
+      price: price
     });
-
   }
 
   doReadBooking = async () => {

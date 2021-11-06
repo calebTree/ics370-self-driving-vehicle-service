@@ -1,11 +1,9 @@
 import React from 'react'
+import { BrowserRouter, Route, Link, Switch, Redirect, withRouter, Router } from "react-router-dom";
 
 // mdcw
 import { MDCLinearProgress } from '@material/linear-progress';
 import { LinearProgress } from '../mdc-components'
-
-// firebase
-import { withFirebase } from "../firebase";
 
 // map
 import { MyGoogleMap } from "../maps";
@@ -22,7 +20,7 @@ class BookNowFormBase extends React.Component {
   }
 
   componentDidMount() {
-    // defined by mdl js
+    // componentHandler defined by mdl js
     componentHandler.upgradeDom();
     // setup linear progress bar
     const linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
@@ -44,8 +42,7 @@ class BookNowFormBase extends React.Component {
     const pickup = this.state.pickup;
     const dropoff = this.state.dropoff;
     this.state.mdcComponent.open();
-    this.props.firebase.doBookNow(pickup, dropoff);
-    // this.props.firebase.doReadBooking();
+
     this.setState({ map: <MyGoogleMap origin={pickup} destination={dropoff} /> });
     
     setTimeout(() => this.state.mdcComponent.close(), 1000);
@@ -75,22 +72,23 @@ class BookNowFormBase extends React.Component {
                 <div>
                   <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input className="mdl-textfield__input" type="text" name="pickup" required onChange={this.onChange} />
-                    <label className="mdl-textfield__label" htmlFor="pickup">Pickup location</label>
+                    <label className="mdl-textfield__label" htmlFor="pickup">Pickup location (O)</label>
                   </div>
                 </div>
                 <div>
                   <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input className="mdl-textfield__input" type="text" name="dropoff" required onChange={this.onChange} />
-                    <label className="mdl-textfield__label" htmlFor="dropoff">Drop of location</label>
+                    <label className="mdl-textfield__label" htmlFor="dropoff">Drop of location (D)</label>
                   </div>
                 </div>
-                <button className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Submit</button>
+                <button className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit">Submit Trip</button>
+                <Link to='/booking/pricing' className="section-button mdl-button mdl-button--raised mdl-button--colored">Pricing</Link>
               </form>
             </div>
             <div className="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-              {/* <div className="mdl-card__title">
-                <h2 className="mdl-card__title-text">Location</h2>
-              </div> */}
+              <div className="mdl-card__title">
+                <h2 className="mdl-card__title-text">Travel Overview</h2>
+              </div>
               {this.state.map}
             </div>
           </div>
@@ -100,6 +98,6 @@ class BookNowFormBase extends React.Component {
   }
 }
 
-const BookNowPage = withFirebase(BookNowFormBase);
+const BookNowPage = BookNowFormBase;
 
 export default BookNowPage;
