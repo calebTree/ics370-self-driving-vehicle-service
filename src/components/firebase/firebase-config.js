@@ -20,7 +20,7 @@ import {
 } from 'firebase/auth';
 
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { collection, addDoc, getDocs, setDoc, doc, query, where } from "firebase/firestore";
+import { collection, addDoc, getDocs, getDoc, setDoc, doc, query, where } from "firebase/firestore";
 
 const config = {
   // add config from firebase console
@@ -80,80 +80,26 @@ class Firebase {
   }
 
   // *** firestore API ***
-  doBookNow = async (destination) => {
+  doBookNow = async (pickup, dropoff) => {
     const currentUser = this.auth.currentUser;
     const bookNow = collection(this.db, "bookNow");
 
     await setDoc(doc(bookNow, currentUser.email), {
-      destination: destination
+      starting: pickup,
+      destination: dropoff
     });
 
-    // const citiesRef = collection(this.db, "cities");
-    // await setDoc(doc(citiesRef, "SF"), {
-    //   name: "San Francisco", state: "CA", country: "USA",
-    //   capital: false, population: 860000,
-    //   regions: ["west_coast", "norcal"]
-    // });
-    // await setDoc(doc(citiesRef, "LA"), {
-    //   name: "Los Angeles", state: "CA", country: "USA",
-    //   capital: false, population: 3900000,
-    //   regions: ["west_coast", "socal"]
-    // });
-    // await setDoc(doc(citiesRef, "DC"), {
-    //   name: "Washington, D.C.", state: null, country: "USA",
-    //   capital: true, population: 680000,
-    //   regions: ["east_coast"]
-    // });
-    // await setDoc(doc(citiesRef, "TOK"), {
-    //   name: "Tokyo", state: null, country: "Japan",
-    //   capital: true, population: 9000000,
-    //   regions: ["kanto", "honshu"]
-    // });
-    // await setDoc(doc(citiesRef, "BJ"), {
-    //   name: "Beijing", state: null, country: "China",
-    //   capital: true, population: 21500000,
-    //   regions: ["jingjinji", "hebei"]
-    // });
-
-    // try {
-    //   const docRef = await addDoc(collection(this.db, "users"), {
-    //     first: "Ada",
-    //     last: "Lovelace",
-    //     born: 1815
-    //   });
-    //   console.log("Document written with ID: ", docRef.id);
-    //   return 
-    // } catch (e) {
-    //   console.error("Error adding document: ", e);
-    // }
-
-    // try {
-    //   const docRef = await addDoc(collection(db, "users"), {
-    //     first: "Alan",
-    //     middle: "Mathison",
-    //     last: "Turing",
-    //     born: 1912
-    //   });
-    
-    //   console.log("Document written with ID: ", docRef.id);
-    // } catch (e) {
-    //   console.error("Error adding document: ", e);
-    // }
-    
   }
 
   doReadBooking = async () => {
-    // const querySnapshot = await getDocs(collection(this.db, "users"));
-    // querySnapshot.forEach((doc) => {
-    //   console.log(`${doc.id} => ${doc.data()}`);
-    // });
-
-    const q = query(collection(this.db, "cities"), where("capital", "==", true));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-    });
+    const docRef = doc(this.db, "bookNow", this.auth.currentUser.email);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
   }
 
 }

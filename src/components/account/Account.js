@@ -48,9 +48,8 @@ class AccountFormBase extends React.Component {
             this.props.firebase
                 .doUpdateProfile(displayName)
                 .then(authUser => {
-                    this.props.history.push();
                     // MDC Component
-                    this.state.mdcComponent.labelText = "Your new display name is: " + displayName;
+                    this.state.mdcComponent.labelText = "Your new display name is: " + authUser.displayName;
                     this.state.mdcComponent.open();
                     this.setState({ ...INITIAL_STATE });
                     return;

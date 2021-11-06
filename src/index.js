@@ -148,9 +148,9 @@ class Greeting extends React.Component {
           <br />
           Arielle Hounton:
           <a href="mailto:arielle.hounton@my.metrostate.edu">arielle.hounton@my.metrostate.edu</a>
-          <br />
+          {/* <br />
           Youssoufou Kante:
-          <a href="mailto:youssoufou.kante@my.metrostate.edu">youssoufou.kante@my.metrostate.edu</a>
+          <a href="mailto:youssoufou.kante@my.metrostate.edu">youssoufou.kante@my.metrostate.edu</a> */}
           <br />
           Jonathan Bracamontes:
           <a href="mailto:jonathan.bracamontes@my.metrostate.edu">jonathan.bracamontes@my.metrostate.edu</a>
