@@ -13,11 +13,12 @@ class PricingPage extends React.Component {
     
     // load mdl-js* classes
     componentDidMount() {
-        componentHandler.upgradeDom();        
+        componentHandler.upgradeDom();
+        // only look for data when a logged in user is available
         this.listener = this.props.firebase.doAuthStateChanged(authUser => {
         authUser
-            ? this.props.firebase.doReadBooking().then(() => {
-                this.setState({ data: "data here" });
+            ? this.props.firebase.doReadBooking().then(data => {
+                this.setState({ data: data });
             })
             : this.setState({ data: null });
         });
@@ -28,7 +29,7 @@ class PricingPage extends React.Component {
     }
 
     render() {
-        const price = this.state.data;
+        const price = this.state.data ? "$" + this.state.data.price / 1000 : "Please wait . . .";
         // console.log(this.state.data);
         return (
             <div>
@@ -37,8 +38,6 @@ class PricingPage extends React.Component {
                         <h2 className="mdl-card__title-text">Pricing</h2>
                     </div>
                     <div className="mdl-grid">
-                        The Pricing Page!
-                        <br />
                         {price}
                     </div>
                 </section>

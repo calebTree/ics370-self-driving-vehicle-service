@@ -4,18 +4,18 @@ import React, { useState, useEffect } from 'react';
 import { withFirebase } from "../firebase";
 
 // google maps
-import { GoogleMap, useJsApiLoader, Marker, DistanceMatrixService } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import googleMapsApiKey from './';
-import Geocode from "react-geocode";
 
 const containerStyle = {
   width: '450px',
   height: '350px'
 };
 
+// MN
 const INITIAL_CENTER = {
-  lat: -3.745,
-  lng: -38.523
+  lat: 44.986656,
+  lng: -93.258133
 };
 
 function MyGoogleMap(props) {
@@ -31,15 +31,15 @@ function MyGoogleMap(props) {
   
   const [map, setMap] = useState(null);
 
-  const calculateDistance = (origin, destination) => {
-    const service = new google.maps.DistanceMatrixService();   
+  const decode = (origin, destination) => {
+    const service = new google.maps.DistanceMatrixService();
     const geocoder = new google.maps.Geocoder();
     const bounds = new google.maps.LatLngBounds();
     const request = {
       origins: [origin],
       destinations: [destination],
       travelMode: google.maps.TravelMode.DRIVING,
-      unitSystem: google.maps.UnitSystem.IMPERIAL,
+      unitSystem: google.maps.UnitSystem.METRIC,
       avoidHighways: false,
       avoidTolls: false,
     };
@@ -56,7 +56,6 @@ function MyGoogleMap(props) {
       const showGeocodedAddressOnMap = (asDestination) => {
         const handler = ({ results }) => {
           map.fitBounds(bounds.extend(results[0].geometry.location));
-          setMap(map);
           if(asDestination)
             setMarkerA(
               <Marker
@@ -64,25 +63,22 @@ function MyGoogleMap(props) {
                 label={asDestination ? "D" : "O"}
               />
             );
-          else {
+          else
             setMarkerB(
               <Marker
                 position={results[0].geometry.location}
                 label={asDestination ? "D" : "O"}
               />
             );
-          }
         };
         return handler;
       };
 
       for (let i = 0; i < originList.length; i++) {
-        const results = response.rows[i].elements;
-  
+        const results = response.rows[i].elements;  
         geocoder
           .geocode({ address: originList[i] })
-          .then(showGeocodedAddressOnMap(false));
-  
+          .then(showGeocodedAddressOnMap(false));  
         for (let j = 0; j < results.length; j++) {
           geocoder
             .geocode({ address: destinationList[j] })
@@ -90,17 +86,13 @@ function MyGoogleMap(props) {
         }
       }
       
+    }).catch(() => {
+      console.log("distance calc fail");
     });
   }
 
-  const decode = (origin, destination) => {
-    // Geocode.setApiKey(googleMapsApiKey);
-    // Geocode.enableDebug();
-    calculateDistance(origin, destination);
-  }
-
+  // HTML5 geolocate
   const geoLocate = () => {
-    // HTML5 geolocation
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
       function(position) {
@@ -108,7 +100,8 @@ function MyGoogleMap(props) {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         }
-        setCenter(center);
+        // to-do: fix async set center if there are already markers
+        // setCenter(center);
       },
       function(error) {
         console.error("Error Code = " + error.code + " - " + error.message);
@@ -122,26 +115,18 @@ function MyGoogleMap(props) {
     // const bounds = new window.google.maps.LatLngBounds();
     // map.fitBounds(bounds);
     setMap(map);
-
+    geoLocate();
   }, [])
 
   useEffect(
-    (map) => {
-      if(props.origin) {
+    () => {
+      if(props.origin)
         decode(props.origin, props.destination);
-        // console.log(distance[0]);
-        // console.log(price[0]);
-      } else {
-        geoLocate();
-      }
-      return () => {
-        setMap(null);
-      };
     },
-    [props.origin, props.destination],
+    [props.origin],
   );
   
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = React.useCallback(function callback() {
     setMap(null)
   }, [])
 
@@ -149,7 +134,7 @@ function MyGoogleMap(props) {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={10}
+        zoom={5}
         onLoad={onLoad}
         onUnmount={onUnmount}
       >

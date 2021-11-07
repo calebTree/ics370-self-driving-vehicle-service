@@ -1,9 +1,13 @@
 import React from 'react'
-import { BrowserRouter, Route, Link, Switch, Redirect, withRouter, Router } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // mdcw
 import { MDCLinearProgress } from '@material/linear-progress';
 import { LinearProgress } from '../mdc-components'
+
+// firebase
+import { withFirebase } from "../firebase";
+import { withAuthorization } from '../session';
 
 // map
 import { MyGoogleMap } from "../maps";
@@ -27,6 +31,25 @@ class BookNowFormBase extends React.Component {
     linearProgress.close();
     linearProgress.determinate = false;
     this.setState({ mdcComponent: linearProgress });
+
+    // ensure a logged in user has loaded
+    this.listener = this.props.firebase.doAuthStateChanged(authUser => {
+      authUser
+        ? this.props.firebase.doReadBooking().then(data => {
+          this.setState({
+            map: <MyGoogleMap origin={data.origin} destination={data.destination} />
+          });
+        }).catch(() => {
+          this.setState({
+            map: <MyGoogleMap />
+          });
+        })
+        : this.setState({ data: null });
+    });
+  }
+
+  componentWillUnmount() {
+    this.listener();
   }
 
   onChange = event => {
@@ -44,7 +67,7 @@ class BookNowFormBase extends React.Component {
     this.state.mdcComponent.open();
 
     this.setState({ map: <MyGoogleMap origin={pickup} destination={dropoff} /> });
-    
+
     setTimeout(() => this.state.mdcComponent.close(), 1000);
     event.preventDefault();
   }
@@ -78,7 +101,7 @@ class BookNowFormBase extends React.Component {
                 <div>
                   <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input className="mdl-textfield__input" type="text" name="dropoff" required onChange={this.onChange} />
-                    <label className="mdl-textfield__label" htmlFor="dropoff">Drop of location (D)</label>
+                    <label className="mdl-textfield__label" htmlFor="dropoff">Drop-off location (D)</label>
                   </div>
                 </div>
                 <button className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit">Submit Trip</button>
@@ -98,6 +121,8 @@ class BookNowFormBase extends React.Component {
   }
 }
 
-const BookNowPage = BookNowFormBase;
+const condition = authUser => !!authUser;
+
+const BookNowPage = withAuthorization(condition)(withFirebase(BookNowFormBase));
 
 export default BookNowPage;
