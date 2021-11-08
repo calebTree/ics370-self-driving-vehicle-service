@@ -18,7 +18,7 @@ class BookNowFormBase extends React.Component {
     this.state = {
       mdcComponent: null,
       map: <MyGoogleMap />,
-      data: null,
+      data: '',
       dropoff: '',
       pickup: '',
     };
@@ -33,21 +33,28 @@ class BookNowFormBase extends React.Component {
     linearProgress.determinate = false;
     this.setState({ mdcComponent: linearProgress });
 
-    // ensure a logged in user has loaded
+
     this.listener = this.props.firebase.doAuthStateChanged(authUser => {
       authUser
         ? this.props.firebase.doReadBooking().then(data => {
-          this.setState({
-            map: <MyGoogleMap origin={data.origin} destination={data.destination} />,
-            data: data
-          });
-        }).catch(() => {
-          this.setState({
-            map: <MyGoogleMap />,
-            data: null
-          });
+          console.log("mount doRead success");
+          if(data)
+            this.setState({
+              map: <MyGoogleMap origin={data.origin} destination={data.destination} />,
+              data: data
+            });
+          else
+            this.setState({
+              map: <MyGoogleMap />,
+              data: ''
+            })
+          this.state.mdcComponent.close();
+        }).catch((error) => {
+          console.log("mount doRead fail");
+          this.state.mdcComponent.close();
+          throw new Error(error);
         })
-        : this.setState({ data: null });
+        : null
     });
   }
 
@@ -55,10 +62,26 @@ class BookNowFormBase extends React.Component {
     this.listener();
   }
 
-  componentDidUpdate() {
-    // this.props.firebase.doReadBooking().then((data) => {
-    //   this.setState({data: data})
-    // })
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.data.origin !== prevState.data.origin) {
+      this.props.firebase.doReadBooking().then(data => {
+        console.log("update doRead success");
+        if(data)
+          this.setState({
+            map: <MyGoogleMap origin={data.origin} destination={data.destination} />,
+            data: data
+          });
+        else
+          this.setState({
+            map: <MyGoogleMap />,
+            data: ''
+          });
+        this.state.mdcComponent.close();
+      }).catch((error) => {
+        console.log("update doRead fail")
+        this.state.mdcComponent.close();
+      });
+    }
   }
 
   onChange = event => {
@@ -75,20 +98,35 @@ class BookNowFormBase extends React.Component {
     const dropoff = this.state.dropoff;
     this.state.mdcComponent.open();
 
-    this.setState({
-      map: <MyGoogleMap origin={pickup} destination={dropoff} />,
+    this.props.firebase.doReadBooking()
+    .then(() => {
+      console.log("onsubmit doRead success");
+      this.setState({
+        map: <MyGoogleMap origin={pickup} destination={dropoff} />,
+        data: {origin: 'Please wait ...'}
+      });     
+      this.state.mdcComponent.close();
+    }).catch(error => {
+      console.log("onsubmit doRead fail");
+      this.state.mdcComponent.close();
     });
-
-    setTimeout(() => this.state.mdcComponent.close(), 1000);
     event.preventDefault();
   }
 
   cancel = () => {
-    this.props.firebase.doCancelBooking().then(() => {
+    this.state.mdcComponent.open();
+    this.props.firebase.doCancelBooking()
+    .then(() => {
+      console.log("cancel success");
       this.setState({
         map: <MyGoogleMap />,
-        data: null
+        data: ''
       });
+      this.state.mdcComponent.close();
+    })
+    .catch(error => {
+      console.log("cancle fail");
+      this.state.mdcComponent.close();
     });
   }
 
@@ -97,7 +135,7 @@ class BookNowFormBase extends React.Component {
     const origin = this.state.data ? this.state.data.origin : '';
     const destination = this.state.data ? this.state.data.destination : '';
     const distance = this.state.data ? this.state.data.distance : '';
-    const rate = .2;
+    const rate = "$0.20/KM";
 
     const ready = this.state.data;
     return (
