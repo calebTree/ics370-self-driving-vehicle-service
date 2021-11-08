@@ -93,10 +93,10 @@ class BookNowFormBase extends React.Component {
   }
 
   render() {
-    const price = this.state.data ? "$" + this.state.data.price / 1000 : null;
-    const origin = this.state.data ? this.state.data.origin : null;
-    const destination = this.state.data ? this.state.data.destination : null;
-    const distance = this.state.data ? this.state.data.distance : null;
+    const price = this.state.data ? "$" + this.state.data.price / 1000 : '';
+    const origin = this.state.data ? this.state.data.origin : '';
+    const destination = this.state.data ? this.state.data.destination : '';
+    const distance = this.state.data ? this.state.data.distance : '';
     const rate = .2;
 
     const ready = this.state.data;
@@ -107,18 +107,9 @@ class BookNowFormBase extends React.Component {
           <div className="mdl-card__title">
             <h2 className="mdl-card__title-text">Book A Ride Now</h2>
           </div>
-          <div className="mdl-grid">
-            <div className="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+          <div className="grid-container">
+            <div>
               <form onSubmit={this.onSubmit}>
-                <div>
-                  <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
-                    <select className="mdl-textfield__input" name="service">
-                      <option>Basic</option>
-                      <option>Deluxe</option>
-                    </select>
-                    <label className="mdl-textfield__label" htmlFor="service">Choose your service</label>
-                  </div>
-                </div>
                 <div>
                   <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input className="mdl-textfield__input" type="text" name="pickup" required onChange={this.onChange} />
@@ -132,19 +123,15 @@ class BookNowFormBase extends React.Component {
                   </div>
                 </div>
                 <button className="section-button mdl-button mdl-button--raised mdl-button--colored" type="submit">Verify</button>
-                {ready
-                  ?
-                  <Link to='/booking/pricing' className="section-button mdl-button mdl-button--raised mdl-button--accent">Checkout</Link>
-                  :
-                  <button className="section-button mdl-button mdl-button--raised mdl-button--accent" disabled={true}>Checkout</button>
-                }
               </form>
-              <div className="map mdl-card mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-                <div className="mdl-card__title">
+            </div>
+            <div className="map">
+              <div className="mdl-card__title">
                 <h2 className="mdl-card__title-text">Travel Overview</h2>
               </div>
-                {this.state.map}
-              </div>
+              {this.state.map}
+            </div>
+            <div>
               <div>
                 <table className="mdl-data-table mdl-js-data-table">
                   <tbody>
@@ -171,6 +158,12 @@ class BookNowFormBase extends React.Component {
                   </tbody>
                 </table>
                 <button className="section-button mdl-button mdl-button--raised" onClick={this.cancel}>Cancel</button>
+                {ready
+                  ?
+                  <Link to='/booking/pricing' className="section-button mdl-button mdl-button--raised mdl-button--accent">Checkout</Link>
+                  :
+                  <button className="section-button mdl-button mdl-button--raised mdl-button--accent" disabled={true}>Checkout</button>
+                }
               </div>
             </div>
           </div>

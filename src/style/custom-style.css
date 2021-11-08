@@ -65,13 +65,19 @@ h2 {
     .content {
         overflow: auto;
         background-color: azure;
-        min-width: 800px;
         max-height: 600px;
-        margin: 5px 25%;
-        padding: 25px;
+        min-width: auto;
+        margin: 5px 20%;
+        padding: 20px;
     }
-    .map {
-        width: fit-content;
+    .mdl-card {
+        width: auto;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
     }
 }
 
@@ -83,5 +89,10 @@ h2 {
         margin: auto;
         margin-top: 5px;
         padding: 25px;
+        width: auto;
+    }
+
+    .map {
+        margin: 10px;
     }
 }
