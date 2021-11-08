@@ -26,70 +26,45 @@ function MyGoogleMap(props) {
   	
   // setup state
 	const [center, setCenter] = useState(INITIAL_CENTER);
-  const [markerA, setMarkerA] = useState(null);
-  const [markerB, setMarkerB] = useState(null);
+	const [markerA, setMarkerA] = useState(null);
+	const [markerB, setMarkerB] = useState(null);
   
   const [map, setMap] = useState(null);
 
-  const decode = (origin, destination) => {
-    const service = new google.maps.DistanceMatrixService();
-    const geocoder = new google.maps.Geocoder();
+  function setMarkers (plan) {
     const bounds = new google.maps.LatLngBounds();
-    const request = {
-      origins: [origin],
-      destinations: [destination],
-      travelMode: google.maps.TravelMode.DRIVING,
-      unitSystem: google.maps.UnitSystem.METRIC,
-      avoidHighways: false,
-      avoidTolls: false,
-    };
-    // get distance matrix response
-    service.getDistanceMatrix(request).then((response) => {
-      // show on map
-      const originList = response.originAddresses;
-      const destinationList = response.destinationAddresses;
+    const geocoder = new google.maps.Geocoder();
 
-      //  calculate price, distance, and store
-      const distance = response.rows[0].elements[0].distance;
-      props.firebase.doBookNow(originList[0], destinationList[0], distance.text, distance.value * .2);
-  
-      const showGeocodedAddressOnMap = (asDestination) => {
-        const handler = ({ results }) => {
-          map.fitBounds(bounds.extend(results[0].geometry.location));
-          if(asDestination)
-            setMarkerA(
-              <Marker
-                position={results[0].geometry.location}
-                label={asDestination ? "D" : "O"}
-              />
-            );
-          else
-            setMarkerB(
-              <Marker
-                position={results[0].geometry.location}
-                label={asDestination ? "D" : "O"}
-              />
-            );
-        };
-        return handler;
+    // to-do: should I send the markers as props?
+    const showGeocodedAddressOnMap = (asDestination) => {
+      const handler = ({ results }) => {
+        map.fitBounds(bounds.extend(results[0].geometry.location));
+        if(asDestination)
+          setMarkerA(
+            <Marker
+              position={results[0].geometry.location}
+              label={asDestination ? "D" : "O"}
+            />
+          );
+        else
+          setMarkerB(
+            <Marker
+              position={results[0].geometry.location}
+              label={asDestination ? "D" : "O"}
+            />
+          );
       };
+      return handler;
+    };
+    
+      geocoder
+        .geocode({ address: props.plan.origin })
+        .then(showGeocodedAddressOnMap(false));
+      geocoder
+        .geocode({ address: props.plan.destination })
+        .then(showGeocodedAddressOnMap(true));
 
-      for (let i = 0; i < originList.length; i++) {
-        const results = response.rows[i].elements;  
-        geocoder
-          .geocode({ address: originList[i] })
-          .then(showGeocodedAddressOnMap(false));  
-        for (let j = 0; j < results.length; j++) {
-          geocoder
-            .geocode({ address: destinationList[j] })
-            .then(showGeocodedAddressOnMap(true));
-        }
-      }
-      
-    }).catch(() => {
-      console.log("distance calc fail");
-    });
-  }
+  } 
 
   // HTML5 geolocate
   const geoLocate = () => {
@@ -118,18 +93,18 @@ function MyGoogleMap(props) {
     geoLocate();
   }, [])
 
-  useEffect(
-    () => {
-      if(props.origin)
-        decode(props.origin, props.destination);
-      else {
-        setCenter(INITIAL_CENTER);
-        setMarkerA(null);
-        setMarkerB(null);
-      }
-    },
-    [props.origin],
-  );
+  // useEffect(
+  //   () => {
+  //     if(props.plan)
+  //       setMarkers(props.plan) 
+  //     else {
+  //       setCenter(INITIAL_CENTER);
+  //       setMarkerA(null);
+  //       setMarkerB(null);
+  //     }
+  //   },
+  //   [props.plan],
+  // );
   
   const onUnmount = React.useCallback(function callback() {
     setMap(null)
