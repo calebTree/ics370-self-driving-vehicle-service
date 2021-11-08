@@ -20,7 +20,7 @@ import {
 } from 'firebase/auth';
 
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { collection, addDoc, getDocs, getDoc, setDoc, doc, query, where } from "firebase/firestore";
+import { collection, addDoc, getDocs, getDoc, setDoc, doc, query, where, deleteDoc } from "firebase/firestore";
 
 const config = {
   // add config from firebase console
@@ -95,11 +95,15 @@ class Firebase {
     const docRef = doc(this.db, "bookNow", this.auth.currentUser.email);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
+      return docSnap.data();
     } else {
       // doc.data() will be undefined in this case
-      console.log("No such document!");
+      console.log("booking not found for " + this.auth.currentUser.email);
     }
+  }
+
+  doCancelBooking = async () => {
+    await deleteDoc(doc(this.db, "bookNow", this.auth.currentUser.email));
   }
 
 }

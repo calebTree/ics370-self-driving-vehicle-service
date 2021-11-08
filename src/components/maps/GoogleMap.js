@@ -122,6 +122,11 @@ function MyGoogleMap(props) {
     () => {
       if(props.origin)
         decode(props.origin, props.destination);
+      else {
+        setCenter(INITIAL_CENTER);
+        setMarkerA(null);
+        setMarkerB(null);
+      }
     },
     [props.origin],
   );

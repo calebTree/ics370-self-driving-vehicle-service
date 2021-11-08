@@ -60,12 +60,28 @@ h2 {
 .warning{
     color: red;
 }
-.content{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    padding: 25px;
-    background-color: azure;
-    min-width: 800px;
+
+@media screen and (min-width: 610px) {
+    .content {
+        overflow: auto;
+        background-color: azure;
+        min-width: 800px;
+        max-height: 600px;
+        margin: 5px 25%;
+        padding: 25px;
+    }
+    .map {
+        width: fit-content;
+    }
+}
+
+@media screen and (max-width: 610px) {
+    .content {
+        overflow: auto;
+        background-color: azure;
+        max-height: 600px;
+        margin: auto;
+        margin-top: 5px;
+        padding: 25px;
+    }
 }
