@@ -26,16 +26,15 @@ function MyGoogleMap(props) {
   	
   // setup state
 	const [center, setCenter] = useState(INITIAL_CENTER);
-	const [markerA, setMarkerA] = useState(null);
-	const [markerB, setMarkerB] = useState(null);
+  const [markerA, setMarkerA] = useState(null);
+  const [markerB, setMarkerB] = useState(null);
   
   const [map, setMap] = useState(null);
 
-  function setMarkers (plan) {
-    const bounds = new google.maps.LatLngBounds();
+  const setMarkers = (origin, destination) => {
     const geocoder = new google.maps.Geocoder();
-
-    // to-do: should I send the markers as props?
+    const bounds = new google.maps.LatLngBounds();
+  
     const showGeocodedAddressOnMap = (asDestination) => {
       const handler = ({ results }) => {
         map.fitBounds(bounds.extend(results[0].geometry.location));
@@ -56,15 +55,15 @@ function MyGoogleMap(props) {
       };
       return handler;
     };
-    
+
       geocoder
-        .geocode({ address: props.plan.origin })
-        .then(showGeocodedAddressOnMap(false));
+        .geocode({ address: origin })
+        .then(showGeocodedAddressOnMap(false));  
       geocoder
-        .geocode({ address: props.plan.destination })
+        .geocode({ address: destination })
         .then(showGeocodedAddressOnMap(true));
 
-  } 
+  }
 
   // HTML5 geolocate
   const geoLocate = () => {
@@ -76,7 +75,7 @@ function MyGoogleMap(props) {
           lng: position.coords.longitude
         }
         // to-do: fix async set center if there are already markers
-        // setCenter(center);
+        setCenter(center);
       },
       function(error) {
         console.error("Error Code = " + error.code + " - " + error.message);
@@ -90,24 +89,25 @@ function MyGoogleMap(props) {
     // const bounds = new window.google.maps.LatLngBounds();
     // map.fitBounds(bounds);
     setMap(map);
-    geoLocate();
+    // geoLocate();
   }, [])
 
-  // useEffect(
-  //   () => {
-  //     if(props.plan)
-  //       setMarkers(props.plan) 
-  //     else {
-  //       setCenter(INITIAL_CENTER);
-  //       setMarkerA(null);
-  //       setMarkerB(null);
-  //     }
-  //   },
-  //   [props.plan],
-  // );
+  useEffect(
+    () => {
+      if(props.markers)
+        setMarkers(props.markers.origin, props.markers.destination);
+      else {
+        setCenter(INITIAL_CENTER);
+        setMarkerA(null);
+        setMarkerB(null);
+        // geoLocate();
+      }
+    },
+    [props.markers],
+  );
   
   const onUnmount = React.useCallback(function callback() {
-    setMap(null)
+    setMap(null);
   }, [])
 
   return isLoaded ? (

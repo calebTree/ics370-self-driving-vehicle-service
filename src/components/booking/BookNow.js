@@ -10,35 +10,26 @@ import { withFirebase } from "../firebase";
 import { withAuthorization } from '../session';
 
 // google maps
-import { useJsApiLoader, DistanceMatrixService } from '@react-google-maps/api';
 import { MyGoogleMap } from "../maps";
-import { Loader } from "@googlemaps/js-api-loader"
-import googleMapsApiKey from '../maps';
 
-const trip = {
-  origin: "someplace",
-  destination: "otherplace"
+const INITIAL_STATE = {
+  map: <MyGoogleMap markers={null}/>,
+  pickup: '',
+  dropoff: '',
+  distance: '',
+  rate: '',
+  price: '',
+  ready: false
 }
+
 class BookNowFormBase extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       mdcComponent: null,
-      map: <MyGoogleMap plan={trip}/>,
-      pickup: '',
-      dropoff: '',
-      distance: '',
-      rate: '',
-      price: '',
+      ...INITIAL_STATE
     };
   }
-
-  // loader = new Loader({
-  //   apiKey: googleMapsApiKey,
-  //   version: "weekly",
-  //   // ...additionalOptions,
-  // });
 
   componentDidMount() {
     // componentHandler defined by mdl js
@@ -48,30 +39,35 @@ class BookNowFormBase extends React.Component {
     linearProgress.close();
     linearProgress.determinate = false;
     this.setState({ mdcComponent: linearProgress });
+    linearProgress.open();
 
     // check if plan already exists
     this.listener = this.props.firebase.doAuthStateChanged(authUser => {
       authUser
         ? this.props.firebase.doReadBooking().then(data => {
           console.log("mount doRead success");
-          
-          const trip = {
-            origin: data.origin,
-            destination: data.destination
+          if(data) { // if data found populate travel overview
+            const markers = {
+              origin: data.origin,
+              destination: data.destination
+            }
+            this.setState({
+              pickup: data.origin,
+              dropoff: data.destination,
+              distance: data.distance,
+              price: data.price,
+              map: <MyGoogleMap markers={markers} />,
+              ready: true
+            })
+          } else {  // else reset to initial state
+            this.setState({
+              ...INITIAL_STATE
+            })
           }
-          console.log(trip);
-          this.setState({
-            pickup: data.origin,
-            dropoff: data.destination,
-            distance: data.distance,
-            price: data.price,
-            map: <MyGoogleMap plan={trip} />
-          })
-
-          this.state.mdcComponent.close();
+          linearProgress.close();
         }).catch((error) => {
           console.log("mount doRead fail");
-          this.state.mdcComponent.close();
+          linearProgress.close();
           throw new Error(error);
         })
         : null
@@ -80,26 +76,6 @@ class BookNowFormBase extends React.Component {
 
   componentWillUnmount() {
     this.listener();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // if (this.state.data.origin !== prevState.data.origin) {
-    //   this.props.firebase.doReadBooking().then(data => {
-    //     console.log("update doRead success");
-    //     if(data)
-    //       this.setState({
-    //         data: data
-    //       });
-    //     else
-    //       this.setState({
-    //         data: ''
-    //       });
-    //     this.state.mdcComponent.close();
-    //   }).catch((error) => {
-    //     console.log("update doRead fail")
-    //     this.state.mdcComponent.close();
-    //   });
-    // }
   }
 
   onChange = event => {
@@ -113,63 +89,51 @@ class BookNowFormBase extends React.Component {
 
   onSubmit = (event) => {
     this.state.mdcComponent.open();
-    // this.loader.load().then(() => {
-      const pickup = this.state.pickup;
-      const dropoff = this.state.dropoff;
-      const service = new google.maps.DistanceMatrixService();
-      const geocoder = new google.maps.Geocoder();
-      const request = {
-        origins: [pickup],
-        destinations: [dropoff],
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC,
-        avoidHighways: false,
-        avoidTolls: false,
-      };
+    const service = new google.maps.DistanceMatrixService();
+    const geocoder = new google.maps.Geocoder();
+    const request = {
+      origins: [this.state.pickup],
+      destinations: [this.state.dropoff],
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.METRIC,
+      avoidHighways: false,
+      avoidTolls: false,
+    };
 
-      // get distance matrix response
-      service.getDistanceMatrix(request).then((response) => {
-        // show on map
-        const originList = response.originAddresses;
-        const destinationList = response.destinationAddresses;
+    // get distance matrix response
+    service.getDistanceMatrix(request).then((response) => {
+      // show on map
+      const origin = response.originAddresses[0];
+      const destination = response.destinationAddresses[0];
+      //  calculate price, distance, and store
+      const distance = response.rows[0].elements[0].distance;
+      // store trip in database
+      this.props.firebase.doBookNow(origin, destination, distance.text, distance.value * .2);
 
-        //  calculate price, distance, and store
-        const distance = response.rows[0].elements[0].distance;
-        this.props.firebase.doBookNow(originList[0], destinationList[0], distance.text, distance.value * .2);
+      const markers = {
+        origin: origin,
+        destination: destination
+      }
 
-        const trip = {
-          origin: originList[0],
-          destination: destinationList[0]
-        }
+      this.setState({
+        pickup: origin,
+        dropoff: destination,
+        distance: distance.text,
+        price: distance.value * .2,
+        map: <MyGoogleMap markers={markers} />,
+        ready: true
+      })
 
-        this.setState({
-          pickup: originList[0],
-          dropoff: destinationList[0],
-          distance: distance.text,
-          price: distance.value * .2,
-          map: <MyGoogleMap plan={trip} />,
-        })
-
-        for (let i = 0; i < originList.length; i++) {
-          const results = response.rows[i].elements;  
-          geocoder
-            .geocode({ address: originList[i] })
-            // .then(showGeocodedAddressOnMap(false));
-          for (let j = 0; j < results.length; j++) {
-            geocoder
-              .geocode({ address: destinationList[j] })
-              // .then(showGeocodedAddressOnMap(true));
-          }
-        }
-
-      }).catch((error) => {
-        console.log("distance calc fail");
-        console.log(error);
-      });
-    // })
-
-    this.state.mdcComponent.close();
-
+      geocoder.geocode({ address: origin });
+      geocoder.geocode({ address: destination });
+      
+      this.state.mdcComponent.close();
+    }).catch((error) => {
+      console.log("distance calc fail");
+      this.state.mdcComponent.close();
+      throw new Error(error);
+    });
+    
     event.preventDefault();
   }
 
@@ -179,24 +143,25 @@ class BookNowFormBase extends React.Component {
     .then(() => {
       console.log("cancel success");
       this.setState({
-        map: <MyGoogleMap />,
+        ...INITIAL_STATE
       });
       this.state.mdcComponent.close();
     })
     .catch(error => {
       console.log("cancle fail");
       this.state.mdcComponent.close();
+      throw new Error(error);
     });
   }
 
   render() {
-    const price = this.state.price ? "$" + this.state.price / 1000 : '';
-    const origin = this.state.pickup ? this.state.pickup : '';
-    const destination = this.state.dropoff ? this.state.dropoff : '';
-    const distance = this.state.distance ? this.state.distance : '';
+    const price = "$" + this.state.price / 1000;
+    const origin = this.state.pickup;
+    const destination = this.state.dropoff;
+    const distance = this.state.distance;
     const rate = "$0.20/KM";
+    const ready = this.state.ready;
 
-    const ready = this.state.data;
     return (
       <div>
         <LinearProgress />
@@ -208,14 +173,16 @@ class BookNowFormBase extends React.Component {
             <div>
               <form onSubmit={this.onSubmit}>
                 <div>
-                  <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input className="mdl-textfield__input" type="text" name="pickup" required onChange={this.onChange} />
+                  {/* to-do: can the textfields be styled with values in them? */}
+                  <div className="mdl-textfield mdl-js-textfield">
+                    <input className="mdl-textfield__input" value={origin} type="text" name="pickup" required onChange={this.onChange} />
                     <label className="mdl-textfield__label" htmlFor="pickup">Pickup location (O)</label>
                   </div>
                 </div>
                 <div>
-                  <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input className="mdl-textfield__input" type="text" name="dropoff" required onChange={this.onChange} />
+                  {/* to-do: can the textfields be styled with values in them? */}
+                  <div className="mdl-textfield mdl-js-textfield">
+                    <input className="mdl-textfield__input" value={destination} type="text" name="dropoff" required onChange={this.onChange} />
                     <label className="mdl-textfield__label" htmlFor="dropoff">Drop-off location (D)</label>
                   </div>
                 </div>
