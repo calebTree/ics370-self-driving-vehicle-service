@@ -13,7 +13,7 @@ import { withAuthorization } from '../session';
 import { MyGoogleMap } from "../maps";
 
 const INITIAL_STATE = {
-  map: <MyGoogleMap markers={null}/>,
+  map: <MyGoogleMap markers={null} />,
   pickup: '',
   dropoff: '',
   distance: '',
@@ -46,7 +46,7 @@ class BookNowFormBase extends React.Component {
       authUser
         ? this.props.firebase.doReadBooking().then(data => {
           console.log("mount doRead success");
-          if(data) { // if data found populate travel overview
+          if (data) { // if data found populate travel overview
             const markers = {
               origin: data.origin,
               destination: data.destination
@@ -126,32 +126,32 @@ class BookNowFormBase extends React.Component {
 
       geocoder.geocode({ address: origin });
       geocoder.geocode({ address: destination });
-      
+
       this.state.mdcComponent.close();
     }).catch((error) => {
       console.log("distance calc fail");
       this.state.mdcComponent.close();
       throw new Error(error);
     });
-    
+
     event.preventDefault();
   }
 
   cancel = () => {
     this.state.mdcComponent.open();
     this.props.firebase.doCancelBooking()
-    .then(() => {
-      console.log("cancel success");
-      this.setState({
-        ...INITIAL_STATE
+      .then(() => {
+        console.log("cancel success");
+        this.setState({
+          ...INITIAL_STATE
+        });
+        this.state.mdcComponent.close();
+      })
+      .catch(error => {
+        console.log("cancle fail");
+        this.state.mdcComponent.close();
+        throw new Error(error);
       });
-      this.state.mdcComponent.close();
-    })
-    .catch(error => {
-      console.log("cancle fail");
-      this.state.mdcComponent.close();
-      throw new Error(error);
-    });
   }
 
   render() {
@@ -188,14 +188,6 @@ class BookNowFormBase extends React.Component {
                 </div>
                 <button className="section-button mdl-button mdl-button--raised mdl-button--colored" type="submit">Verify</button>
               </form>
-            </div>
-            <div className="map">
-              <div className="mdl-card__title">
-                <h2 className="mdl-card__title-text">Travel Overview</h2>
-              </div>
-              {this.state.map}
-            </div>
-            <div>
               <div>
                 <table className="mdl-data-table mdl-js-data-table">
                   <tbody>
@@ -229,6 +221,12 @@ class BookNowFormBase extends React.Component {
                   <button className="section-button mdl-button mdl-button--raised mdl-button--accent" disabled={true}>Checkout</button>
                 }
               </div>
+            </div>
+            <div className="map">
+              <div className="mdl-card__title">
+                <h2 className="mdl-card__title-text">Travel Overview</h2>
+              </div>
+              {this.state.map}
             </div>
           </div>
         </section>
