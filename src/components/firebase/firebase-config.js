@@ -98,7 +98,7 @@ class Firebase {
       return docSnap.data();
     } else {
       // doc.data() will be undefined in this case
-      console.log("booking not found for " + this.auth.currentUser.email);
+      // console.log("booking for " + this.auth.currentUser.email + " not found.");
     }
   }
 

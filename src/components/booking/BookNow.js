@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 
 // mdcw
 import { MDCLinearProgress } from '@material/linear-progress';
-import { LinearProgress } from '../mdc-components'
+import { MDCBanner } from '@material/banner';
+import { MDCSnackbar } from '@material/snackbar';
+import { LinearProgress, FormErrorBanner, GeneralSnackBar } from '../mdc-components';
 
 // firebase
 import { withFirebase } from "../firebase";
@@ -26,7 +28,9 @@ class BookNowFormBase extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mdcComponent: null,
+      mdcProgress: null,
+      mdcBanner: null,
+      mdcSnackbar: null,
       ...INITIAL_STATE
     };
   }
@@ -38,14 +42,20 @@ class BookNowFormBase extends React.Component {
     const linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.close();
     linearProgress.determinate = false;
-    this.setState({ mdcComponent: linearProgress });
+    this.setState({ mdcProgress: linearProgress });
     linearProgress.open();
+    // setup banner
+    const banner = new MDCBanner(document.querySelector('.mdc-banner'));
+    this.setState({ mdcBanner: banner });
+    // setup snackbar
+    const snackbar = new MDCSnackbar(document.querySelector('.mdc-snackbar'));
+    this.setState({ mdcSnackbar: snackbar });
 
     // check if plan already exists
     this.listener = this.props.firebase.doAuthStateChanged(authUser => {
       authUser
         ? this.props.firebase.doReadBooking().then(data => {
-          console.log("mount doRead success");
+          // console.log("mount doRead success");
           if (data) { // if data found populate travel overview
             const markers = {
               origin: data.origin,
@@ -59,6 +69,9 @@ class BookNowFormBase extends React.Component {
               map: <MyGoogleMap markers={markers} />,
               ready: true
             })
+            // this.state.mdcSnackbar.labelText = this.state.pickup + " to " + this.state.dropoff + " found.";
+            this.state.mdcSnackbar.labelText = "Previous trip found.";
+            this.state.mdcSnackbar.open();
           } else {  // else reset to initial state
             this.setState({
               ...INITIAL_STATE
@@ -66,7 +79,7 @@ class BookNowFormBase extends React.Component {
           }
           linearProgress.close();
         }).catch((error) => {
-          console.log("mount doRead fail");
+          // console.log("mount doRead fail");
           linearProgress.close();
           throw new Error(error);
         })
@@ -85,10 +98,11 @@ class BookNowFormBase extends React.Component {
     this.setState({
       [name]: value
     });
+    this.state.mdcBanner.close();
   }
 
   onSubmit = (event) => {
-    this.state.mdcComponent.open();
+    this.state.mdcProgress.open();
     const service = new google.maps.DistanceMatrixService();
     const geocoder = new google.maps.Geocoder();
     const request = {
@@ -108,7 +122,10 @@ class BookNowFormBase extends React.Component {
       //  calculate price, distance, and store
       const distance = response.rows[0].elements[0].distance;
       // store trip in database
-      this.props.firebase.doBookNow(origin, destination, distance.text, distance.value * .2);
+      this.props.firebase.doBookNow(origin, destination, distance.text, distance.value * .2).then(() => {
+        this.state.mdcSnackbar.labelText = this.state.pickup + " to " + this.state.dropoff + " saved.";
+        this.state.mdcSnackbar.open();
+      });
 
       const markers = {
         origin: origin,
@@ -127,35 +144,41 @@ class BookNowFormBase extends React.Component {
       geocoder.geocode({ address: origin });
       geocoder.geocode({ address: destination });
 
-      this.state.mdcComponent.close();
+      this.state.mdcProgress.close();
     }).catch((error) => {
-      console.log("distance calc fail");
-      this.state.mdcComponent.close();
-      throw new Error(error);
+      // console.log("distance calc fail");
+      this.state.mdcProgress.close();
+      if(error.name === 'TypeError') {
+        this.state.mdcBanner.setText("Failed to save " + this.state.pickup + " to " + this.state.dropoff + ": address is malformed.");
+        this.state.mdcBanner.open();
+      }
+      // throw new Error(error);
     });
 
     event.preventDefault();
   }
 
   cancel = () => {
-    this.state.mdcComponent.open();
+    this.state.mdcProgress.open();
     this.props.firebase.doCancelBooking()
       .then(() => {
-        console.log("cancel success");
+        // console.log("cancel success");
         this.setState({
           ...INITIAL_STATE
         });
-        this.state.mdcComponent.close();
+        this.state.mdcProgress.close();
+        this.state.mdcSnackbar.labelText = "Booking canceled.";
+        this.state.mdcSnackbar.open();
       })
       .catch(error => {
-        console.log("cancle fail");
-        this.state.mdcComponent.close();
+        // console.log("cancle fail");
+        this.state.mdcProgress.close();
         throw new Error(error);
       });
   }
 
   render() {
-    const price = "$" + this.state.price / 1000;
+    const price = "$" + (this.state.price / 1000).toFixed(2);
     const origin = this.state.pickup;
     const destination = this.state.dropoff;
     const distance = this.state.distance;
@@ -166,6 +189,7 @@ class BookNowFormBase extends React.Component {
       <div>
         <LinearProgress />
         <section className="content mdl-card mdl-shadow--2dp">
+          <FormErrorBanner />
           <div className="mdl-card__title">
             <h2 className="mdl-card__title-text">Book A Ride Now</h2>
           </div>
@@ -175,14 +199,14 @@ class BookNowFormBase extends React.Component {
                 <div>
                   {/* to-do: can the textfields be styled with values in them? */}
                   <div className="mdl-textfield mdl-js-textfield">
-                    <input className="mdl-textfield__input" value={origin} type="text" name="pickup" required onChange={this.onChange} />
+                    <input className="mdl-textfield__input" type="text" name="pickup" required onChange={this.onChange} />
                     <label className="mdl-textfield__label" htmlFor="pickup">Pickup location (O)</label>
                   </div>
                 </div>
                 <div>
                   {/* to-do: can the textfields be styled with values in them? */}
                   <div className="mdl-textfield mdl-js-textfield">
-                    <input className="mdl-textfield__input" value={destination} type="text" name="dropoff" required onChange={this.onChange} />
+                    <input className="mdl-textfield__input" type="text" name="dropoff" required onChange={this.onChange} />
                     <label className="mdl-textfield__label" htmlFor="dropoff">Drop-off location (D)</label>
                   </div>
                 </div>
@@ -230,6 +254,7 @@ class BookNowFormBase extends React.Component {
             </div>
           </div>
         </section>
+        <GeneralSnackBar />
       </div>
     )
   }

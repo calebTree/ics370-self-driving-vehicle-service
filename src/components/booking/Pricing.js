@@ -30,11 +30,11 @@ class PricingPage extends React.Component {
 
     render() {
         const status = this.state.data ? null : "Please wait ...";
-        const price = this.state.data ? "$" + this.state.data.price / 1000 : null;
+        const price = this.state.data ? "$" + (this.state.data.price / 1000).toFixed(2) : null;
         const origin = this.state.data ? this.state.data.origin : null;
         const destination = this.state.data ? this.state.data.destination : null;
         const distance = this.state.data ? this.state.data.distance : null;
-        const rate = .2;
+        const rate = "$0.20/KM";
         return (
             <div>
                 <section className="content mdl-card mdl-shadow--2dp">
