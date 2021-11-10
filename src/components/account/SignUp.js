@@ -7,11 +7,11 @@ import { withFirebase } from '../firebase';
 
 // material design component
 import { MDCBanner } from '@material/banner';
-import { RegisterBanner } from '../mdc-components';
+import { FormErrorBanner } from '../mdc-components';
 
 const SignUpPage = (props) => (
   <div>
-    <RegisterBanner />
+    <FormErrorBanner />
     <section className="content mdl-card mdl-shadow--2dp">
       <div>
         <div className="mdl-card__title">

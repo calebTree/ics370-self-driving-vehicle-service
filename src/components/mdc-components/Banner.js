@@ -1,7 +1,7 @@
 import React from "react";
 
 // https://material.io/components/banners
-const RegisterBanner = (props) => (
+const FormErrorBanner = (props) => (
     <div className="mdc-banner" role="banner">
         <div className="mdc-banner__content"
             role="alertdialog"
@@ -20,4 +20,4 @@ const RegisterBanner = (props) => (
     </div>
 )
 
-export { RegisterBanner };
+export { FormErrorBanner };

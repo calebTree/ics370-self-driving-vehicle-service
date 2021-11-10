@@ -4,7 +4,7 @@ import { withRouter } from "react-router";
 import { withFirebase } from "../firebase";
 // material design component
 import { MDCSnackbar } from '@material/snackbar';
-import { AccountSnackBar } from '../mdc-components';
+import { GeneralSnackBar } from '../mdc-components';
 
 const SignInPage = () => (
     <div>
@@ -16,7 +16,7 @@ const SignInPage = () => (
                 <SignInForm />
             </div>
         </section>
-        <AccountSnackBar />
+        <GeneralSnackBar />
     </div>
 );
 

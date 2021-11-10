@@ -4,7 +4,7 @@ import { withAuthorization } from '../session';
 
 // material design component
 import { MDCSnackbar } from '@material/snackbar';
-import { AccountSnackBar } from '../mdc-components';
+import { GeneralSnackBar } from '../mdc-components';
 
 const AccountPage = (props) => (
     <div>
@@ -14,7 +14,7 @@ const AccountPage = (props) => (
             </div>
             <AccountForm />
         </section>
-        <AccountSnackBar />
+        <GeneralSnackBar />
     </div>
 );
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-const AccountSnackBar = () => (
+const GeneralSnackBar = () => (
     <div>
         <aside className="mdc-snackbar">
             <div className="mdc-snackbar__surface" role="status" aria-relevant="additions">
@@ -36,4 +36,4 @@ const RegisterSnackBar = (props) => (
     </div>
 )
 
-export { AccountSnackBar, RegisterSnackBar };
+export { GeneralSnackBar, RegisterSnackBar };

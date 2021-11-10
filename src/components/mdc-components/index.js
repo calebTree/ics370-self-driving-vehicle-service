@@ -1,6 +1,6 @@
 
-import { AccountSnackBar, RegisterSnackBar } from './SnackBar'
-import { RegisterBanner } from './Banner';
+import { GeneralSnackBar, RegisterSnackBar } from './SnackBar'
+import { FormErrorBanner } from './Banner';
 import { LinearProgress } from './Progress';
 
-export { AccountSnackBar, RegisterSnackBar, RegisterBanner, LinearProgress };
+export { GeneralSnackBar, RegisterSnackBar, FormErrorBanner, LinearProgress };
