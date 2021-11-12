@@ -1,4 +1,4 @@
-# Firebase WebApp Version of FAV-RIDE
+# Firebase + React - WebApp Version of FAV-RIDE
 
 ## Install
 * `npm install`
