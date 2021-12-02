@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 // firebase
 import { withFirebase } from "../firebase";
@@ -67,6 +68,8 @@ class PricingPage extends React.Component {
                                 </tr>
                             </tbody>
                         </table>
+                        <Link to='/booking/now' className="section-button mdl-button mdl-button--raised mdl-button">Back</Link>
+                        <Link to='/booking/confirm' className="section-button mdl-button mdl-button--raised mdl-button--accent">Confirm</Link>
                     </div>
                 </section>
             </div>

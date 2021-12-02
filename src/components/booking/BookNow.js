@@ -182,7 +182,7 @@ class BookNowFormBase extends React.Component {
     const origin = this.state.pickup;
     const destination = this.state.dropoff;
     const distance = this.state.distance;
-    const rate = "$0.20/KM";
+    const rate = "$0.20/km";
     const ready = this.state.ready;
 
     return (

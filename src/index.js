@@ -9,7 +9,7 @@ import { withFirebase } from './components/firebase';
 import Firebase, { FirebaseContext } from './components/firebase';
 
 // components
-import { BookNowPage, BookLaterPage, PricingPage } from './components/booking';
+import { BookNowPage, BookLaterPage, PricingPage, ConfirmPage } from './components/booking';
 import { AccountPage, SignUpPage, SignInPage } from './components/account';
 
 // style
@@ -121,6 +121,7 @@ class Home extends React.Component {
           <Route path="/booking/now" component={BookNowPage} />
           <Route path="/booking/later" component={BookLaterPage} />
           <Route path="/booking/pricing" component={PricingPage} />
+          <Route path="/booking/confirm" component={ConfirmPage} />
           <Redirect to="/" />
         </Switch>
       </div>
