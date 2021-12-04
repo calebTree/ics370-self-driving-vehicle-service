@@ -4,10 +4,12 @@ import { withAuthorization } from '../session';
 
 // material design component
 import { MDCSnackbar } from '@material/snackbar';
-import { GeneralSnackBar } from '../mdc-components';
+import { MDCLinearProgress } from '@material/linear-progress';
+import { GeneralSnackBar, LinearProgress } from '../mdc-components';
 
 const AccountPage = (props) => (
     <div>
+        <LinearProgress />
         <section className="content mdl-card mdl-shadow--2dp">
             <div className="mdl-card__title">
                 <h2 className="mdl-card__title-text">Account Update Form</h2>
@@ -21,7 +23,6 @@ const AccountPage = (props) => (
 const INITIAL_STATE = {
     displayName: '',
     error: null,
-    isAdmin: '',
 };
 
 class AccountFormBase extends React.Component {
@@ -29,6 +30,8 @@ class AccountFormBase extends React.Component {
         super(props);
         this.state = {
             mdcComponent: null,
+            mdcProgress: null,
+            isAdmin: false,
             ...INITIAL_STATE
         }
     }
@@ -37,6 +40,13 @@ class AccountFormBase extends React.Component {
         // load mdl-js* classes
         componentHandler.upgradeDom();
 
+        // setup linear progress bar
+        const linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
+        linearProgress.close();
+        linearProgress.determinate = false;
+        this.setState({ mdcProgress: linearProgress });
+        linearProgress.open();
+
         // MDC Component
         const snackbar = new MDCSnackbar(document.querySelector('.mdc-snackbar'));
         this.setState({ mdcComponent: snackbar });
@@ -44,10 +54,11 @@ class AccountFormBase extends React.Component {
         this.listener = this.props.firebase.doAuthStateChanged(authUser => {
             authUser
                 ? this.props.firebase.doReadAccount().then(data => {
-                    this.setState({ isAdmin: data.role });
-                    console.log(this.state.isAdmin);
+                    if(data.role === "admin")
+                        this.setState({ isAdmin: true });
+                  linearProgress.close();
                 })
-                : this.setState({ isAdmin: null });
+                : this.setState({ data: '' });
         });
     }
 
@@ -80,20 +91,29 @@ class AccountFormBase extends React.Component {
         event.preventDefault();
     };
 
+    changeRole = (event) => {
+        this.state.mdcProgress.open();
+        const role = event.target.checked ? "admin" : "user";
+        this.props.firebase.doUpdateRole(role).then(() => {
+            this.setState({
+                isAdmin: (this.state.isAdmin == false),
+            });
+            this.state.mdcProgress.close();
+        });
+    }
+
     onChange = event => {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-
-        // console.log(this.state.isAdmin);
-
+        
         this.setState({
             [name]: value
         });
     }
 
     render() {
-        const isAdmin = this.state.isAdmin === "admin" ? true : false;
+        const isAdmin = this.state.isAdmin;
         return (
             <form onSubmit={this.onSubmit}>
                 <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -101,11 +121,11 @@ class AccountFormBase extends React.Component {
                     <label className="mdl-textfield__label" htmlFor="displayName">Enter a new display name.</label>
                 </div>
                 <div>
+                    <div className="label">System Admin</div>
                     <label className="switch" htmlFor="isAdmin">
-                        <input name="isAdmin" type="checkbox" id="isAdmin" onChange={this.onChange} checked={isAdmin} />
+                        <input name="isAdmin" type="checkbox" id="isAdmin" onChange={this.changeRole} checked={isAdmin}/>
                         <span className="slider round"></span>
                     </label>
-                    <span className="label">Toggle System Admin</span>
                 </div>
                 <button type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Update Profile</button>
             </form>

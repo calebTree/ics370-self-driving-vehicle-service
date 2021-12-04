@@ -23,7 +23,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { collection, addDoc, getDocs, getDoc, setDoc, doc, query, where, deleteDoc } from "firebase/firestore";
 
 const config = {
-  // firebase API key here
+  // API Key Here
 };
 
 function getFirebaseConfig() {
@@ -123,6 +123,13 @@ class Firebase {
       // doc.data() will be undefined in this case
       // console.log("booking for " + this.auth.currentUser.email + " not found.");
     }
+  }
+
+  doUpdateRole = async (role) => {
+    const userData = collection(this.db, "userData");
+    await setDoc(doc(userData, this.auth.currentUser.email), {
+      role: role
+    });
   }
 
 }
