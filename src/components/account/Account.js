@@ -53,11 +53,15 @@ class AccountFormBase extends React.Component {
 
         this.listener = this.props.firebase.doAuthStateChanged(authUser => {
             authUser
-                ? this.props.firebase.doReadAccount().then(data => {
-                    if(data.role === "admin")
-                        this.setState({ isAdmin: true });
-                  linearProgress.close();
-                })
+                ? this.props.firebase.doReadAccount()
+                    .then(data => {
+                        if(data.role === "admin")
+                            this.setState({ isAdmin: true });
+                        linearProgress.close();
+                    }).catch((error) => {
+                        // console.log(error.message);
+                        linearProgress.close();
+                    })
                 : this.setState({ data: '' });
         });
     }
@@ -94,10 +98,14 @@ class AccountFormBase extends React.Component {
     changeRole = (event) => {
         this.state.mdcProgress.open();
         const role = event.target.checked ? "admin" : "user";
-        this.props.firebase.doUpdateRole(role).then(() => {
-            this.setState({
-                isAdmin: (this.state.isAdmin == false),
-            });
+        this.props.firebase.doUpdateRole(role)
+            .then(() => {
+                this.setState({
+                    isAdmin: (this.state.isAdmin == false),
+                });
+                this.state.mdcProgress.close();
+        }).catch(() => {
+            console.log("failed to change role");
             this.state.mdcProgress.close();
         });
     }
