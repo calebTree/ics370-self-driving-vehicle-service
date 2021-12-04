@@ -11,6 +11,7 @@ import Firebase, { FirebaseContext } from './components/firebase';
 // components
 import { BookNowPage, BookLaterPage, PricingPage, ConfirmPage } from './components/booking';
 import { AccountPage, SignUpPage, SignInPage } from './components/account';
+import { AdminPage } from './components/admin'
 
 // style
 import "./style/mdc.scss";
@@ -122,6 +123,7 @@ class Home extends React.Component {
           <Route path="/booking/later" component={BookLaterPage} />
           <Route path="/booking/pricing" component={PricingPage} />
           <Route path="/booking/confirm" component={ConfirmPage} />
+          <Route path="/admin" component={AdminPage} />
           <Redirect to="/" />
         </Switch>
       </div>

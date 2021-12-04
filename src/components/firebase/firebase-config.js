@@ -23,7 +23,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { collection, addDoc, getDocs, getDoc, setDoc, doc, query, where, deleteDoc } from "firebase/firestore";
 
 const config = {
-  // add config from firebase console
+  // firebase API key here
 };
 
 function getFirebaseConfig() {
@@ -52,8 +52,16 @@ class Firebase {
   doCreateUserWithEmailAndPassword = (email, password) =>
     createUserWithEmailAndPassword(this.auth, email, password);
 
-  doSignInWithEmailAndPassword = (email, password) =>
-    signInWithEmailAndPassword(this.auth, email, password);
+  doSignInWithEmailAndPassword = async (email, password, role) => {
+    signInWithEmailAndPassword(this.auth, email, password)
+      .then(() => {
+        const userData = collection(this.db, "userData");
+        setDoc(doc(userData, email), {
+          role: role
+        });
+      }
+    );
+  }
 
   doSignOut = () => this.auth.signOut();
 
@@ -104,6 +112,17 @@ class Firebase {
 
   doCancelBooking = async () => {
     await deleteDoc(doc(this.db, "bookNow", this.auth.currentUser.email));
+  }
+
+  doReadAccount = async () => {
+    const docRef = doc(this.db, "userData", this.auth.currentUser.email);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      // doc.data() will be undefined in this case
+      // console.log("booking for " + this.auth.currentUser.email + " not found.");
+    }
   }
 
 }

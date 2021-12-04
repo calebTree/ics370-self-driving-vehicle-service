@@ -6,13 +6,13 @@ import { withAuthorization } from '../session';
 import { MDCSnackbar } from '@material/snackbar';
 import { GeneralSnackBar } from '../mdc-components';
 
-const AccountPage = (props) => (
+const AdminPage = (props) => (
     <div>
         <section className="content mdl-card mdl-shadow--2dp">
             <div className="mdl-card__title">
-                <h2 className="mdl-card__title-text">Account Update Form</h2>
+                <h2 className="mdl-card__title-text">Admin page</h2>
             </div>
-            <AccountForm />
+            <AdminForm />
         </section>
         <GeneralSnackBar />
     </div>
@@ -21,10 +21,9 @@ const AccountPage = (props) => (
 const INITIAL_STATE = {
     displayName: '',
     error: null,
-    isAdmin: '',
 };
 
-class AccountFormBase extends React.Component {
+class AdminFormBase extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -40,19 +39,6 @@ class AccountFormBase extends React.Component {
         // MDC Component
         const snackbar = new MDCSnackbar(document.querySelector('.mdc-snackbar'));
         this.setState({ mdcComponent: snackbar });
-
-        this.listener = this.props.firebase.doAuthStateChanged(authUser => {
-            authUser
-                ? this.props.firebase.doReadAccount().then(data => {
-                    this.setState({ isAdmin: data.role });
-                    console.log(this.state.isAdmin);
-                })
-                : this.setState({ isAdmin: null });
-        });
-    }
-
-    componentWillUnmount() {
-        this.listener();
     }
 
     onSubmit = (event) => {
@@ -85,27 +71,17 @@ class AccountFormBase extends React.Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
-        // console.log(this.state.isAdmin);
-
         this.setState({
             [name]: value
         });
     }
 
     render() {
-        const isAdmin = this.state.isAdmin === "admin" ? true : false;
         return (
             <form onSubmit={this.onSubmit}>
                 <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input name="displayName" className="mdl-textfield__input" value={this.state.displayName} type="text" onChange={this.onChange} />
                     <label className="mdl-textfield__label" htmlFor="displayName">Enter a new display name.</label>
-                </div>
-                <div>
-                    <label className="switch" htmlFor="isAdmin">
-                        <input name="isAdmin" type="checkbox" id="isAdmin" onChange={this.onChange} checked={isAdmin} />
-                        <span className="slider round"></span>
-                    </label>
-                    <span className="label">Toggle System Admin</span>
                 </div>
                 <button type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Update Profile</button>
             </form>
@@ -115,8 +91,8 @@ class AccountFormBase extends React.Component {
 
 const condition = authUser => !!authUser;
 
-const AccountForm = withAuthorization(condition)(AccountFormBase);
+const AdminForm = withAuthorization(condition)(AdminFormBase);
 
-export { AccountForm };
+export { AdminForm };
 
-export default AccountPage;
+export default AdminPage;
