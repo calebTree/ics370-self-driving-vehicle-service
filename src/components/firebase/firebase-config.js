@@ -52,12 +52,12 @@ class Firebase {
   doCreateUserWithEmailAndPassword = (email, password) =>
     createUserWithEmailAndPassword(this.auth, email, password);
 
-  doSignInWithEmailAndPassword = async (email, password, role) => {
+  doSignInWithEmailAndPassword = async (email, password) => {
     signInWithEmailAndPassword(this.auth, email, password)
       .then(() => {
         const userData = collection(this.db, "userData");
         setDoc(doc(userData, email), {
-          role: role
+          role: "user"
         });
       }
     );
@@ -130,6 +130,10 @@ class Firebase {
     await setDoc(doc(userData, this.auth.currentUser.email), {
       role: role
     });
+  }
+
+  doAddVehicle = async (type, color, fuel) => {
+    console.log(type, color, fuel);
   }
 
 }

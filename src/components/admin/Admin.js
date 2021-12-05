@@ -19,8 +19,9 @@ const AdminPage = (props) => (
 );
 
 const INITIAL_STATE = {
-    vehicleType: '',
-    error: null,
+    type: "car",
+    color: "blue",
+    fuel: "electric"
 };
 
 class AdminFormBase extends React.Component {
@@ -39,30 +40,38 @@ class AdminFormBase extends React.Component {
         // MDC Component
         const snackbar = new MDCSnackbar(document.querySelector('.mdc-snackbar'));
         this.setState({ mdcComponent: snackbar });
+
+        this.listener = this.props.firebase.doAuthStateChanged(authUser => {
+            if(authUser) {
+              this.props.firebase.doReadAccount()
+                .then(data => {
+                    if(!(data.role === "admin"))
+                        this.props.history.push("/welcome");
+                }).catch((error) => {
+                    // console.log(error.message);
+                });
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this.listener();
     }
 
     onSubmit = (event) => {
-        const { vehicleType } = this.state;
-        vehicleType 
-        ?
-            this.props.firebase
-                .doAddVehicle(vehicleType)
+        const { type, color, fuel } = this.state;
+        this.props.firebase
+            .doAddVehicle(type, color, fuel)
                 .then(authUser => {
                     // MDC Component
                     this.state.mdcComponent.labelText = "Vehicle added.";
                     this.state.mdcComponent.open();
-                    this.setState({ ...INITIAL_STATE });
-                    return;
                 })
                 .catch(error => {
                     // this.setState({ error });
                     this.state.mdcComponent.labelText = error;
-                    return;
+                    this.state.mdcComponent.open();
                 })
-        :
-                this.state.mdcComponent.labelText = "Please complete the form.";
-                this.state.mdcComponent.open();
-
         event.preventDefault();
     };
 
@@ -77,29 +86,43 @@ class AdminFormBase extends React.Component {
     }
 
     render() {
-        return (            
+        return (
             <form onSubmit={this.onSubmit}>
-                <div className="mdl-textfield mdl-js-textfield getmdl-select">
-                    <input type="text" value="" className="mdl-textfield__input" id="sample1" readOnly />
-                    <input type="hidden" value="" name="sample1" />
-                    <label htmlFor="sample1" className="mdl-textfield__label">Vehicle Type</label>
-                    <ul htmlFor="sample1" className="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                        <li className="mdl-menu__item" data-val="car">Car</li>
-                        <li className="mdl-menu__item" data-val="trk">Truck</li>
-                        <li className="mdl-menu__item" data-val="bus">Bus</li>
-                    </ul>
+                <div className="grid-container">
+                    <div>
+                        <label htmlFor="type">Vehicle Type: </label>
+                        <select id="type" name="type" onClick={this.onChange}>
+                            <option value="car">Car</option>
+                            <option value="truck">Truck</option>
+                            <option value="bus">Bus</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div>Vehicle Color:</div>
+                        <label className="section-button mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="blue">
+                            <input type="radio" id="blue" className="mdl-radio__button" name="color" onClick={this.onChange} value="blue" defaultChecked />
+                            <span className="mdl-radio__label">Blue</span>
+                        </label>
+                        <label className="section-button mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="green">
+                            <input type="radio" id="green" className="mdl-radio__button" name="color" onClick={this.onChange} value="green" />
+                            <span className="mdl-radio__label">Green</span>
+                        </label>
+                    </div>
+                    <div>
+                        <div>Fuel Type:</div>
+                        <label className="section-button mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="electric">
+                            <input type="radio" id="electric" className="mdl-radio__button" name="fuel" onClick={this.onChange} value="electric" defaultChecked />
+                            <span className="mdl-radio__label">Electric</span>
+                        </label>
+                        <label className="section-button mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="petrol">
+                            <input type="radio" id="petrol" className="mdl-radio__button" name="fuel" onClick={this.onChange} value="petrol" />
+                            <span className="mdl-radio__label">Petrol</span>
+                        </label>
+                    </div>
+                    <div>
+                        <button type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Add Vehicle</button>
+                    </div>
                 </div>
-                <div>
-                    <label className="section-button mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="blue">
-                        <input type="radio" id="blue" className="mdl-radio__button" name="color" value="1" defaultChecked />
-                        <span className="mdl-radio__label">Blue</span>
-                    </label>
-                    <label className="section-button mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="green">
-                        <input type="radio" id="green" className="mdl-radio__button" name="color" value="2" />
-                        <span className="mdl-radio__label">Green</span>
-                    </label>
-                </div>
-                <button type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Add Vehicle</button>
             </form>
         );
     }
