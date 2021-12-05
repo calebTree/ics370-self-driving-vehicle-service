@@ -19,7 +19,7 @@ const AdminPage = (props) => (
 );
 
 const INITIAL_STATE = {
-    displayName: '',
+    vehicleType: '',
     error: null,
 };
 
@@ -42,14 +42,14 @@ class AdminFormBase extends React.Component {
     }
 
     onSubmit = (event) => {
-        const { displayName } = this.state;
-        displayName 
+        const { vehicleType } = this.state;
+        vehicleType 
         ?
             this.props.firebase
-                .doUpdateProfile(displayName)
+                .doAddVehicle(vehicleType)
                 .then(authUser => {
                     // MDC Component
-                    this.state.mdcComponent.labelText = "Your new display name is: " + authUser.displayName;
+                    this.state.mdcComponent.labelText = "Vehicle added.";
                     this.state.mdcComponent.open();
                     this.setState({ ...INITIAL_STATE });
                     return;
@@ -77,13 +77,29 @@ class AdminFormBase extends React.Component {
     }
 
     render() {
-        return (
+        return (            
             <form onSubmit={this.onSubmit}>
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input name="displayName" className="mdl-textfield__input" value={this.state.displayName} type="text" onChange={this.onChange} />
-                    <label className="mdl-textfield__label" htmlFor="displayName">Enter a new display name.</label>
+                <div className="mdl-textfield mdl-js-textfield getmdl-select">
+                    <input type="text" value="" className="mdl-textfield__input" id="sample1" readOnly />
+                    <input type="hidden" value="" name="sample1" />
+                    <label htmlFor="sample1" className="mdl-textfield__label">Vehicle Type</label>
+                    <ul htmlFor="sample1" className="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                        <li className="mdl-menu__item" data-val="car">Car</li>
+                        <li className="mdl-menu__item" data-val="trk">Truck</li>
+                        <li className="mdl-menu__item" data-val="bus">Bus</li>
+                    </ul>
                 </div>
-                <button type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Update Profile</button>
+                <div>
+                    <label className="section-button mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="blue">
+                        <input type="radio" id="blue" className="mdl-radio__button" name="color" value="1" defaultChecked />
+                        <span className="mdl-radio__label">Blue</span>
+                    </label>
+                    <label className="section-button mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="green">
+                        <input type="radio" id="green" className="mdl-radio__button" name="color" value="2" />
+                        <span className="mdl-radio__label">Green</span>
+                    </label>
+                </div>
+                <button type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Add Vehicle</button>
             </form>
         );
     }

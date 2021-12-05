@@ -17,6 +17,11 @@ import { AdminPage } from './components/admin'
 import "./style/mdc.scss";
 import "./style/custom-style.css";
 
+// material design component
+import { MDCSnackbar } from '@material/snackbar';
+import { MDCLinearProgress } from '@material/linear-progress';
+import { GeneralSnackBar, LinearProgress } from './components/mdc-components';
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -115,7 +120,7 @@ class Home extends React.Component {
         </div>
         <Switch>
           <Route exact path="/" component={Greeting} />
-          <Route exact path="/welcome" render={props => (<Welcome state={this.state} />)} />
+          <Route exact path="/welcome" render={props => (<Welcome state={this.state} firebase={this.props.firebase} />)} />
           <Route path="/register" component={SignUpPage} />
           <Route path="/login" component={SignInPage} />
           <Route path="/account" component={AccountPage} />
@@ -172,12 +177,54 @@ class Greeting extends React.Component {
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isAdmin: false,
+    }
+  }
+
+  componentDidMount() {
+    // load mdl-js* classes
+    // componentHandler.upgradeDom();
+
+    // setup linear progress bar
+    const linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
+    linearProgress.close();
+    linearProgress.determinate = false;
+    this.setState({ mdcProgress: linearProgress });
+
+    // MDC Component
+    const snackbar = new MDCSnackbar(document.querySelector('.mdc-snackbar'));
+    this.setState({ mdcComponent: snackbar });
+
+    this.listener = this.props.firebase.doAuthStateChanged(authUser => {
+      if(authUser) {
+        linearProgress.open();
+        this.props.firebase.doReadAccount()
+          .then(data => {
+              if(data.role === "admin")
+                  this.setState({ isAdmin: true });
+              linearProgress.close();
+          }).catch((error) => {
+              // console.log(error.message);
+              linearProgress.close();
+          });
+      } else {
+        this.setState({ data: '' });
+        linearProgress.close();
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.listener();
   }
 
   render() {
     const authUser = this.props.state.authUser;
+    const adminPage = this.state.isAdmin ? <Link to='/admin' className="section-button mdl-button mdl-button--raised">Admin Page</Link> : null;
     return (
       <div>
+        <LinearProgress />
         <section className="content mdl-card mdl-shadow--2dp">
             {authUser
               ? 
@@ -187,6 +234,7 @@ class Welcome extends React.Component {
                 </div>
                   <Link to='/booking/now' className="section-button mdl-button mdl-button--raised mdl-button--accent">Book Now <i className="material-icons">hail</i></Link>
                   <Link to='/booking/later' className="section-button mdl-button mdl-button--raised mdl-button--colored">Book Later <i className="material-icons">departure_board</i></Link>
+                  {adminPage}
               </div>
               : 
               <div>
@@ -203,6 +251,7 @@ class Welcome extends React.Component {
               </div>
             }
         </section>
+        <GeneralSnackBar />
       </div>
     )
   }

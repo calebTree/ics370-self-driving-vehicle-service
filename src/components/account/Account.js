@@ -104,6 +104,11 @@ class AccountFormBase extends React.Component {
                     isAdmin: (this.state.isAdmin == false),
                 });
                 this.state.mdcProgress.close();
+                if(this.state.isAdmin)
+                    this.state.mdcComponent.labelText = "You are now admin.";
+                else
+                    this.state.mdcComponent.labelText = "You are now user.";
+                this.state.mdcComponent.open();
         }).catch(() => {
             console.log("failed to change role");
             this.state.mdcProgress.close();
