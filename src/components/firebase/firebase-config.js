@@ -20,10 +20,20 @@ import {
 } from 'firebase/auth';
 
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { collection, addDoc, getDocs, getDoc, setDoc, doc, query, where, deleteDoc } from "firebase/firestore";
+import { collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  setDoc,
+  doc,
+  query,
+  where,
+  deleteDoc,
+  updateDoc, arrayUnion, arrayRemove
+ } from "firebase/firestore";
 
 const config = {
-  // API Key Here
+  // API Keys Here
 };
 
 function getFirebaseConfig() {
@@ -99,6 +109,14 @@ class Firebase {
     });
   }
 
+  doBookLater = async (date, time, vehicle) => {
+    const bookLaterRef = doc(this.db, "bookLater", this.auth.currentUser.email);
+    // Atomically add a new region to the "regions" array field.
+    await updateDoc(bookLaterRef, {
+      bookings: arrayUnion({date: date, time: time})
+    });
+  }
+
   doReadBooking = async () => {
     const docRef = doc(this.db, "bookNow", this.auth.currentUser.email);
     const docSnap = await getDoc(docRef);
@@ -133,9 +151,18 @@ class Firebase {
   }
 
   doAddVehicle = async (type, color, fuel) => {
-    console.log(type, color, fuel);
+    // console.log(type, color, fuel);    
+    try {
+      const docRef = await addDoc(collection(this.db, "vehicles"), {
+        type: type,
+        color: color,
+        fuel: fuel
+      });    
+      // console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   }
-
 }
 
 export default Firebase;

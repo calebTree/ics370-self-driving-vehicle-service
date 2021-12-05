@@ -19,7 +19,7 @@ const AdminPage = (props) => (
 );
 
 const INITIAL_STATE = {
-    type: "car",
+    type: "cars",
     color: "blue",
     fuel: "electric"
 };
@@ -64,11 +64,12 @@ class AdminFormBase extends React.Component {
             .doAddVehicle(type, color, fuel)
                 .then(authUser => {
                     // MDC Component
-                    this.state.mdcComponent.labelText = "Vehicle added.";
+                    this.state.mdcComponent.labelText = "Vehicle added to available " + type + ".";
                     this.state.mdcComponent.open();
                 })
                 .catch(error => {
                     // this.setState({ error });
+                    console.log(error.message);
                     this.state.mdcComponent.labelText = error;
                     this.state.mdcComponent.open();
                 })
@@ -92,9 +93,9 @@ class AdminFormBase extends React.Component {
                     <div>
                         <label htmlFor="type">Vehicle Type: </label>
                         <select id="type" name="type" onClick={this.onChange}>
-                            <option value="car">Car</option>
-                            <option value="truck">Truck</option>
-                            <option value="bus">Bus</option>
+                            <option value="cars">Car</option>
+                            <option value="trucks">Truck</option>
+                            <option value="busses">Bus</option>
                         </select>
                     </div>
                     <div>
