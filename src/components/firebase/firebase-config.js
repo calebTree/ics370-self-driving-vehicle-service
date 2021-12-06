@@ -143,9 +143,19 @@ class Firebase {
 
   doSetRole = async (role) => {
     const userData = collection(this.db, "userData");
+    const vehicles = collection(this.db, "vehicles");
     await setDoc(doc(userData, this.auth.currentUser.email), {
       role: role
     });
+    await setDoc(doc(vehicles, "cars"), {
+      vehiclesAvailable: []
+    })
+    await setDoc(doc(vehicles, "trucks"), {
+      vehiclesAvailable: []
+    })
+    await setDoc(doc(vehicles, "busses"), {
+      vehiclesAvailable: []
+    })
   }
 
   doAddVehicle = async (type, color, fuel) => {
