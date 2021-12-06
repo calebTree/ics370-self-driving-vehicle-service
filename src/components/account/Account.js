@@ -98,7 +98,7 @@ class AccountFormBase extends React.Component {
     changeRole = (event) => {
         this.state.mdcProgress.open();
         const role = event.target.checked ? "admin" : "user";
-        this.props.firebase.doUpdateRole(role)
+        this.props.firebase.doSetRole(role)
             .then(() => {
                 this.setState({
                     isAdmin: (this.state.isAdmin == false),

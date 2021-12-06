@@ -19,8 +19,7 @@ import {
   updateProfile,
 } from 'firebase/auth';
 
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { collection,
+import { collection, getFirestore, connectFirestoreEmulator,
   addDoc,
   getDocs,
   getDoc,
@@ -59,19 +58,18 @@ class Firebase {
   }
 
   // *** Auth API ***
-  doCreateUserWithEmailAndPassword = (email, password) =>
-    createUserWithEmailAndPassword(this.auth, email, password);
-
-  doSignInWithEmailAndPassword = async (email, password) => {
-    signInWithEmailAndPassword(this.auth, email, password)
+  doCreateUserWithEmailAndPassword = async (email, password) => {
+    return createUserWithEmailAndPassword(this.auth, email, password)
       .then(() => {
-        const userData = collection(this.db, "userData");
-        setDoc(doc(userData, email), {
-          role: "user"
+        const bookLaterRef = doc(this.db, "bookLater", email);
+        setDoc(bookLaterRef, {
+          bookings: []
         });
-      }
-    );
+      });
   }
+
+  doSignInWithEmailAndPassword = (email, password) =>
+    signInWithEmailAndPassword(this.auth, email, password);
 
   doSignOut = () => this.auth.signOut();
 
@@ -143,7 +141,7 @@ class Firebase {
     }
   }
 
-  doUpdateRole = async (role) => {
+  doSetRole = async (role) => {
     const userData = collection(this.db, "userData");
     await setDoc(doc(userData, this.auth.currentUser.email), {
       role: role
@@ -151,17 +149,12 @@ class Firebase {
   }
 
   doAddVehicle = async (type, color, fuel) => {
-    // console.log(type, color, fuel);    
-    try {
-      const docRef = await addDoc(collection(this.db, "vehicles"), {
-        type: type,
-        color: color,
-        fuel: fuel
-      });    
-      // console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+    // console.log(type, color, fuel);
+    const vehiclesRef = doc(this.db, "vehicles", type);
+    // Atomically add a new region to the "regions" array field.
+    await updateDoc(vehiclesRef, {
+      vehicesAvailable: arrayUnion({color: color, fuel: fuel})
+    });
   }
 }
 

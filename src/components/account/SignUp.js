@@ -58,29 +58,25 @@ const SignUpPage = (props) => (
 
       firebase
         .doCreateUserWithEmailAndPassword(email, passwordOne)
-        .then(authUser => {
-          if(fName + " " + lName != " ")
-            firebase
-              .doUpdateProfile((fName + " " + lName).trim())
-              .then(authUser => {
-                history.push();
-                return;
-              })
-              .catch(error => {
-                // this.setState({ error });
-                mdcComponent.setText(error.message);
-                return;
-              });
-            this.setState({ ...INITIAL_STATE });
-            history.push('/welcome');
-            return;
-        })
-        .catch(error => {
-          // this.setState({ error });
-          mdcComponent.setText(error.message);
-          mdcComponent.open();
-          return;
-        });
+          .then(authUser => {
+            if(fName + " " + lName != " ")
+              firebase
+                .doUpdateProfile((fName + " " + lName).trim())
+                  .then(authUser => {
+                    history.push('/welcome');
+                  })
+                  .catch(error => {
+                    // this.setState({ error });
+                    mdcComponent.setText(error.message);
+                  });
+              this.setState({ ...INITIAL_STATE });
+              history.push('/welcome');
+          })
+            .catch(error => {
+              // this.setState({ error });
+              mdcComponent.setText(error.message);
+              mdcComponent.open();
+            });
       event.preventDefault();
     };
   
