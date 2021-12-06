@@ -69,8 +69,9 @@ const SignUpPage = (props) => (
                     // this.setState({ error });
                     mdcComponent.setText(error.message);
                   });
-              this.setState({ ...INITIAL_STATE });
-              history.push('/welcome');
+            this.setState({ ...INITIAL_STATE });
+            firebase.setLastLogin();
+            history.push('/welcome');
           })
             .catch(error => {
               // this.setState({ error });

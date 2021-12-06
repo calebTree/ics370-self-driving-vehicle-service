@@ -168,10 +168,10 @@ class BookLaterFormBase extends React.Component {
         </div>
         <div>
           <div>
+            <label htmlFor="vehicleOptions">Choose a vehicle: </label>
             <select id="vehicleOptions" name="chosenOptions" onChange={this.onChange}>
               {vehicleOptions.length > 0 ? vehicleOptions : <option disabled>none available</option>}
             </select>
-            <label htmlFor="vehicleOptions"> Choose a vehicle.</label>
           </div>
         </div>
         <button className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Submit</button>

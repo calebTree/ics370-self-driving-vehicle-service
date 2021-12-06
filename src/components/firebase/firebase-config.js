@@ -28,11 +28,12 @@ import { collection, getFirestore, connectFirestoreEmulator,
   query,
   where,
   deleteDoc,
-  updateDoc, arrayUnion, arrayRemove
+  updateDoc, arrayUnion, arrayRemove,
+  Timestamp 
  } from "firebase/firestore";
 
 const config = {
-  // API Keys Here
+  // API Key Here
 };
 
 function getFirebaseConfig() {
@@ -58,8 +59,9 @@ class Firebase {
   }
 
   // *** Auth API ***
-  doCreateUserWithEmailAndPassword = async (email, password) =>
-    createUserWithEmailAndPassword(this.auth, email, password)
+  doCreateUserWithEmailAndPassword = async (email, password) => {
+    return createUserWithEmailAndPassword(this.auth, email, password);
+  }
 
   doSignInWithEmailAndPassword = (email, password) =>
     signInWithEmailAndPassword(this.auth, email, password);
@@ -72,6 +74,13 @@ class Firebase {
   doGoogleSignIn = async () => {
     var provider = new GoogleAuthProvider();
     await signInWithPopup(this.auth, provider);
+  }
+
+  setLastLogin = async () => {
+    const userData = collection(this.db, "userData");
+    await setDoc(doc(userData, this.auth.currentUser.email), {
+      lastLogin: Timestamp.fromDate(new Date())
+    }, {merge: true});
   }
 
   doUpdateProfile = (displayName) => {
@@ -137,7 +146,7 @@ class Firebase {
     const userData = collection(this.db, "userData");
     await setDoc(doc(userData, this.auth.currentUser.email), {
       role: role
-    });
+    }, {merge: true});
   }
 
   doAddVehicle = async (type, color, fuel) => {

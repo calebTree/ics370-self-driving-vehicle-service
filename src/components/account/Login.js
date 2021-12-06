@@ -46,6 +46,7 @@ class LoginFormBase extends React.Component {
                 .then(() => {
                     // console.log("signed in " + this.state.email);
                     this.setState({ ...INITIAL_STATE });
+                    this.props.firebase.setLastLogin();
                     this.props.history.push('/welcome');
                 })
                 .catch(error => {
