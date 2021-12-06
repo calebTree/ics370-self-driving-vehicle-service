@@ -74,6 +74,7 @@ class Firebase {
   doGoogleSignIn = async () => {
     var provider = new GoogleAuthProvider();
     await signInWithPopup(this.auth, provider);
+    this.setLastLogin();
   }
 
   setLastLogin = async () => {
