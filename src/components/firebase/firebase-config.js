@@ -105,7 +105,8 @@ class Firebase {
       origin: pickup,
       destination: dropoff,
       distance: distance,
-      price: price
+      price: price,
+      createTime: Timestamp.fromDate(new Date())
     });
   }
 

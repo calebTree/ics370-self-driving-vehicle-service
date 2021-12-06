@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { withFirebase } from "../firebase";
 
 import QRCode from "react-qr-code";
+var sha1 = require('sha1');
 
 class PricingPage extends React.Component {
     constructor(props) {
@@ -38,6 +39,8 @@ class PricingPage extends React.Component {
         const destination = this.state.data ? this.state.data.destination : null;
         const distance = this.state.data ? this.state.data.distance : null;
         const rate = "$0.20/KM";
+        const bookingID = this.state.data ? sha1(JSON.stringify(this.state.data)) : '';
+        console.log(bookingID)
         return (
             <div>
                 <section className="content mdl-card mdl-shadow--2dp">
@@ -75,7 +78,7 @@ class PricingPage extends React.Component {
                             <Link to='/booking/confirm' className="section-button mdl-button mdl-button--raised mdl-button--accent">Confirm</Link>
                         </div>
                         <div>
-                            <QRCode value="hey" />
+                            {bookingID ? <div>Scan this QR code to unlock the vehicle. <QRCode value={bookingID} />{bookingID}</div> : "Please wait ..." }
                         </div>
                     </div>
                 </section>
