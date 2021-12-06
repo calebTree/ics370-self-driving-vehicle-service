@@ -58,15 +58,8 @@ class Firebase {
   }
 
   // *** Auth API ***
-  doCreateUserWithEmailAndPassword = async (email, password) => {
-    return createUserWithEmailAndPassword(this.auth, email, password)
-      .then(() => {
-        const bookLaterRef = doc(this.db, "bookLater", email);
-        setDoc(bookLaterRef, {
-          bookings: []
-        });
-      });
-  }
+  doCreateUserWithEmailAndPassword = async (email, password) =>
+    createUserWithEmailAndPassword(this.auth, email, password)
 
   doSignInWithEmailAndPassword = (email, password) =>
     signInWithEmailAndPassword(this.auth, email, password);
@@ -109,10 +102,9 @@ class Firebase {
 
   doBookLater = async (date, time, vehicle) => {
     const bookLaterRef = doc(this.db, "bookLater", this.auth.currentUser.email);
-    // Atomically add a new region to the "regions" array field.
-    await updateDoc(bookLaterRef, {
+    await setDoc(bookLaterRef, {
       bookings: arrayUnion({date: date, time: time, vehicle: vehicle})
-    });
+    }, {merge: true});
   }
 
   doReadBooking = async () => {
@@ -143,28 +135,16 @@ class Firebase {
 
   doSetRole = async (role) => {
     const userData = collection(this.db, "userData");
-    const vehicles = collection(this.db, "vehicles");
     await setDoc(doc(userData, this.auth.currentUser.email), {
       role: role
     });
-    await setDoc(doc(vehicles, "cars"), {
-      vehiclesAvailable: []
-    })
-    await setDoc(doc(vehicles, "trucks"), {
-      vehiclesAvailable: []
-    })
-    await setDoc(doc(vehicles, "busses"), {
-      vehiclesAvailable: []
-    })
   }
 
   doAddVehicle = async (type, color, fuel) => {
-    // console.log(type, color, fuel);
     const vehiclesRef = doc(this.db, "vehicles", type);
-    // Atomically add a new region to the "regions" array field.
-    await updateDoc(vehiclesRef, {
+    await setDoc(vehiclesRef, {
       vehiclesAvailable: arrayUnion({color: color, fuel: fuel})
-    });
+    }, {merge: true});
   }
 
   doGetVehicleOptions = async (vehicleType) => {
@@ -174,7 +154,7 @@ class Firebase {
       return docSnap.data();
     } else {
       // doc.data() will be undefined in this case
-      console.log("No such document!");
+      // console.log("No such document!");
     }
   }
 }

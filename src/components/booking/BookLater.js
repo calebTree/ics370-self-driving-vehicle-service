@@ -89,7 +89,12 @@ class BookLaterFormBase extends React.Component {
           })
         })
         .catch((error) => {
-          console.log(error.message)
+          // console.log(error.message)
+          this.setState({
+            vehicleOptions: null,
+            chosenOptions: null,
+            vehicleType: value,
+          })
         })
   }
 

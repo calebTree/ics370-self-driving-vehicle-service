@@ -49,8 +49,6 @@ class LoginFormBase extends React.Component {
                     this.props.history.push('/welcome');
                 })
                 .catch(error => {
-                    // this.setState({ error });
-                    this.setState({ ...INITIAL_STATE });
                     // console.log(error.message);
                     this.state.mdcComponent.labelText = error.message;
                     this.state.mdcComponent.open();
