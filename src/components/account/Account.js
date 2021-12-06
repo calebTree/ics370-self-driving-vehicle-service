@@ -12,7 +12,7 @@ const AccountPage = (props) => (
         <LinearProgress />
         <section className="content mdl-card mdl-shadow--2dp">
             <div className="mdl-card__title">
-                <h2 className="mdl-card__title-text">Account Update Form</h2>
+                <h2 className="mdl-card__title-text">My Account</h2>
             </div>
             <AccountForm />
         </section>
@@ -129,18 +129,20 @@ class AccountFormBase extends React.Component {
         const isAdmin = this.state.isAdmin;
         return (
             <form onSubmit={this.onSubmit}>
-                <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input name="displayName" className="mdl-textfield__input" value={this.state.displayName} type="text" onChange={this.onChange} />
-                    <label className="mdl-textfield__label" htmlFor="displayName">Enter a new display name.</label>
+                <div className="grid-container">
+                    <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label section-button">
+                        <input name="displayName" className="mdl-textfield__input" value={this.state.displayName} type="text" onChange={this.onChange} />
+                        <label className="mdl-textfield__label" htmlFor="displayName">display name</label>
+                    </div>
+                    <div className="section-button">
+                        <div className="label">System Admin</div>
+                        <label className="switch" htmlFor="isAdmin">
+                            <input name="isAdmin" type="checkbox" id="isAdmin" onChange={this.changeRole} checked={isAdmin}/>
+                            <span className="slider round"></span>
+                        </label>
+                    </div>
+                    <div><button type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Update Profile</button></div>
                 </div>
-                <div>
-                    <div className="label">System Admin</div>
-                    <label className="switch" htmlFor="isAdmin">
-                        <input name="isAdmin" type="checkbox" id="isAdmin" onChange={this.changeRole} checked={isAdmin}/>
-                        <span className="slider round"></span>
-                    </label>
-                </div>
-                <button type="submit" className="section-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-left">Update Profile</button>
             </form>
         );
     }

@@ -111,7 +111,7 @@ class Firebase {
     const bookLaterRef = doc(this.db, "bookLater", this.auth.currentUser.email);
     // Atomically add a new region to the "regions" array field.
     await updateDoc(bookLaterRef, {
-      bookings: arrayUnion({date: date, time: time})
+      bookings: arrayUnion({date: date, time: time, vehicle: vehicle})
     });
   }
 
@@ -153,8 +153,19 @@ class Firebase {
     const vehiclesRef = doc(this.db, "vehicles", type);
     // Atomically add a new region to the "regions" array field.
     await updateDoc(vehiclesRef, {
-      vehicesAvailable: arrayUnion({color: color, fuel: fuel})
+      vehiclesAvailable: arrayUnion({color: color, fuel: fuel})
     });
+  }
+
+  doGetVehicleOptions = async (vehicleType) => {
+    const docRef = doc(this.db, "vehicles", vehicleType);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
   }
 }
 
