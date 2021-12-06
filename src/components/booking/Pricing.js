@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 // firebase
 import { withFirebase } from "../firebase";
 
+import QRCode from "react-qr-code";
+
 class PricingPage extends React.Component {
     constructor(props) {
         super(props);
@@ -43,33 +45,38 @@ class PricingPage extends React.Component {
                         <h2 className="mdl-card__title-text">Pricing</h2>
                     </div>
                     {status}
-                    <div>
-                        <table className="mdl-data-table mdl-js-data-table">
-                            <tbody>
-                                <tr>
-                                    <th className="mdl-data-table__cell--non-numeric">Pickup:</th>
-                                    <td>{origin}</td>
-                                </tr>
-                                <tr>
-                                    <th className="mdl-data-table__cell--non-numeric">Destination:</th>
-                                    <td>{destination}</td>
-                                </tr>
-                                <tr>
-                                    <th className="mdl-data-table__cell--non-numeric">Distance:</th>
-                                    <td>{distance}</td>
-                                </tr>
-                                <tr>
-                                    <th className="mdl-data-table__cell--non-numeric">Rate:</th>
-                                    <td>{rate}</td>
-                                </tr>
-                                <tr>
-                                    <th className="mdl-data-table__cell--non-numeric">Price:</th>
-                                    <td>{price}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <Link to='/booking/now' className="section-button mdl-button mdl-button--raised mdl-button">Back</Link>
-                        <Link to='/booking/confirm' className="section-button mdl-button mdl-button--raised mdl-button--accent">Confirm</Link>
+                    <div className="grid-container">
+                        <div>
+                            <table className="mdl-data-table mdl-js-data-table">
+                                <tbody>
+                                    <tr>
+                                        <th className="mdl-data-table__cell--non-numeric">Pickup:</th>
+                                        <td>{origin}</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="mdl-data-table__cell--non-numeric">Destination:</th>
+                                        <td>{destination}</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="mdl-data-table__cell--non-numeric">Distance:</th>
+                                        <td>{distance}</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="mdl-data-table__cell--non-numeric">Rate:</th>
+                                        <td>{rate}</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="mdl-data-table__cell--non-numeric">Price:</th>
+                                        <td>{price}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <Link to='/booking/now' className="section-button mdl-button mdl-button--raised mdl-button">Back</Link>
+                            <Link to='/booking/confirm' className="section-button mdl-button mdl-button--raised mdl-button--accent">Confirm</Link>
+                        </div>
+                        <div>
+                            <QRCode value="hey" />
+                        </div>
                     </div>
                 </section>
             </div>

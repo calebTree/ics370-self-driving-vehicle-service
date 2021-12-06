@@ -10,7 +10,7 @@ const AdminPage = (props) => (
     <div>
         <section className="content mdl-card mdl-shadow--2dp">
             <div className="mdl-card__title">
-                <h2 className="mdl-card__title-text">Admin page</h2>
+                <h2 className="mdl-card__title-text">Admin Page</h2>
             </div>
             <AdminForm />
         </section>
@@ -108,8 +108,6 @@ class AdminFormBase extends React.Component {
                             <input type="radio" id="green" className="mdl-radio__button" name="color" onClick={this.onChange} value="green" />
                             <span className="mdl-radio__label">Green</span>
                         </label>
-                    </div>
-                    <div>
                         <div>Fuel Type:</div>
                         <label className="section-button mdl-radio mdl-js-radio mdl-js-ripple-effect" htmlFor="electric">
                             <input type="radio" id="electric" className="mdl-radio__button" name="fuel" onClick={this.onChange} value="electric" defaultChecked />
