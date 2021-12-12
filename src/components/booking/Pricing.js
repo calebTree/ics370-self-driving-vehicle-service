@@ -40,7 +40,6 @@ class PricingPage extends React.Component {
         const distance = this.state.data ? this.state.data.distance : null;
         const rate = "$0.20/KM";
         const bookingID = this.state.data ? sha1(JSON.stringify(this.state.data)) : '';
-        console.log(bookingID)
         return (
             <div>
                 <section className="content mdl-card mdl-shadow--2dp">

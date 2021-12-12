@@ -32,37 +32,39 @@ function MyGoogleMap(props) {
   const [map, setMap] = useState(null);
 
   const setMarkers = (origin, destination) => {
-    const geocoder = new google.maps.Geocoder();
-    const bounds = new google.maps.LatLngBounds();
+    try {
+      const geocoder = new google.maps.Geocoder();
+      const bounds = new google.maps.LatLngBounds();
   
-    const showGeocodedAddressOnMap = (asDestination) => {
-      const handler = ({ results }) => {
-        map.fitBounds(bounds.extend(results[0].geometry.location));
-        if(asDestination)
-          setMarkerA(
-            <Marker
-              position={results[0].geometry.location}
-              label={asDestination ? "D" : "O"}
-            />
-          );
-        else
-          setMarkerB(
-            <Marker
-              position={results[0].geometry.location}
-              label={asDestination ? "D" : "O"}
-            />
-          );
+      const showGeocodedAddressOnMap = (asDestination) => {
+        const handler = ({ results }) => {
+          map.fitBounds(bounds.extend(results[0].geometry.location));
+          if(asDestination)
+            setMarkerA(
+              <Marker
+                position={results[0].geometry.location}
+                label={asDestination ? "D" : "O"}
+              />
+            );
+          else
+            setMarkerB(
+              <Marker
+                position={results[0].geometry.location}
+                label={asDestination ? "D" : "O"}
+              />
+            );
+        };
+        return handler;
       };
-      return handler;
-    };
-
       geocoder
         .geocode({ address: origin })
         .then(showGeocodedAddressOnMap(false));  
       geocoder
         .geocode({ address: destination })
         .then(showGeocodedAddressOnMap(true));
-
+    } catch(err) {
+      console.error(err.message);
+    }
   }
 
   // HTML5 geolocate
@@ -94,16 +96,16 @@ function MyGoogleMap(props) {
 
   useEffect(
     () => {
-      if(props.markers)
+      if(props.markers && isLoaded && map) {
         setMarkers(props.markers.origin, props.markers.destination);
-      else {
+      } else {
         setCenter(INITIAL_CENTER);
         setMarkerA(null);
         setMarkerB(null);
         // geoLocate();
       }
     },
-    [props.markers],
+    [props.markers, isLoaded, map],
   );
   
   const onUnmount = React.useCallback(function callback() {
@@ -125,4 +127,4 @@ function MyGoogleMap(props) {
   ) : <></>
 }
 
-export default withFirebase(React.memo(MyGoogleMap))
+export default withFirebase(React.memo(MyGoogleMap));
